@@ -56,9 +56,9 @@ class LoginTest extends BaseTest{
             console.log('CH:')
             console.log(res)
         });
-        // this.http.fn(this.http.get('/api/about_cms'), false).then(res =>{
-        //     console.log(res)
-        // });
+        this.http.fn(this.http.get('/api/about_cms'), false).then(res =>{
+            console.log(res)
+        });
     }
 }
 
