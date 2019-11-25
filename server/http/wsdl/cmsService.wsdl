@@ -1,0 +1,91 @@
+<definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:tns="http://server.soap.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://server.soap.com/" name="cmsService">
+    <types>
+        <xsd:schema version="1.0" targetNamespace="http://server.soap.com/">
+            <xsd:element name="Resp_Sequence" type="tns:Resp_Sequence"/>
+            <xsd:complexType name="Resp_Sequence">
+                <xsd:sequence>
+                    <xsd:element name="code" type="xsd:number" minOccurs="0"/>
+                    <xsd:element name="msg" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="sequenceId" type="xsd:number" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="Auth" type="tns:Auth"/>
+            <xsd:complexType name="Auth">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="key" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="language" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="shopid" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="Resp_Config" type="tns:Resp_Config"/>
+            <xsd:complexType name="Resp_Config">
+                <xsd:sequence>
+                    <xsd:element name="code" type="xsd:number" minOccurs="0"/>
+                    <xsd:element name="msg" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="config" type="tns:Config" minOccurs="0">
+                        <xsd:complexType name="Config">
+                            <xsd:sequence>
+                                <xsd:element name="key" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="groupName" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="desc" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+    <message name="getSequenceId">
+        <part name="auth" type="tns:Auth"/>
+        <part name="type" type="xsd:string"/>
+    </message>
+    <message name="getSequenceIdResponse">
+        <part name="cmsResponse" type="tns:Resp_Sequence"/>
+    </message>
+    <message name="getSystemConfig">
+        <part name="auth" type="tns:Auth"/>
+        <part name="configKey" type="xsd:string"/>
+        <part name="groupName" type="xsd:string"/>
+    </message>
+    <message name="getSystemConfigResponse">
+        <part name="cmsResponse" type="tns:Resp_Config"/>
+    </message>
+    <portType name="cmsService">
+        <operation name="getSequenceId">
+            <input wsam:Action="getSequenceId" message="tns:getSequenceId"/>
+            <output wsam:Action="http://server.soap.com/cmsService/getSequenceIdResponse" message="tns:getSequenceIdResponse"/>
+        </operation>
+        <operation name="getSystemConfig">
+            <input wsam:Action="getSystemConfig" message="tns:getSystemConfig"/>
+            <output wsam:Action="http://server.soap.com/cmsService/getSystemConfigResponse" message="tns:getSystemConfigResponse"/>
+        </operation>
+    </portType>
+    <binding name="cmsServicePortBinding" type="tns:cmsService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+        <operation name="getSequenceId">
+            <soap:operation soapAction="getSequenceId"/>
+            <input name="getSequenceId">
+                <soap:body use="literal"/>
+            </input>
+            <output name="getSequenceIdResponse">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getSystemConfig">
+            <soap:operation soapAction="getSystemConfig"/>
+            <input name="getSystemConfig">
+                <soap:body use="literal"/>
+            </input>
+            <output name="getSystemConfigResponse">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="cmsService">
+        <port name="cmsServicePort" binding="tns:cmsServicePortBinding">
+            <soap:address location="https://cc:3001/cmsService"/>
+        </port>
+    </service>
+</definitions>

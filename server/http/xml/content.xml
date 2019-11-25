@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<apis>
+    <api type="user">
+        <url>/api/user</url>
+    </api>
+    <api type="right">
+        <url>/api/right</url>
+    </api>
+    <app>clothingshop</app>
+</apis>
