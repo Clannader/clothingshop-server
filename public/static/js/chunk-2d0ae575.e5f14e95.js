@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0ae575"],{"0a3a":function(n,e,a){"use strict";a.r(e);var t=function(){var n=this,e=n.$createElement,a=n._self._c||e;return a("div")},u=[],c={name:"ShopInfo"},l=c,o=a("2877"),r=Object(o["a"])(l,t,u,!1,null,null,null);e["default"]=r.exports}}]);
