@@ -15,7 +15,7 @@ let userCache = require('../util/cache/UserCache');
 let os = require('os');
 
 // let config = new Config(__dirname + "/../../config/config.ini", true);//Config对象
-let config = new Config(process.env.CONFIG_PATH);
+let config = new Config(process.env.CONFIG_PATH, true);
 
 function Utils() {
 
