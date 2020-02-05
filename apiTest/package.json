@@ -1,0 +1,29 @@
+{
+  "name": "api-test",
+  "version": "1.0.0",
+  "private": true,
+  "author": "oliver.wu",
+  "scripts": {
+    "start": "node ./exec-app.js",
+    "build": "webpack --config ./config/webpack.config.js"
+  },
+  "dependencies": {
+    "axios": "~0.19.0",
+    "crypto-js": "~3.1.9-1",
+    "log4js": "~6.1.0",
+    "moment": "~2.24.0",
+    "node-uuid": "~1.4.8",
+    "validator": "~11.1.0",
+    "xml2js": "~0.4.22"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-preset-env": "^1.3.2",
+    "babel-preset-stage-2": "^6.22.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "uglifyjs-webpack-plugin": "^1.1.1",
+    "webpack": "^3.6.0"
+  }
+}
