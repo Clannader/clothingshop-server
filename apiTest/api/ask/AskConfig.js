@@ -38,8 +38,7 @@ class AskConfig {
         this.config.write('configName', configName)
 
         // 询问配置文件里面的节点内容了
-
-        return Promise.reject('1111')
+        return this.askReadConfig()
     }
 
     async createNewConfig() {
@@ -111,7 +110,7 @@ class AskConfig {
                         return '文件名为空'
                     } else if (val === 'config' || val === 'CreateNew') {
                         return `文件名不能为${val}`
-                    }else if (that.configArr.indexOf(val) !== -1) {
+                    } else if (that.configArr.indexOf(val) !== -1) {
                         return '文件名已存在'
                     }
                     return true
@@ -120,6 +119,47 @@ class AskConfig {
         ]
         const name = await inquirer.prompt(promptList).then(name => name)
         return Promise.resolve(name.configName)
+    }
+
+    async askReadConfig() {
+        let url = this.currentConfig.read('url')
+        let userName = this.currentConfig.read('userName')
+        let password = this.currentConfig.read('password')
+        let promptList = null
+        if (CGlobal.isEmpty(url)) {
+            promptList = [
+                {
+                    type: 'input',
+                    message: '输入Url地址',
+                    name: 'url'
+                }
+            ]
+            const inputUrl = await inquirer.prompt(promptList).then(url => url)
+            this.currentConfig.write('url', inputUrl.url)
+        }
+        if (CGlobal.isEmpty(userName)) {
+            promptList = [
+                {
+                    type: 'input',
+                    message: '输入用户名',
+                    name: 'userName'
+                }
+            ]
+            const inputUserName = await inquirer.prompt(promptList).then(name => name)
+            this.currentConfig.write('userName', inputUserName.userName)
+        }
+        if (CGlobal.isEmpty(password)) {
+            promptList = [
+                {
+                    type: 'password',
+                    message: '输入密码',
+                    name: 'password'
+                }
+            ]
+            const inputPassword = await inquirer.prompt(promptList).then(pwd => pwd)
+            this.currentConfig.write('password', inputPassword.password)
+        }
+        return Promise.resolve(this.currentConfig)
     }
 }
 

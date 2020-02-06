@@ -15,7 +15,7 @@ class ApiTestApplication {
     }
 
     async start() {
-        const [err, result] = await this.askConfig.askConfig().then(res => [null, res]).catch(err => [err])
+        const [err, currentConfig] = await this.askConfig.askConfig().then(res => [null, res]).catch(err => [err])
         if (err) {
             console.error(err)
             setTimeout(() => {
@@ -23,6 +23,9 @@ class ApiTestApplication {
             }, 500)
             return
         }
+        // 这里result返回的是当前执行的配置文件对象
+        CGlobal.env['currentConfig'] = currentConfig
+
     }
 }
 

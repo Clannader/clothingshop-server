@@ -5,6 +5,9 @@
 
 class ApiTestBase {
 
+    constructor() {
+
+    }
 }
 
 module.exports = ApiTestBase
