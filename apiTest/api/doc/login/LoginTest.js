@@ -7,6 +7,18 @@ const ApiTestBase = require('../../base/ApiTestBase')
 
 class LoginTest extends ApiTestBase{
 
+    async start() {
+        const [err, result] = await this.api.service.get('/api/test/version', {})
+            .then(result => [null, result]).catch(err => [err])
+        if(err){
+            console.error(err)
+            return
+        }
+        console.log(result)
+        return Promise.resolve({success: 1, fail: 0})
+    }
 }
 
-module.exports = LoginTest
+module.exports = function () {
+    return new LoginTest()
+}
