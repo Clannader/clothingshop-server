@@ -75,6 +75,9 @@ console.log('require globalServer');
     }
 
     CGlobal.prototype = {
+        env: {
+
+        },
         GlobalStatic: globalVariable,
         //替换占位符
         replaceArgs: function () {
