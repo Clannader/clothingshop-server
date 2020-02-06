@@ -16,12 +16,18 @@ const configDirPath = basePath + 'config'
 if (!fs.existsSync(configDirPath)) {
     fs.mkdirSync(configDirPath)
 }
+
 const configFilePath = configDirPath + '/config.ini'
 if (!fs.existsSync(configFilePath)) {
     fs.writeFileSync(configFilePath, '')
 }
 
 require('./api/public/globalServer')
+
+// 这里赋值全局变量
+CGlobal.env['configDirPath'] = configDirPath
+CGlobal.env['configFilePath'] = configFilePath
+CGlobal.env['basePath'] = basePath
 
 const App = require('./api/ApiTestApplication')
 const apiTest = new App()
