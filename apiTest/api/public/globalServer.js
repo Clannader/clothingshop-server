@@ -52,11 +52,26 @@ log4js.configure({
                 type: 'pattern',
                 pattern: '%[[%d{yyyy-MM-dd hh:mm:ss,SSS}] %p %c -%] %m',
             }
+        },
+        apiLogs: {
+            type: 'dateFile',
+            filename: escapePath(process.env.BASE_PATH + 'apiLogs//apiLog_'),
+            alwaysIncludePattern: true,
+            // pattern: new Date().format('yyyy-MM-dd_HHmmss') + '.log',
+            pattern: 'yyyy-MM-dd.log',
+            layout: {
+                type: 'pattern',
+                pattern: '%d{yyyy-MM-dd hh:mm:ss,SSS} [%z] %p %c - %m'
+            }
         }
     },
     categories: {
         default: {
             appenders: ['serverLogs', 'console'],
+            level: 'all'
+        },
+        apiLogs: {
+            appenders: ['apiLogs'],
             level: 'all'
         }
     }

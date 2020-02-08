@@ -8,6 +8,8 @@ class ApiTestBase {
 
     constructor() {
         this.api = new Api()
+        this.success = 0 //成功数
+        this.fail = 0 // 失败数
     }
 }
 
