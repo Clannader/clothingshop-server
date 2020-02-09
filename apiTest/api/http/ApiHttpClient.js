@@ -4,12 +4,13 @@
 'use strict';
 
 const axios = require('axios')
-const CryptoJS = require('crypto-js')
+const log4js = require('log4js')
 
 class ApiHttpClient {
 
     constructor() {
         this.currentConfig = CGlobal.env['currentConfig']
+        this.apiLogs = log4js.getLogger('apiLogs')
         this.init()
     }
 
@@ -31,6 +32,9 @@ class ApiHttpClient {
             req => {
                 req.headers['credential'] = this.currentConfig.read('session') || ''
                 console.log('请求地址:' + req.baseURL + req.url)
+                this.apiLogs.info('请求地址: %s', req.baseURL + req.url)
+                const params = req.params ? req.params : (req.data ? req.data : {})
+                this.apiLogs.info('请求参数: %s', JSON.stringify(params))
                 return req
             },
             error => {
@@ -40,12 +44,17 @@ class ApiHttpClient {
 
         this.service.interceptors.response.use(
             resp => {
+                this.apiLogs.info('返回参数: %s', JSON.stringify(resp.data))
                 return resp.data
             },
             error => {
                 return Promise.reject(error)
             }
         )
+    }
+
+    getHttp() {
+        return this.service
     }
 }
 

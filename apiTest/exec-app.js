@@ -12,7 +12,7 @@ for (let key in config) {
 const basePath = process.env['BASE_PATH']
 const fs = require('fs')
 // 判断是否存在config文件夹
-const configDirPath = basePath + 'config'
+const configDirPath = basePath + '/config'
 if (!fs.existsSync(configDirPath)) {
     fs.mkdirSync(configDirPath)
 }
