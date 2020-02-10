@@ -11,6 +11,14 @@ class ApiTestBase {
         this.success = 0 //成功数
         this.fail = 0 // 失败数
     }
+
+    assertEqual(isSuccess = false) {
+        if (isSuccess) {
+            this.success++
+        }else {
+            this.fail++
+        }
+    }
 }
 
 module.exports = ApiTestBase
