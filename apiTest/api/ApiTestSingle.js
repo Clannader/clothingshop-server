@@ -40,6 +40,8 @@ class ApiTestSingle extends ApiTestBase{
         const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
         this.config.write('session', loginResult.credential)
 
+        console.log('-------------------开始测试-------------------')
+        console.time('耗时')
         const execTestArr = []
         execTestArr.push(this.testLogin1())
         execTestArr.push(this.testLogin2())
@@ -48,6 +50,7 @@ class ApiTestSingle extends ApiTestBase{
 
             console.log('成功: %s', this.success)
             console.log('失败: %s', this.fail)
+            console.timeEnd('耗时')
             setTimeout(() => {
                 process.exit(0)
             }, 500)
@@ -55,12 +58,30 @@ class ApiTestSingle extends ApiTestBase{
 
     }
 
-    testLogin1() {
+    async testLogin1() {
+        const loginParams = {
+            adminId: this.config.read('userName'),
+            adminPws: CryptoJS.sha256(this.config.read('password'))
+        }
+        const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
+        this.assertEqual(loginResult.code === CGlobal.GlobalStatic.ApiCode.Success)
 
+        await this.http.post('/api/user/logout', {}, {
+            headers: {
+                credential: loginResult['credential']
+            }
+        })
+        return ''
     }
 
-    testLogin2() {
-
+    async testLogin2() {
+        const loginParams = {
+            adminId: this.config.read('userName'),
+            adminPws: CryptoJS.sha256('22')
+        }
+        const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
+        this.assertEqual(loginResult.code !== CGlobal.GlobalStatic.ApiCode.Success)
+        return ''
     }
 }
 

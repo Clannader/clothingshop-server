@@ -31,7 +31,9 @@ class ApiHttpClient {
         })
         this.service.interceptors.request.use(
             req => {
-                req.headers['credential'] = this.currentConfig.read('session') || ''
+                req.headers['credential'] = req.headers['credential']
+                    ? req.headers['credential']
+                    : this.currentConfig.read('session') || ''
                 const params = req.params ? req.params : (req.data ? req.data : {})
                 console.log('请求地址:' + req.baseURL + req.url)
                 if (this.print) {
