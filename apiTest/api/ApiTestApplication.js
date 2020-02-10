@@ -30,6 +30,7 @@ class ApiTestApplication {
         // 这里result返回的是当前执行的配置文件对象
         CGlobal.env['currentConfig'] = currentConfig
         this.http = new HttpClient()
+        this.http.setPrint(false)
         this.apiLogs.info('-------------------------API测试开始-------------------------')
         this.apiLogs.info('-------------------------执行时间 %s-------------------------',
             new Date().format('yyyy-MM-dd HH:mm:ss'))
@@ -95,7 +96,7 @@ class ApiTestApplication {
                 success += result.success
                 fail += result.fail
             })
-
+            this.apiLogs.info('-------------------------API测试结果-------------------------')
             this.apiLogs.info('测试总数:%s', success + fail)
             this.apiLogs.info('成功总数:%s', success)
             this.apiLogs.info('失败总数:%s', fail)
