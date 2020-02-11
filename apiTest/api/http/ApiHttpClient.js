@@ -25,8 +25,7 @@ class ApiHttpClient {
             timeout: 30000, // 请求超时设置
             headers: { // 自定义请求头
                 'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'language': 'CN'
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
         this.service.interceptors.request.use(
@@ -34,6 +33,7 @@ class ApiHttpClient {
                 req.headers['credential'] = req.headers['credential']
                     ? req.headers['credential']
                     : this.currentConfig.read('session') || ''
+                req.headers['language'] = req.headers['language'] || 'CN'
                 const params = req.params ? req.params : (req.data ? req.data : {})
                 console.log('请求地址:' + req.baseURL + req.url)
                 if (this.print) {

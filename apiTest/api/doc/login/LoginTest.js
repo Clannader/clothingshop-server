@@ -7,15 +7,15 @@ const ApiTestBase = require('../../base/ApiTestBase')
 
 class LoginTest extends ApiTestBase{
 
-    async start() {
-        const [err, result] = await this.api.service.get('/api/test/version', {})
-            .then(result => [null, result]).catch(err => [err])
-        if(err){
-            console.error(err)
-            return
-        }
-        console.log(result)
-        return Promise.resolve({success: 1, fail: 0})
+    async testVersion() {
+        const versionResult = await this.http.get('/api/test/version', {})
+            .then(result => result)
+        this.assertEqual(versionResult.code === this.apiCode.Success)
+        return versionResult
+    }
+
+    beforeStart() {
+        this.pushTest(this.testVersion())
     }
 }
 

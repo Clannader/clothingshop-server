@@ -23,11 +23,10 @@ class ApiTestSingle extends ApiTestBase{
 
     constructor() {
         super()
-        this.http = this.api.getHttp()
         this.config = CGlobal.env['currentConfig']
     }
 
-    async start() {
+    async beforeStart() {
         // 先登录
         const session = this.config.read('session')
         if (!CGlobal.isEmpty(session)) {
@@ -40,22 +39,23 @@ class ApiTestSingle extends ApiTestBase{
         const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
         this.config.write('session', loginResult.credential)
 
+        this.pushTest(this.testLogin1())
+        this.pushTest(this.testLogin2())
+        this.pushTest(this.testLang1())
+        this.pushTest(this.testLang2())
+
+    }
+
+    async start() {
         console.log('-------------------开始测试-------------------')
         console.time('耗时')
-        const execTestArr = []
-        execTestArr.push(this.testLogin1())
-        execTestArr.push(this.testLogin2())
-        Promise.all(execTestArr).then(async allResult => {
-            console.log(allResult)
 
-            console.log('成功: %s', this.success)
-            console.log('失败: %s', this.fail)
-            console.timeEnd('耗时')
-            setTimeout(() => {
-                process.exit(0)
-            }, 500)
-        })
+        await super.start().then(res => res)
 
+        console.timeEnd('耗时')
+        setTimeout(() => {
+            process.exit(0)
+        }, 500)
     }
 
     async testLogin1() {
@@ -64,7 +64,7 @@ class ApiTestSingle extends ApiTestBase{
             adminPws: CryptoJS.sha256(this.config.read('password'))
         }
         const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
-        this.assertEqual(loginResult.code === CGlobal.GlobalStatic.ApiCode.Success)
+        this.assertEqual(loginResult.code === this.apiCode.Success)
 
         await this.http.post('/api/user/logout', {}, {
             headers: {
@@ -80,10 +80,33 @@ class ApiTestSingle extends ApiTestBase{
             adminPws: CryptoJS.sha256('22')
         }
         const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
-        this.assertEqual(loginResult.code !== CGlobal.GlobalStatic.ApiCode.Success)
+        this.assertEqual(loginResult.code !== this.apiCode.Success)
+        return ''
+    }
+
+    async testLang1() {
+        const langResult = await this.http.get('/api/test/lang', {}, {
+            headers: {
+                'language': 'CN'
+            }
+        }).then(res => res)
+        this.assertEqual(langResult.code === this.apiCode.Success
+            && langResult.lang === 'CN')
+        return ''
+    }
+
+    async testLang2() {
+        const langResult = await this.http.get('/api/test/lang', {
+            headers: {
+                'language': 'EN'
+            }
+        }).then(res => res)
+        this.assertEqual(langResult.code === this.apiCode.Success
+            && langResult.lang === 'EN')
         return ''
     }
 }
+
 
 const api = new ApiTestSingle()
 api.start()

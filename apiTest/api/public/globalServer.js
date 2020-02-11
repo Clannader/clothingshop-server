@@ -60,7 +60,7 @@ log4js.configure({
             // pattern: new Date().format('yyyy-MM-dd_HHmmss'),
             // %f:文件名, %l:行号
             // daysToKeep: 10 //删除10天前的日志
-            pattern: 'yyyy-MM-dd.log',
+            pattern: 'yyyy-MM-dd',
             // 这里有个问题,不知道如何覆盖原文件日志,貌似没有这样选项的设置
             layout: {
                 type: 'pattern',

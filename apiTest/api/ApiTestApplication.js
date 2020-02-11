@@ -40,8 +40,7 @@ class ApiTestApplication {
         // 测试地址是否404
         console.log('-------------------------测试网络-------------------------')
         const notFoundErr = await this.http.getHttp()
-            .get('/api/test/network', {}).then(res => {
-                console.log(res)
+            .get('/api/test/network', {}).then(() => {
                 return null
             }).catch(err => err)
         if (notFoundErr) {
