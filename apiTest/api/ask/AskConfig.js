@@ -23,8 +23,9 @@ class AskConfig {
         if (CGlobal.isEmpty(configName)) {
             configName = await this.createNewConfig().then(name => name)
         } else {
-            // TODO 到时候注释回来
-            // configName = await this.replaceConfig(configName).then(name => name)
+            if (this.config.read('ignore') !== 'true') {
+                configName = await this.replaceConfig(configName).then(name => name)
+            }
         }
         if (configName === 'CreateNew') {
             //询问创建新的配置文件

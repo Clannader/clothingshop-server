@@ -7,9 +7,6 @@ const ApiTestBase = require('../../base/ApiTestBase')
 
 class AdminTest extends ApiTestBase {
 
-    start() {
-        return Promise.resolve({success: 0, fail: 0})
-    }
 }
 
 module.exports = function () {

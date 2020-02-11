@@ -1,7 +1,7 @@
 /**
  * Create by CC on 2019/9/13
  */
-'use strict';
+'use strict'
 
 const axios = require('axios')
 const log4js = require('log4js')
@@ -12,6 +12,7 @@ class ApiHttpClient {
         this.currentConfig = CGlobal.env['currentConfig']
         this.apiLogs = log4js.getLogger('apiLogs')
         this.init()
+        this.print = true
     }
 
     init() {
@@ -24,17 +25,21 @@ class ApiHttpClient {
             timeout: 30000, // 请求超时设置
             headers: { // 自定义请求头
                 'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'language': 'CN'
+                'X-Requested-With': 'XMLHttpRequest'
             }
-        });
+        })
         this.service.interceptors.request.use(
             req => {
-                req.headers['credential'] = this.currentConfig.read('session') || ''
-                console.log('请求地址:' + req.baseURL + req.url)
-                this.apiLogs.info('请求地址: %s', req.baseURL + req.url)
+                req.headers['credential'] = req.headers['credential']
+                    ? req.headers['credential']
+                    : this.currentConfig.read('session') || ''
+                req.headers['language'] = req.headers['language'] || 'CN'
                 const params = req.params ? req.params : (req.data ? req.data : {})
-                this.apiLogs.info('请求参数: %s', JSON.stringify(params))
+                console.log('请求地址:' + req.baseURL + req.url)
+                if (this.print) {
+                    this.apiLogs.info('请求地址: %s', req.baseURL + req.url)
+                    this.apiLogs.info('请求参数: %s', JSON.stringify(params))
+                }
                 return req
             },
             error => {
@@ -44,7 +49,9 @@ class ApiHttpClient {
 
         this.service.interceptors.response.use(
             resp => {
-                this.apiLogs.info('返回参数: %s', JSON.stringify(resp.data))
+                if (this.print) {
+                    this.apiLogs.info('返回参数: %s', JSON.stringify(resp.data))
+                }
                 return resp.data
             },
             error => {
@@ -55,6 +62,10 @@ class ApiHttpClient {
 
     getHttp() {
         return this.service
+    }
+
+    setPrint(print = true) {
+        this.print = print
     }
 }
 
