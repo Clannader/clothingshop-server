@@ -7,6 +7,10 @@ const ApiTestBase = require('../../base/ApiTestBase')
 
 class LoginTest extends ApiTestBase{
 
+    /**
+     * 测试获取API版本
+     * @return {Promise<any>}
+     */
     async testVersion() {
         const versionResult = await this.http.get('/api/test/version', {})
             .then(result => result)
@@ -14,8 +18,24 @@ class LoginTest extends ApiTestBase{
         return versionResult
     }
 
+    /**
+     * 测试登录成功
+     * @return {Promise<void>}
+     */
+    async testLogin() {
+        const result = await this.login('supervisor', 's')
+            .then(result => result)
+        console.log(result['credential'])
+        this.assertEqual(result.code === this.apiCode.Success)
+        if (result.code === this.apiCode.Success) {
+            await this.logout(result['credential'])
+        }
+        return result
+    }
+
     beforeStart() {
         this.pushTest(this.testVersion())
+        this.pushTest(this.testLogin())
     }
 }
 

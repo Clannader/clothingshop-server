@@ -103,7 +103,10 @@ class ApiTestApplication {
             this.apiLogs.info('成功总数:%s', success)
             this.apiLogs.info('失败总数:%s', fail)
             this.apiLogs.info('测试总时间: %s ms', new Date().getTime() - startTime)
-
+            console.log('测试总数:%s', success + fail)
+            console.log('成功总数:%s', success)
+            console.log('失败总数:%s', fail)
+            console.log('耗时:%s ms', new Date().getTime() - startTime)
             // 这里退出
             console.log('-------------------------测试结束退出-------------------------')
             await this.http.getHttp().post('/api/user/logout', {})
