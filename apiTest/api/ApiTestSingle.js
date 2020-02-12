@@ -17,7 +17,6 @@ const path = __dirname + '/../config/local.ini'
 CGlobal.env['currentConfig'] = new Config(path, true)
 
 const ApiTestBase = require('./base/ApiTestBase')
-const CryptoJS = require('crypto.js')
 
 class ApiTestSingle extends ApiTestBase{
 
@@ -30,17 +29,12 @@ class ApiTestSingle extends ApiTestBase{
         // 先登录
         const session = this.config.read('session')
         if (!CGlobal.isEmpty(session)) {
-            await this.http.post('/api/user/logout', {})
+            await this.logout(session)
         }
-        const loginParams = {
-            adminId: this.config.read('userName'),
-            adminPws: CryptoJS.sha256(this.config.read('password'))
-        }
-        const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
+        const loginResult = await this.login(this.config.read('userName'), this.config.read('password'))
+            .then(res => res)
         this.config.write('session', loginResult.credential)
 
-        this.pushTest(this.testLogin1())
-        this.pushTest(this.testLogin2())
         this.pushTest(this.testLang1())
         this.pushTest(this.testLang2())
 
@@ -56,32 +50,6 @@ class ApiTestSingle extends ApiTestBase{
         setTimeout(() => {
             process.exit(0)
         }, 500)
-    }
-
-    async testLogin1() {
-        const loginParams = {
-            adminId: this.config.read('userName'),
-            adminPws: CryptoJS.sha256(this.config.read('password'))
-        }
-        const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
-        this.assertEqual(loginResult.code === this.apiCode.Success)
-
-        await this.http.post('/api/user/logout', {}, {
-            headers: {
-                credential: loginResult['credential']
-            }
-        })
-        return ''
-    }
-
-    async testLogin2() {
-        const loginParams = {
-            adminId: this.config.read('userName'),
-            adminPws: CryptoJS.sha256('22')
-        }
-        const loginResult = await this.http.post('/api/user/login', loginParams).then(res => res)
-        this.assertEqual(loginResult.code !== this.apiCode.Success)
-        return ''
     }
 
     async testLang1() {
