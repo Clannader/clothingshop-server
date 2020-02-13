@@ -102,6 +102,7 @@ log4js.configure({
             filename: escapePath(process.env.BASE_PATH + 'logs//server.log'),
             pattern: 'yyyy-MM-dd',
             level: 'all',
+            // daysToKeep: 10, //删除10天前的日志,感觉没什么用
             alwaysIncludePattern: true,
             layout: {
                 type: 'pattern',

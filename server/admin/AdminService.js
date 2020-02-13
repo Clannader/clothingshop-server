@@ -17,21 +17,21 @@ const AdminService = {
     doLogin(req, res) {
         let aid = req.body['adminId'];
         let password = req.body['adminPws'];
-        Admin.loginSystem(aid, function (err, result) {
-            if (err) return res.send({code: 0, msg: CGlobal.serverLang(err.message)});
+        Admin.loginSystem(req, aid, function (err, result) {
+            if (err) return res.send({code: 0, msg: err.message});
             let admin = result.admin;
             let shop = result.shop;
             let otherInfo = result.otherInfo;
             let msg = '';
             let code = 0;
             if (!admin || admin.password !== password) {
-                msg = CGlobal.serverLang('用户名或密码错误');
+                msg = CGlobal.serverLang(req.lang,'用户名或密码错误', 'admin.invPws');
             } else if (admin.adminStatus === false) {
-                msg = CGlobal.serverLang('用户未激活');
+                msg = CGlobal.serverLang(req.lang,'用户未激活', 'admin.invStatus');
             } else if (!admin.adminType || admin.adminType === CGlobal.GlobalStatic.User_Type.THIRD) {
-                msg = CGlobal.serverLang('第三方用户不能登录系统');
+                msg = CGlobal.serverLang(req.lang,'第三方用户不能登录系统', 'admin.invUser');
             } else if (shop === null) {
-                msg = CGlobal.serverLang('店铺不存在');
+                msg = CGlobal.serverLang(req.lang,'店铺不存在', 'admin.noExistShop');
             }
             if(msg !== ''){
                 return res.send({code: code, msg: msg});
@@ -48,12 +48,12 @@ const AdminService = {
                     //TODO 权限这个也可以每次进来的时候查一遍,避免自己权限被别人更改,没有刷新最新的权限
                     //以后会考虑压缩数据,加密后存库,使用参数控制
                     //还可以避免数据库内存溢出
-                    rights: admin.rights,
+                    // rights: admin.rights,
                     loginTime: currentDate,//这个日期如果在网页显示没有错就可以,如果有错就转格式
                     expires: currentDate.getTime(),//有效期
-                    activeDate: currentDate.getTime(),//活跃时间
+                    // activeDate: currentDate.getTime(),//活跃时间
                     lastTime: admin.loginTime || currentDate,//上次登录时间
-                    language: CGlobal.GlobalLangType,//语言
+                    // language: CGlobal.GlobalLangType,//语言
                     shopId: otherInfo.shopId,//当前登录的店铺ID
                     // shopList: otherInfo.shopList,//该用户能够操作的店铺ID
                     selfShop: otherInfo.selfShop,//用户自己的店铺ID
