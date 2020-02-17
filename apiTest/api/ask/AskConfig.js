@@ -91,7 +91,7 @@ class AskConfig {
             }
         ]
         const result = await inquirer.prompt(promptList)
-        if (result.isCreate) {
+        if (result['isCreate']) {
             //创建文件
             return this.createNewConfig()
         } else {
@@ -120,7 +120,7 @@ class AskConfig {
             }
         ]
         const name = await inquirer.prompt(promptList).then(name => name)
-        return Promise.resolve(name.configName)
+        return Promise.resolve(name['configName'])
     }
 
     async askReadConfig() {

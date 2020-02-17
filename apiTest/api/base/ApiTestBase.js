@@ -6,6 +6,7 @@ const Api = require('../http/ApiHttpClient')
 const execArr = Symbol('execArr')
 const success = Symbol('success')
 const fail = Symbol('fail')
+const CryptoJS = require('crypto.js')
 
 class ApiTestBase {
 
@@ -47,6 +48,27 @@ class ApiTestBase {
 
     pushTest(fun) {
         this[execArr].push(fun || CGlobal.noop())
+    }
+
+    async login(username, pwd) {
+        const loginParams = {
+            adminId: username,
+            adminPws: CryptoJS.sha256(pwd)
+        }
+        const result = await this.http.post('/api/user/login', loginParams)
+            .then(result => result)
+        // this.assertEqual(result.code === this.apiCode.Success)
+        return result
+    }
+
+    async logout(credential) {
+        const result = await this.http.post('/api/user/logout', {}, {
+            headers: {
+                credential: credential
+            }
+        })
+        // this.assertEqual(result.code === this.apiCode.Success)
+        return result
     }
 }
 

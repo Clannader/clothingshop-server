@@ -156,10 +156,14 @@ AdminSchema.statics._errorSearchHandler = function (user, session, cb) {
     }
 };
 
-AdminSchema.statics.loginSystem = function (adminId, callback) {
+AdminSchema.statics.loginSystem = function (req, adminId, callback) {
     //判断aid是否是邮箱地址,因为可以用邮箱地址登录
-    if (!adminId) return callback({message: '用户名不能为空'});
-    if (!adminId.match(CGlobal.GlobalStatic.userNameExp)) return callback({message: '用户名含有非法字符'});
+    if (!adminId) {
+        return callback({message: CGlobal.serverLang(req.lang, '用户名不能为空', 'admin.userName')});
+    }
+    if (!adminId.match(CGlobal.GlobalStatic.userNameExp)){
+        return callback({message: CGlobal.serverLang(req.lang, '用户名含有非法字符', 'admin.invUserName')});
+    }
     let where = {};
     let matches = adminId.match('^(.+)@(.+)$');
     let loginShop = '';
@@ -191,7 +195,7 @@ AdminSchema.statics.loginSystem = function (adminId, callback) {
                 }
                 //登录用户名不是SUPERVISOR
                 else {
-                    return cb({message: '用户名或密码错误'});//让报错不往下走了
+                    return cb({message: CGlobal.serverLang(req.lang, '用户名或密码错误', 'admin.invPws')});//让报错不往下走了
                 }
             });
         },
