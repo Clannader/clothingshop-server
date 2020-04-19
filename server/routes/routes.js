@@ -48,6 +48,7 @@ app.all('/*', function (req, res, next) {
 app.use(require('./h5Routes/login_route'));
 app.use(require('./h5Routes/user_route'));
 app.use(require('./h5Routes/about_cms_route'));
+app.use(require('./h5Routes/rights_route'));
 
 module.exports = app;
 

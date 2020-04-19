@@ -12,6 +12,7 @@ function RightsService() {
 
 }
 
+// 获取权限列表
 RightsService.getRightsList = function (req, res) {
     let session = Utils.getAdminSession(req);
     Rights.getAllRights(req.body, session, function (err, result) {
@@ -19,7 +20,7 @@ RightsService.getRightsList = function (req, res) {
             console.error(err);
             return res.send({code: -1, msg: err.message});
         }
-        res.send(result);
+        res.send({code: 1, rights: result});
     });
 };
 
@@ -71,6 +72,7 @@ RightsService.modifyRights = function (req, res) {
     });
 };
 
+// 获取用户能够设置的权限代码
 RightsService.getRightsCode = function (req, res){
     let adminSession = Utils.getAdminSession(req);
     if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.RightsSetup.code)) {
