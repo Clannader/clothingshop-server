@@ -3,8 +3,8 @@
  */
 'use strict'
 
-let adminUserService = require('../user/AdminUserService')
-const utils = require('../util/Utils')
+const adminUserService = require('../user/AdminUserService')
+const Utils = require('../util/Utils');
 
 function CmsUserService() {
 
@@ -38,8 +38,11 @@ CmsUserService.setupPws = function (req, res) {
     adminUserService.setupPws.apply(this, arguments)
 }
 
-CmsUserService.getUserRoles = function (req, res) {
-    return res.send({code: 1, roles: utils.readConfig('roles')})
+CmsUserService.getUserRoles = async function (req, res) {
+    const session = Utils.getAdminSession(req);
+    const rights = session.rights.join(',')
+    // delete session.rights
+    return res.send({code: 1, roles: rights})
 }
 
 module.exports = CmsUserService

@@ -794,5 +794,17 @@ function setUpPwsLog(user, session) {
     //TODO 这里还有发邮件告知该用户你的密码已被修改
 }
 
+// 这里是内部获取用户信息方法
+AdminSchema.statics._getAdminInfo = function (adminId, shopId, field = {rights: 1}) {
+    return new Promise(((resolve, reject) => {
+        this.findOne({adminId: adminId, shopId: shopId}, field, function (err, user) {
+            if(err){
+                return reject(err)
+            }
+            resolve(user)
+        });
+    }))
+}
+
 conn.model('Admin', AdminSchema);
 module.exports = conn.model('Admin');

@@ -9,5 +9,6 @@ module.exports = {
     invPws: '用户名或密码错误',
     invStatus: '用户未激活',
     invUser: '第三方用户不能登录系统',
-    noExistShop: '店铺不存在'
+    noExistShop: '店铺不存在',
+    errorRights: '获取权限失败'
 }

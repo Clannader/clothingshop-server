@@ -33,7 +33,8 @@ app.all('/*', function (req, res, next) {
     req.aop = {
         startTime: new Date().getTime()
     };
-    req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
+    // 这句话写到了initData.js里面去了
+    // req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
     //重写res.end方法
     let _end = res.end;
     res.end = function (chunk) {

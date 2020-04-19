@@ -11,11 +11,12 @@ function CmsLoginService() {
 }
 
 CmsLoginService.checkCors = function (req, res, next){
-    if(Utils.readConfig('cors') === 'true'){
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', '*');
-    }
+    // 这句话写到了initData.js里面去了
+    // if(Utils.readConfig('cors') === 'true'){
+    //     res.setHeader('Access-Control-Allow-Origin', '*');
+    //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    //     res.setHeader('Access-Control-Allow-Headers', '*');
+    // }
     let method = req.method;
     if('OPTIONS' === method){
         return res.send({});

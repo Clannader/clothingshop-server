@@ -18,7 +18,7 @@ let Rights = {
         , validate: [function (value) {
             return value.length <= 30;
         }, 'Groupname length is more than 30.']
-        , match: CGlobal.GlobalStatic.nameExp
+        , match: CGlobal.GlobalStatic.rightsNameExp
     },//权限组名
     desc: {
         type: String
@@ -308,6 +308,52 @@ RightsSchema.statics.getAllRights = function (searchWhere, session, cb) {
         cb(null, array);
     }).sort(Utils.getSortOrder(searchWhere['sortOrder']));
 };
+
+// 内部方法获取用户的权限集合
+RightsSchema.statics._getAdminRights = function(rights = ''){
+    // 写权限内部获取算法
+    // 权限由于是以,号分隔的,所以先以,变成数组
+    const arrayRights = rights.split(',')
+    // 抽离成3组,字母,数字,带-号的
+    const letterArr = []//字母组
+    const numberArr = []//数字组
+    const lessArr = []//减号组
+    arrayRights.forEach(v => {
+        if(v.match(/^[A-Za-z]+$/)){
+            letterArr.push(v)
+        }else if(v.startsWith('-')){
+            lessArr.push(v)
+        }else if(v.match(/^[0-9]+$/)){
+            numberArr.push(v)
+        }
+    })
+    return new Promise(((resolve, reject) => {
+        const where = {
+            groupName: {
+                $in: letterArr
+            }
+        }
+        this.find(where, {rightsCode: 1}, function (err, result) {
+            if(err){
+                return reject(err)
+            }
+            let rightsArr = []
+            result.forEach(v => {
+                // 数组拼接
+                rightsArr = rightsArr.concat(v.rightsCode.split(','))
+            })
+            // 数组去重复
+            const rightSet = new Set(rightsArr)
+            numberArr.forEach(value => {
+                rightSet.add(value)
+            })
+            lessArr.forEach(value => {
+                rightSet.delete(value.substring(1))
+            })
+            resolve(Array.from(rightSet))
+        })
+    }))
+}
 
 conn.model('Rights', RightsSchema);
 module.exports = conn.model('Rights');

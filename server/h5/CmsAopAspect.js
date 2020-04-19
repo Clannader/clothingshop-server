@@ -66,7 +66,7 @@ class CmsAopAspect {
             //     returnData = JSON.stringify(temp);
             // }
             // createParams.send = returnData;
-
+            // TODO 这里无法清除session中的rights
             createParams.send = res.returnData;
             createParams.date = new Date();
             AdminAccess.create(createParams, function (err) {
