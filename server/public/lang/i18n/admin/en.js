@@ -9,5 +9,6 @@ module.exports = {
     invPws: 'Invalid username or password',
     invStatus: 'Invalid user status',
     invUser: 'Interface users can not login into the system',
-    noExistShop: 'The shop does not exist'
+    noExistShop: 'The shop does not exist',
+    errorRights: 'Failed to obtain permission'
 }
