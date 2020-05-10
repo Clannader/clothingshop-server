@@ -66,7 +66,23 @@ class CmsAopAspect {
             //     returnData = JSON.stringify(temp);
             // }
             // createParams.send = returnData;
-            // TODO 这里无法清除session中的rights
+
+            // 这里无法清除session中的rights
+            // 改用直接操作数据库来弄吧
+            const store = req.sessionStore
+            // const sessions = db.getCollection('sessions')
+            const sessionID = req.sessionID
+            store.get(sessionID, (err, session) => {
+                if(session){
+                    delete session.adminSession.rights
+                    store.set(sessionID, session, err => {
+                        if(err){
+                            console.error(err)
+                        }
+                    })
+                }
+            })
+
             createParams.send = res.returnData;
             createParams.date = new Date();
             AdminAccess.create(createParams, function (err) {

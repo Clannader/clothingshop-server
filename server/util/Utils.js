@@ -273,8 +273,8 @@ Utils.isHasSwaggerHeader = function (req) {
 };
 
 Utils.isHasJsonHeader = function (req) {
-    return req.headers && req.headers['content-type']
-        && req.headers['content-type'] === 'application/json';
+    return req.headers && req.headers['content-type'];
+        // && req.headers['content-type'] === 'application/json';
 };
 
 Utils.isHasSoapHeader = function (req) {

@@ -57,7 +57,7 @@ zlib.directory('config/', 'config');
 // zlib.directory('public/', 'public');
 zlib.directory('server/', 'server');
 // zlib.directory('views/', 'views');
-zlib.directory('apiTest/', 'apiTest');
+// zlib.directory('apiTest/', 'apiTest');
 zlib.file('app.js', { name: 'app.js' });
 zlib.file('app.bat', { name: 'app.bat' });
 zlib.file('cluster_multiple.js', { name: 'cluster_multiple.js' });

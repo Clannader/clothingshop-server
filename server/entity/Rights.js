@@ -286,6 +286,13 @@ RightsSchema.statics.queryAllRights = function (searchWhere, session, cb) {
     this.queryRights(searchWhere, session, cb);
 };
 
+/**
+ *
+ * @param searchWhere {groupName:1}
+ * @param session
+ * @param cb
+ * @return {*}
+ */
 RightsSchema.statics.getAllRights = function (searchWhere, session, cb) {
     if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
         return cb({message:'抱歉,你没有权限访问!'});
