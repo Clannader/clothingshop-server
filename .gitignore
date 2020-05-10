@@ -70,6 +70,7 @@ typings/
 /.settings/
 /public/
 /views/
+/tempUpload/
 selenium-debug.log
 
 # Editor directories and files

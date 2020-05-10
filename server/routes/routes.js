@@ -50,6 +50,7 @@ app.use(require('./h5Routes/login_route'));
 app.use(require('./h5Routes/user_route'));
 app.use(require('./h5Routes/about_cms_route'));
 app.use(require('./h5Routes/rights_route'));
+app.use(require('./h5Routes/upload_route'));// 上传文件路由
 
 module.exports = app;
 
