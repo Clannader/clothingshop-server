@@ -41,7 +41,7 @@ app.all('/*', function (req, res, next) {
         res.returnData = chunk + '';
         return _end.apply(this, Array.prototype.slice.apply(arguments));
     };
-    Aspect.logAspect(req, res);
+    // Aspect.logAspect(req, res);
     next();
 });
 
