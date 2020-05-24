@@ -282,6 +282,14 @@ Utils.isHasSoapHeader = function (req) {
     return xmlHeader && xmlHeader.indexOf('xml') !== -1;
 };
 
+Utils.stringToBase64 = function (str = '') {
+    return Buffer.from(str).toString('base64')
+}
+
+Utils.base64ToString = function (base64) {
+    return Buffer.from(base64, 'base64').toString()
+}
+
 //Utils读关于CMS的配置,因为无法在全局函数初始化,只能在这里初始化了
 //给全局对象新增字段值
 //因为这些值是读配置的,配置类又得先加载全局类,所以只能这里加了- -

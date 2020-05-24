@@ -4,12 +4,18 @@
 'use strict'
 
 const multer = require('multer')
-const Utils = require('../util/Utils');
+const Utils = require('../util/Utils')
+const fs = require('fs')
+const uploadDirPath = CGlobal.isEmpty(Utils.readConfig('uploadDir'))
+    ? 'tempUpload' : Utils.readConfig('uploadDir')
+if (!fs.existsSync(process.env.BASE_PATH + uploadDirPath)) {
+    fs.mkdirSync(process.env.BASE_PATH + uploadDirPath)
+}
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // 设置保存的路径
-        cb(null, Utils.readConfig('uploadDir'))
+        cb(null, uploadDirPath)
     },
     filename: function (req, file, cb) {
         // 修改上传时,保存的文件名
@@ -38,7 +44,7 @@ const limits = {
 const fileUpload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: limits,
+    // limits: limits,
     preservePath: false
 })
 
@@ -69,6 +75,11 @@ class FileUploadService {
             }
             return res.send({code: 1, msg: '上传成功'})
         })
+    }
+
+    static get8SEPdf(req, res) {
+        const pdfStr = fs.readFileSync(process.env.BASE_PATH+ '/tempUpload/8SE.pdf')
+        return res.send({code: 1, pdf: Utils.stringToBase64(pdfStr)})
     }
 }
 
