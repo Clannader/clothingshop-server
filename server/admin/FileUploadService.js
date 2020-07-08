@@ -78,7 +78,8 @@ class FileUploadService {
     }
 
     static get8SEPdf(req, res) {
-        const pdfStr = fs.readFileSync(process.env.BASE_PATH+ '/tempUpload/8SE.pdf')
+        const num = req.body.num
+        const pdfStr = fs.readFileSync(process.env.BASE_PATH+ `/tempUpload/${num}.pdf`)
         return res.send({code: 1, pdf: Utils.stringToBase64(pdfStr)})
     }
 }
