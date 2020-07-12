@@ -68,8 +68,6 @@ typings/
 /test/unit/coverage/
 /test/e2e/reports/
 /.settings/
-/public/
-/views/
 /tempUpload/
 selenium-debug.log
 
