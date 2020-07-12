@@ -5,7 +5,8 @@
   "author": "oliver.wu",
   "scripts": {
     "start": "node ./app.js",
-    "build": "webpack --config ./config/webpack.config.js"
+    "build": "webpack --config ./config/webpack.config.js",
+    "update": "npm uninstall all"
   },
   "dependencies": {
     "async": "~3.1.0",

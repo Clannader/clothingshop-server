@@ -15,6 +15,6 @@ app.get('/index$', AboutCmsService.gotoIndex);
 app.get('/index/*', AboutCmsService.gotoIndex);
 
 // 设置代理转发到CMBGAPI
-app.post('/cms/h5/cmbg-api/na/statistic/report/print_with_condition', AboutCmsService.gotoNaReport)
+app.post('/cms/h5/api/file/pdf/test', AboutCmsService.gotoNaReport)
 
 module.exports = app;
