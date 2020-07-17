@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([["chunk-2d20f934"],{b3e2:function(e,n,t){"use strict";t.r(n);var r={name:"Monitor"},u=t("2877"),i=Object(u.a)(r,(function(){var e=this.$createElement,n=this._self._c||e;return n("div",[n("router-view")],1)}),[],!1,null,null,null);n.default=i.exports}}]);
