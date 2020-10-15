@@ -272,7 +272,7 @@ Utils.isHasSwaggerHeader = function (req) {
         && req.headers['swagger-ui'] === 'SwaggerUI';
 };
 
-Utils.isHasJsonHeader = function (req) {
+Utils.isHasJsonHeader = function (/*req*/) {
     return true
     // return req.headers && req.headers['content-type'];
         // && req.headers['content-type'] === 'application/json';

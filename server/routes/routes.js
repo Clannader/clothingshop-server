@@ -22,6 +22,7 @@ app.all('/*', function (req, res, next) {
         req.body = JSON.parse(nodeXss(JSON.stringify(req.body)));
     }
 
+    // 其实这里这个语言类型已经没有用了
     CGlobal.GlobalLangType = req.headers['language'] || CGlobal.GlobalStatic.CN;
 
     if(Utils.readConfig('printUrl') === 'true'){
@@ -41,7 +42,7 @@ app.all('/*', function (req, res, next) {
         res.returnData = chunk + '';
         return _end.apply(this, Array.prototype.slice.apply(arguments));
     };
-    // Aspect.logAspect(req, res);
+    Aspect.logAspect(req, res);
     next();
 });
 
