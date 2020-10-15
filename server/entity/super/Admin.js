@@ -287,6 +287,28 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
 }
 
 /**
+ * 获取用户能操作的酒店列表
+ * 这个应该使用内存缓存来搞
+ */
+AdminSchema.statics.getOperaShopList = function(session) {
+  let listWhere = {}
+  if (session.adminType === CGlobal.GlobalStatic.User_Type.SYSTEM) {
+    if (!CGlobal.isSupervisor(session)) {
+      listWhere.supplierCode = {$in: session.supplierCode.split(',')}
+    }
+  } else {
+    listWhere.shopId = session.shopId
+  }
+  // console.log(listWhere)
+  return new Promise(((resolve, reject) => {
+    Shop.find(listWhere, {_id: 0, shopId: 1, shopName: 1, supplierCode: 1}, (err, result) => {
+      if (err) reject(err)
+      resolve(result)
+    })
+  }))
+}
+
+/**
  * 通过adminId和shopId查询对应的用户
  * @param adminId
  * @param shopId

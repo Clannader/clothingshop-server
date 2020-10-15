@@ -46,7 +46,8 @@ const AdminService = {
       req.session.adminSession = {
         adminId: admin.adminId,
         adminName: admin.adminName,
-        //TODO 权限这个也可以每次进来的时候查一遍,避免自己权限被别人更改,没有刷新最新的权限
+        adminType: admin.adminType,
+        //权限这个也可以每次进来的时候查一遍,避免自己权限被别人更改,没有刷新最新的权限
         //以后会考虑压缩数据,加密后存库,使用参数控制
         //还可以避免数据库内存溢出
         // rights: admin.rights,
