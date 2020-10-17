@@ -9,6 +9,7 @@ const conn = require('../dao/daoConnection')
 const Rights = conn.getEntity('Rights')
 const Admin = conn.getEntity('Admin')
 const Utils = require('../util/Utils')
+const adminInfoCache = require('../util/cache/AdminInfoCache')
 
 const initAdminInfo = async function (req, res, next) {
     req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
@@ -47,6 +48,11 @@ const initAdminInfo = async function (req, res, next) {
             msg: CGlobal.serverLang(req.lang, '获取权限失败', 'admin.errorRights')})
     }
     adminSession.rights = rights
+
+    // 新增获取用户能操作的酒店列表
+    const shopList = await adminInfoCache.getOperaShopList(adminSession)
+    adminSession.shopList = shopList['shopList'] || []
+    // console.log(adminSession.shopList)
     next()
 }
 
