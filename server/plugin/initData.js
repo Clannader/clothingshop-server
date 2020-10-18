@@ -50,8 +50,8 @@ const initAdminInfo = async function (req, res, next) {
     adminSession.rights = rights
 
     // 新增获取用户能操作的酒店列表
-    const shopList = await adminInfoCache.getOperaShopList(adminSession)
-    adminSession.shopList = shopList['shopList'] || []
+    const shopListResult = await adminInfoCache.getOperaShopList(adminSession)
+    adminSession.shopList = shopListResult['shopList'] || []
     // console.log(adminSession.shopList)
     next()
 }
