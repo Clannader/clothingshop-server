@@ -7,7 +7,7 @@ let Schema = require('mongoose').Schema
 let dao = require('../dao/daoConnection')
 let conn = dao.getConnection()
 let AdminLog = require('./super/AdminLog')
-let async = require('async')
+// let async = require('async')
 let Utils = require('../util/Utils')
 let Rights = {
   groupName: {
@@ -18,7 +18,7 @@ let Rights = {
     , validate: [function (value) {
       return value.length <= 30
     }, 'Groupname length is more than 30.']
-    , match: CGlobal.GlobalStatic.rightsNameExp
+    // , match: CGlobal.GlobalStatic.rightsNameExp // TODO 暂时不知道什么原因,新建权限组校验失败
   },//权限组名
   desc: {
     type: String
@@ -35,12 +35,17 @@ let Rights = {
 }
 let RightsSchema = new Schema(Rights)
 
-RightsSchema.statics.deleteRights = function (id, session, cb) {
+RightsSchema.statics.deleteRights = function (req, session, cb) {
+  const id = req.body.id
+  if (CGlobal.isEmpty(id)) {
+    return cb({message: CGlobal.serverLang(req.lang, '权限ID不能为空', 'rightsGroup.idEmpty')})
+  }
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: '抱歉,你没有权限访问!'})
+    return cb({message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)})
   }
   if (!Utils.isMongoId(id)) {
-    return cb({message: '无效的id值'})
+    return cb({message: CGlobal.serverLang(req.lang, '无效的ID值', 'rightsGroup.invID')})
   }
   // this.findByIdAndRemove(id, function (err, right) {
   //     if (err) return cb(err);
@@ -55,18 +60,18 @@ RightsSchema.statics.deleteRights = function (id, session, cb) {
   //     });
   //     cb(err, right);
   // });
-
+  // TODO 新增判断不能删除固定权限组
   let that = this
   this.findById(id, function (err, right) {
     if (err) return cb(err)
-    if (!right) return cb({message: '权限组已不存在'})
+    if (!right) return cb({message: CGlobal.serverLang(req.lang, '权限组不存在', 'rightsGroup.noExistGroup')})
     if (!isAllowUpdate(session.rights, right.rightsCode)) {
-      return cb({message: '你没有权限删除该权限组!'})
+      return cb({message: CGlobal.serverLang(req.lang, '你没有权限删除该权限组!', 'rightsGroup.noDeleteGroup')})
     }
-    that.remove({_id: id}, function (err) {
+    that.deleteOne({_id: id}, function (err) {
       AdminLog.createLog({
         userName: session.adminId,
-        content: CGlobal.serverLang('删除 {0} 权限组', right.groupName),
+        content: CGlobal.serverLang(req.lang, '删除 {0} 权限组', 'rightsGroup.delLogRights', right.groupName),
         shopId: session.shopId,
         type: CGlobal.GlobalStatic.Log_Type.Right
       }, session, function (err) {
@@ -207,34 +212,34 @@ function isAllowUpdate(userRights, rightsCode) {
   return flag
 }
 
-RightsSchema.statics.deleteMultipleRights = function (ids, session, cb) {
-  if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: '抱歉,你没有权限访问!'})
-  }
-  if (!Array.isArray(ids)) return cb({message: 'The param ids is not Array.'})
-  let that = this
-  let errRes = []//失败的结果数和原因
-  let successCount = 0//成功的结果数
-  async.eachOfSeries(ids, function (value, key, callback) {
-    that.deleteRights(value, session, function (err) {
-      if (err) {
-        let index = key + 1 - successCount
-        errRes.push(index + '):' + CGlobal.serverLang(err.message))
-      } else {
-        successCount++
-      }
-      callback()
-    })
-  }, function () {
-    let result = []
-    result.push(CGlobal.serverLang('删除失败:{0}个', errRes.length))
-    if (errRes.length !== 0) {
-      result.push(CGlobal.serverLang('失败原因:{0}{1}', '<br>', errRes.join('<br>')))
-    }
-    result.push(CGlobal.serverLang('成功删除:{0}个', successCount))
-    cb(null, result.join('<br>'))
-  })
-}
+// RightsSchema.statics.deleteMultipleRights = function (ids, session, cb) {
+//   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
+//     return cb({message: '抱歉,你没有权限访问!'})
+//   }
+//   if (!Array.isArray(ids)) return cb({message: 'The param ids is not Array.'})
+//   let that = this
+//   let errRes = []//失败的结果数和原因
+//   let successCount = 0//成功的结果数
+//   async.eachOfSeries(ids, function (value, key, callback) {
+//     that.deleteRights(value, session, function (err) {
+//       if (err) {
+//         let index = key + 1 - successCount
+//         errRes.push(index + '):' + CGlobal.serverLang(err.message))
+//       } else {
+//         successCount++
+//       }
+//       callback()
+//     })
+//   }, function () {
+//     let result = []
+//     result.push(CGlobal.serverLang('删除失败:{0}个', errRes.length))
+//     if (errRes.length !== 0) {
+//       result.push(CGlobal.serverLang('失败原因:{0}{1}', '<br>', errRes.join('<br>')))
+//     }
+//     result.push(CGlobal.serverLang('成功删除:{0}个', successCount))
+//     cb(null, result.join('<br>'))
+//   })
+// }
 
 RightsSchema.statics.findRightById = function (req, session, cb) {
   let id = req.body.id
@@ -253,6 +258,7 @@ RightsSchema.statics.findRightById = function (req, session, cb) {
     if (err) {
       return cb(err)
     }
+    // 如果权限不存在或者该权限不能给当前用户编辑,则提示权限不存在
     if (!result || !isAllowUpdate(session.rights, result.rightsCode)) {
       return cb({message: CGlobal.serverLang(req.lang, '权限组不存在', 'rightsGroup.noExistGroup')})
     }
@@ -314,6 +320,7 @@ RightsSchema.statics.getAllRights = function (req, session, cb) {
   }
   let userRights = session.rights
   // 这里如果以后有优化,那就返回指定自定给前端
+  // TODO 这里估计要考虑一下权限组的排序问题,把新增的权限组排到前面去
   const field = {groupName: 1, rightsCode: 1, desc: 1}
   this.find(where, field, function (err, result) {
     if (err) return cb(err)

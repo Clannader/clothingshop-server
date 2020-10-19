@@ -82,17 +82,50 @@ TestSchema.statics.groupFind = function (cb) {
   ], cb)
 }
 
+// 通过类型分组,查询每种类型最大的floorNo
+TestSchema.statics.groupBy = function (cb) {
+  this.aggregate([
+    {
+      $group: {
+        _id: {type: "$type"},
+        floorNo: {$max: "$floorNo"},
+        // books: {$push: "$$ROOT"}
+      }
+    },
+    // {
+    //   $addFields: {
+    //     totalCopies: {$sum: "$books.floorNo"}
+    //   }
+    // },
+    // {
+    //   $project: {
+    //     _id: 0, // 去掉_id
+    //     type: '$_id.type', // 给_id另起一个名字叫type
+    //     floorNo: 1,
+    //     books: 1,
+    //     // totalCopies: 1
+    //   }
+    // }
+  ], cb)
+}
+
 conn.model('Test', TestSchema)
 
 const AppTest = conn.model('Test', TestSchema)
 
-AppTest.find((err, res) => {
-  // console.log(res)
-})
+// AppTest.find((err, res) => {
+//   console.log(res)
+// })
 
-AppTest.groupFind((err, res) => {
-  console.log(err)
-  console.log(JSON.stringify(res))
-})
+// AppTest.groupFind((err, res) => {
+//   console.log(err)
+//   console.log(JSON.stringify(res))
+// })
 
+AppTest.groupBy((err, res) => {
+  if (err) console.error(err)
+  else {
+    console.log(JSON.stringify(res))
+  }
+})
 

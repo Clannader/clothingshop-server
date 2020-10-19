@@ -6,8 +6,8 @@
 console.log('require AdminService')
 const db = require('../dao/daoConnection')
 const Admin = db.getEntity('Admin')
-const Shop = db.getEntity('Shop')
-const AdminAccess = db.getEntity('AdminAccess')
+// const Shop = db.getEntity('Shop')
+// const AdminAccess = db.getEntity('AdminAccess')
 const signature = require('cookie-signature')
 
 const Utils = require('../util/Utils')
