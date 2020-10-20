@@ -6,8 +6,8 @@
 console.log('require AdminService')
 const db = require('../dao/daoConnection')
 const Admin = db.getEntity('Admin')
-const Shop = db.getEntity('Shop')
-const AdminAccess = db.getEntity('AdminAccess')
+// const Shop = db.getEntity('Shop')
+// const AdminAccess = db.getEntity('AdminAccess')
 const signature = require('cookie-signature')
 
 const Utils = require('../util/Utils')
@@ -25,6 +25,9 @@ const AdminService = {
     let otherInfo = result.otherInfo
     let msg = ''
     let code = 0
+    // 1.新增用户密码输错次数
+    // 2.新增用户锁定时间
+    // 3.新增用户有限期使用时间
     if (!admin || admin.password !== password) {
       msg = CGlobal.serverLang(req.lang, '用户名或密码错误', 'admin.invPws')
     } else if (admin.adminStatus === false) {

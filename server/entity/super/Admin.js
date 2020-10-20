@@ -314,9 +314,9 @@ AdminSchema.statics.getOperaShopList = function(session) {
  * @param shopId
  * @param callback
  */
-AdminSchema.statics.searchAdmin = function (adminId, shopId, callback) {
+AdminSchema.statics.searchAdmin = function (req, adminId, shopId) {
   if (shopId !== 'SYSTEM') adminId = adminId + '@' + shopId
-  this.loginSystem(adminId, callback)
+  return this.loginSystem(req, adminId)
 }
 
 /**
