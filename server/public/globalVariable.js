@@ -33,6 +33,7 @@ let staticVal = {
         USER: 'User'
     },
     userNameExp: /^[\w\u4e00-\u9fa5\@\.]+$/,
+    rightsNameExp: /^[A-Za-z]+$/,
     mailExp: /^[\w\.\-]+@[\w]+((\.[\w]{2,3}){1,2})$/,
     nameExp: /^[\w\u4e00-\u9fa5]+$/,
     codeExp: /^[\w]+$/,
