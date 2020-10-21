@@ -77,9 +77,9 @@ RightsService.modifyRights = function (req, res) {
 RightsService.getRightsCode = function (req, res) {
   let adminSession = Utils.getAdminSession(req)
   if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.RightsSetup.code)) {
-    return res.send([])
+    return res.send({code: 1, rightsCode: []})
   }
-  return res.send(Utils.getRightsArray(adminSession))
+  return res.send({code: 1, rightsCode: Utils.getRightsArray(req.lang, adminSession)})
 }
 
 module.exports = RightsService
