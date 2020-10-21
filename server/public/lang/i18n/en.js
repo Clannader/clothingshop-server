@@ -4,7 +4,8 @@
 'use strict'
 
 const admin = require('./admin/en')
+const rightsManager = require('./rightsManager/en')
 
 module.exports = {
-    admin
+    admin, rightsManager
 }

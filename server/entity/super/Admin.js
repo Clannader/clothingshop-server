@@ -72,6 +72,16 @@ let Admin = {
   },//管理员的状态,false时不可登录
   createUser: {
     type: String//创建这个用户的人
+  },
+  retryNumber: {
+    type: Number,// 密码错误次数
+    default: 0
+  },
+  lockTime: {
+    type: Date // 用户被锁定时间
+  },
+  expireTime: {
+    type: Date // 用户有效期
   }
 }
 let AdminSchema = new Schema(Admin)

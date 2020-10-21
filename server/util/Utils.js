@@ -136,14 +136,13 @@ Utils.getIgnoreCase = function (name, mode) {
   return {$regex: '^' + name + '$', $options: 'i'}
 }
 
-Utils.getRightsArray = function (session) {
+Utils.getRightsArray = function (lang, session) {
   let rightsData = []
   CGlobal.forEach(CGlobal.Rights, function (i, v) {
-    if ((session.rights === CGlobal.GlobalStatic.Supervisor_Rights
-        || session.rights.indexOf(v.code) !== -1) && v.scope === 'ALL') {
+    if (session.rights.indexOf(v.code) !== -1) {
       rightsData.push({
-        code: v.code + '',
-        desc: CGlobal.serverLang(v.desc)
+        code: v.code,
+        desc: CGlobal.serverLang(lang, v.desc, 'rightsManager.' + v.code)
       })
     }
   })
