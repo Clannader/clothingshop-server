@@ -199,7 +199,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         that.findOne(where, function (err, adminObj) {
           if (err) return cb(err)
           if (adminObj) return cb(null, JSON.parse(JSON.stringify(adminObj)))
-          if (CGlobal.isSupervisor({adminId: adminId})) {
+          if (CGlobal.isSupervisor({adminId: adminId, orgRights: ''})) {
             that.create(Utils.getSuper(), function (err) {
               cb(err, Utils.getSuper())
             })
