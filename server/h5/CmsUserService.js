@@ -42,7 +42,11 @@ CmsUserService.getUserRoles = async function (req, res) {
     const session = Utils.getAdminSession(req);
     const rights = session.rights.join(',')
     // delete session.rights
-    return res.send({code: 1, roles: rights})
+    return res.send({
+        code: 1,
+        roles: rights,
+        session: Utils.getTemplateSession(session)
+    })
 }
 
 module.exports = CmsUserService

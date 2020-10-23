@@ -43,6 +43,10 @@ let staticVal = {
     sessionSecret: '123456cms',
     interfaceHeader: 'CMS-Interface',
     sequenceType: ['MESSAGE','ROOMNO'],
-    baseUrl: '/index'
+    baseUrl: '/index',
+    tripleDES: {
+        key: 'ClothingShop',
+        iv: '8890880'
+    }
 };
 module.exports = staticVal;

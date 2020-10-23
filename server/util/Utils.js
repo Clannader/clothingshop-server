@@ -45,6 +45,28 @@ Utils.sha1 = function (str, key) {
   return CryptoJS.SHA1(str).toString()
 }
 
+Utils.tripleDESencrypt = function (str = '') {
+  // 3DES加密算法
+  const key = CryptoJS.enc.Utf8.parse(CGlobal.GlobalStatic.tripleDES.key)
+  const encryptAction = CryptoJS.TripleDES.encrypt(str, key, {
+    iv: CryptoJS.enc.Utf8.parse(CGlobal.GlobalStatic.tripleDES.iv),
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  return encryptAction.toString()
+}
+
+Utils.tripleDESdecrypt = function (str = '') {
+  // 3DES解密算法
+  const key = CryptoJS.enc.Utf8.parse(CGlobal.GlobalStatic.tripleDES.key)
+  const decryptAction = CryptoJS.TripleDES.decrypt(str, key, {
+    iv: CryptoJS.enc.Utf8.parse(CGlobal.GlobalStatic.tripleDES.iv),
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  return decryptAction.toString(CryptoJS.enc.Utf8)
+}
+
 //复杂加密密码
 Utils.complexEncryption = function (userid, userPws) {
   //128位太多了,使用64位的
@@ -106,6 +128,19 @@ Utils.getAdminSession = function (req) {
     return userCache.getUserCache(cacheKey)
   } else {
     return null
+  }
+}
+
+Utils.getTemplateSession = function (session) {
+  return {
+    adminId: session.adminId,
+    adminName: session.adminName,
+    adminType: session.adminType,
+    lastTime: session.lastTime,
+    shopId: session.shopId,
+    selfShop: session.selfShop,
+    supplierCode: session.supplierCode,
+    shopName: session.shopName
   }
 }
 
