@@ -65,11 +65,11 @@ module.exports.getModelNames = function () {
  * @param condition 查询条件
  * @param field 返回字段
  * @param sort 排序方式
- * @param skip 跳过几条
+ * @param skip 跳过几条 现在变成传第几页过来
  * @param limit 查询几条
  * @param cb 回调函数
  */
-module.exports.getPageQuery = function (name, condition, field, sort, skip, limit, cb) {
+module.exports.getPageQuery = function (name, condition, field, sort, skip = 1, limit, cb) {
     let entity = that.getEntity(name);
     let c = condition, f = field, st = {}, sp = skip, lt = limit;
     if(CGlobal.isPlainObject(sort)){
@@ -97,19 +97,20 @@ module.exports.getPageQuery = function (name, condition, field, sort, skip, limi
             lt = 'ALL';
         }
         let _limit = 30;
-        entity.count(c, function (err, total) {
+        entity.countDocuments(c, function (err, total) {
             if (err)return cb(err);
             if (lt === 'ALL'){
                 _limit = total;
             }else {
                 _limit = lt;
             }
+            sp = (sp - 1) < 0 ? 0 : (sp - 1) * _limit
             return entity.find(c, f, function (err, result) {
                 cb(err, {
                     total: total,
                     rows: result
                 });
-            }).sort(st).skip(parseInt(sp || 0)).limit(parseInt(_limit));
+            }).sort(st).skip(sp).limit(parseInt(_limit));
         });
     }
 };
