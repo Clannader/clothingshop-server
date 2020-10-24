@@ -44,8 +44,10 @@ RightsSchema.statics.deleteRights = function (req, session, cb) {
     return cb({message: CGlobal.serverLang(req.lang, '权限ID不能为空', 'rightsGroup.idEmpty')})
   }
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
-          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)})
+    return cb({
+      message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)
+    })
   }
   if (!Utils.isMongoId(id)) {
     return cb({message: CGlobal.serverLang(req.lang, '无效的ID值', 'rightsGroup.invID')})
@@ -99,8 +101,10 @@ RightsSchema.statics.createRights = function (req, session, cb) {
   delete data.id
   let that = this
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
-          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)})
+    return cb({
+      message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)
+    })
   }
   this.checkRightsInfo(req, data, session, function (err) {
     if (err) return cb(err)
@@ -155,8 +159,10 @@ RightsSchema.statics.modifyRights = function (req, session, cb) {
   let data = req.body
   let that = this
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
-          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)})
+    return cb({
+      message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)
+    })
   }
   this.checkRightsInfo(req, data, session, function (err) {
     if (err) return cb(err)
@@ -182,7 +188,7 @@ RightsSchema.statics.modifyRights = function (req, session, cb) {
         const text = CGlobal.serverLang(req.lang, '编辑', 'rightsGroup.modifyText')
         return cb({message: CGlobal.serverLang(req.lang, '默认权限组无法{0}!', 'rightsGroup.defaultRightsGroup', text)})
       }
-      that.update({_id: id}, {$set: data}, function (err) {
+      that.updateOne({_id: id}, {$set: data}, function (err) {
         contrastRights(req, data, oldRights, session)
         cb(err, oldRights)
       })
@@ -203,7 +209,7 @@ function contrastRights(req, newRights, oldRights, session) {
   CGlobal.forEach(chartRights, function (key, value) {
     if (newRights[key] !== oldRights[key]) {
       content.push(CGlobal.replaceArgs('{0}:{1}->{2}.'
-          , CGlobal.serverLang(req.lang, value, 'rightsGroup.'+key), oldRights[key] || 'null', newRights[key] || 'null'))
+          , CGlobal.serverLang(req.lang, value, 'rightsGroup.' + key), oldRights[key] || 'null', newRights[key] || 'null'))
     }
   })
 
@@ -223,7 +229,7 @@ function contrastRights(req, newRights, oldRights, session) {
 //比较该用户是否能操作改权限组
 function isAllowUpdate(userRights, rightsCode) {
   //如果用户的权限代码不能包含编辑的权限代码,就不能修改这个权限组
-  if (userRights === CGlobal.GlobalStatic.Supervisor_Rights) return true
+  // if (userRights === CGlobal.GlobalStatic.Supervisor_Rights) return true
   let codeArray = rightsCode.split(',')
   let flag = true
   codeArray.forEach(function (value) {
@@ -273,8 +279,10 @@ RightsSchema.statics.findRightById = function (req, session, cb) {
     return cb({message: CGlobal.serverLang(req.lang, '无效的ID值', 'rightsGroup.invID')})
   }
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
-          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)})
+    return cb({
+      message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)
+    })
   }
   const field = {groupName: 1, rightsCode: 1, desc: 1}
   this.findById(id, field, function (err, result) {
@@ -289,7 +297,7 @@ RightsSchema.statics.findRightById = function (req, session, cb) {
   })
 }
 
-RightsSchema.statics.queryRights = function (searchWhere, session, cb) {
+/*RightsSchema.statics.queryRights = function (searchWhere, session, cb) {
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
     return cb({message: '抱歉,你没有权限访问!'})
   }
@@ -321,7 +329,7 @@ RightsSchema.statics.queryAllRights = function (searchWhere, session, cb) {
   searchWhere['pageSize'] = 'ALL'
   searchWhere['offset'] = '0'
   this.queryRights(searchWhere, session, cb)
-}
+}*/
 
 /**
  *
@@ -333,30 +341,52 @@ RightsSchema.statics.queryAllRights = function (searchWhere, session, cb) {
 RightsSchema.statics.getAllRights = function (req, session, cb) {
   const searchWhere = req.body
   if (!CGlobal.isPermission(session.rights, CGlobal.Rights.RightsSetup.code)) {
-    return cb({message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
-            , 'admin.noRights', CGlobal.Rights.RightsSetup.code)})
+    return cb({
+      message: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.RightsSetup.code)
+    })
   }
-  let groupName = searchWhere['groupName']
-  let where = {}//查询条件
+  const groupName = searchWhere['groupName']
+  const where = {}//查询条件
   if (groupName) {
     where.groupName = Utils.getIgnoreCase(groupName, true)
   }
-  let userRights = session.rights
+  const userRights = session.rights
   // 这里如果以后有优化,那就返回指定自定给前端
-  // TODO 这里估计要考虑一下权限组的排序问题,把新增的权限组排到前面去
+  // TODO 这里估计要考虑一下权限组的排序问题,把默认的权限组排到前面去
   const field = {groupName: 1, rightsCode: 1, desc: 1}
-  this.find(where, field, function (err, result) {
+  const offset = searchWhere['offset']
+  const pageSize = 'ALL'/*searchWhere['pageSize']*/
+  const sortOrder = searchWhere['sortOrder'] || {}
+  // this.find(where, field, function (err, result) {
+  //   if (err) return cb(err)
+  //   // if (userRights === CGlobal.GlobalStatic.Supervisor_Rights) return cb(null, result)
+  //   if (CGlobal.isSupervisor(session)) return cb(null, result)
+  //   let array = []
+  //   result.forEach(function (value) {
+  //     if (isAllowUpdate(userRights, value.rightsCode)) {
+  //       array.push(value)
+  //     }
+  //   })
+  //   cb(null, array)
+  // }).sort(Utils.getSortOrder(searchWhere['sortOrder']))
+  // where.$where = 'return this.rightsCode.length > 10'
+  dao.getPageQuery('Rights', where, field, sortOrder, offset, pageSize, function (err, result) {
     if (err) return cb(err)
     // if (userRights === CGlobal.GlobalStatic.Supervisor_Rights) return cb(null, result)
     if (CGlobal.isSupervisor(session)) return cb(null, result)
     let array = []
-    result.forEach(function (value) {
+    // const orgLen = result.rows.length
+    result.rows.forEach(function (value) {
       if (isAllowUpdate(userRights, value.rightsCode)) {
         array.push(value)
       }
     })
-    cb(null, array)
-  }).sort(Utils.getSortOrder(searchWhere['sortOrder']))
+    result.rows = array
+    result.total = array.length
+    // result.total = result.total - (orgLen - result.rows.length)
+    cb(null, result)
+  })
 }
 
 // 内部方法获取用户的权限集合
