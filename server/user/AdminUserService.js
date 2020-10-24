@@ -5,7 +5,7 @@
 console.log('require AdminUserService')
 let dao = require('../dao/daoConnection')
 let Admin = dao.getEntity('Admin')
-let Shop = dao.getEntity('Shop')
+// let Shop = dao.getEntity('Shop')
 
 let Utils = require('../util/Utils')
 
