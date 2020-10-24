@@ -32,6 +32,7 @@ const AdminService = {
     let retryNumber = admin.retryNumber || 0
     let lockTime = admin.lockTime
     const expireTime = admin.expireTime
+    let expireMsg = undefined // 用户准备过期时返回提示
     // 1.新增用户密码输错次数
     // 2.新增用户锁定时间
     // 3.新增用户有限期使用时间
@@ -71,8 +72,20 @@ const AdminService = {
         msg = CGlobal.serverLang(req.lang, '第三方用户不能登录系统', 'admin.invUser')
       } else if (shop === null) {
         msg = CGlobal.serverLang(req.lang, '店铺不存在', 'admin.noExistShop')
-      } else if (!CGlobal.isEmpty(expireTime) && moment(expireTime).isBefore(moment())) {
-        msg = CGlobal.serverLang(req.lang, '该用户已过期', 'admin.expireTime')
+      } else if (!CGlobal.isEmpty(expireTime)) {
+        if (moment(expireTime).isBefore(moment())) {
+          msg = CGlobal.serverLang(req.lang, '该用户已过期', 'admin.expireTime')
+        } else {
+          // 计算距离过期还有多少天
+          const diffDays = moment(expireTime).diff(moment(), 'days')
+          if (diffDays >=1 && diffDays <= 3) {
+            expireMsg = CGlobal.serverLang(req.lang, '该用户还有 {0} 天过期,请尽快联系管理员'
+                , 'admin.expireMsg', diffDays)
+          } else if (diffDays === 0) {
+            expireMsg = CGlobal.serverLang(req.lang, '该用户今天即将到期,请尽快联系管理员'
+                , 'admin.expireTodayMsg')
+          }
+        }
       }
     }
 
@@ -120,8 +133,17 @@ const AdminService = {
       let json = {
         code: 1,
         credential: 's:' + signature.sign(
-            req.sessionID, CGlobal.GlobalStatic.sessionSecret)
+            req.sessionID, CGlobal.GlobalStatic.sessionSecret),
+        expireMsg: expireMsg,
+        session: Utils.getTemplateSession(req.session.adminSession)
       }
+      // 临时输出免登录地址
+      const key = Utils.tripleDESencrypt(JSON.stringify({
+        credential: json.credential
+      }))
+      // console.log(Utils.tripleDESdecrypt(key))
+      const url = 'http://localhost:9800/#/home?key=' + encodeURIComponent(key)
+      console.log(url)
       res.send(json)
     })
 

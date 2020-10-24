@@ -47,7 +47,9 @@ const initAdminInfo = async function (req, res, next) {
         return res.send({code: 0,
             msg: CGlobal.serverLang(req.lang, '获取权限失败', 'admin.errorRights')})
     }
-    adminSession.rights = rights
+    adminSession.rights = rights // 这个是换算后的权限列表,都是数字组成
+    adminSession.orgRights = adminRights // 这个是用户原始的权限代码
+    adminSession.sessionID = req.sessionID
 
     // 新增获取用户能操作的酒店列表
     const shopListResult = await adminInfoCache.getOperaShopList(adminSession)

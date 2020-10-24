@@ -199,7 +199,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         that.findOne(where, function (err, adminObj) {
           if (err) return cb(err)
           if (adminObj) return cb(null, JSON.parse(JSON.stringify(adminObj)))
-          if (CGlobal.isSupervisor({adminId: adminId})) {
+          if (CGlobal.isSupervisor({adminId: adminId, orgRights: ''})) {
             that.create(Utils.getSuper(), function (err) {
               cb(err, Utils.getSuper())
             })
@@ -331,11 +331,12 @@ AdminSchema.statics.searchAdmin = function (req, adminId, shopId) {
 
 /**
  * 通过查询条件分页查询用户
- * @param searchWhere
+ * @param req
  * @param session
  * @param cb
  */
-AdminSchema.statics.queryAdmins = function (searchWhere, session, cb) {
+AdminSchema.statics.queryAdmins = function (req, session, cb) {
+  const searchWhere = req.body
   let input = searchWhere['input'] || ''
   let where = {
     $or: [], $and: []
@@ -406,6 +407,7 @@ AdminSchema.statics.queryAdmins = function (searchWhere, session, cb) {
   let offset = searchWhere['offset']
   let pageSize = searchWhere['pageSize']
   let sortOrder = searchWhere['sortOrder']
+  // TODO 这里还是取1比较好
   let fields = {password: 0, loginTime: 0, rights: 0, usedPws: 0}
   dao.getPageQuery('Admin', where, fields, sortOrder, offset, pageSize, cb)
 }

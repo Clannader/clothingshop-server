@@ -121,21 +121,21 @@ ShopSchema.statics.findShopIdListByUser = function (session, cb) {
     });
 };
 
-ShopSchema.statics.findShopList = function (session, cb) {
-    let field = {_id: 0, shopId: 1, shopName: 1, supplierCode: 1};
-    let where = {};
-    if (session.selfShop === 'SYSTEM') {
-        if (!CGlobal.isSupervisor(session)) {
-            where.supplierCode = {$in: session.supplierCode.split(',')};
-        }
-    } else {
-        where.shopId = Utils.getIgnoreCase(session.shopId);
-    }
-    this.find(where, field, function (err, result) {
-        if (err) return cb(err, []);
-        cb(null, result);
-    });
-};
+// ShopSchema.statics.findShopList = function (session, cb) {
+//     let field = {_id: 0, shopId: 1, shopName: 1, supplierCode: 1};
+//     let where = {};
+//     if (session.selfShop === 'SYSTEM') {
+//         if (!CGlobal.isSupervisor(session)) {
+//             where.supplierCode = {$in: session.supplierCode.split(',')};
+//         }
+//     } else {
+//         where.shopId = Utils.getIgnoreCase(session.shopId);
+//     }
+//     this.find(where, field, function (err, result) {
+//         if (err) return cb(err, []);
+//         cb(null, result);
+//     });
+// };
 
 ShopSchema.statics.queryShop = function (searchWhere, session, cb) {
     if (!CGlobal.isPermission(session.rights, CGlobal.Rights.ShopSetup.code)) {

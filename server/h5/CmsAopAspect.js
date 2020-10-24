@@ -76,6 +76,8 @@ class CmsAopAspect {
         if (session) {
           delete session.adminSession.rights
           delete session.adminSession.shopList
+          delete session.adminSession.sessionID
+          delete session.adminSession.orgRights
           store.set(sessionID, session, err => {
             if (err) {
               console.error(err)

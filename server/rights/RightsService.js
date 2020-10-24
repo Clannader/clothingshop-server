@@ -20,7 +20,7 @@ RightsService.getRightsList = function (req, res) {
       console.error(err)
       return res.send({code: -1, msg: err.message})
     }
-    res.send({code: 1, rights: result})
+    res.send({code: 1, rights: result.rows, total: result.total})
   })
 }
 
