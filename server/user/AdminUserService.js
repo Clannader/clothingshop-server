@@ -18,7 +18,7 @@ AdminUserService.getUsersList = function (req, res) {
   Admin.queryAdmins(req, session, function (err, result) {
     if (err) {
       console.error(err)
-      return res.send({code: -1, msg: err.message})
+      return res.send({code: 0, msg: err.message})
     }
     res.send({code: 1, users: result.rows, total: result.total})
   })

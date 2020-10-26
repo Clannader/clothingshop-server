@@ -341,7 +341,7 @@ AdminSchema.statics.searchAdmin = function (req, adminId, shopId) {
  */
 AdminSchema.statics.queryAdmins = function (req, session, cb) {
   const searchWhere = req.body
-  let input = searchWhere['input'] || ''
+  let input = searchWhere['cond'] || ''
   let where = {
     $or: [], $and: []
   }//查询条件
@@ -411,8 +411,8 @@ AdminSchema.statics.queryAdmins = function (req, session, cb) {
   let offset = searchWhere['offset']
   let pageSize = searchWhere['pageSize']
   let sortOrder = searchWhere['sortOrder']
-  // TODO 这里还是取1比较好
-  let fields = {password: 0, loginTime: 0, rights: 0, usedPws: 0}
+  let fields = {adminId: 1, adminName: 1, adminType: 1,
+    shopId: 1, rights: 1, email: 1, supplierCode: 1, loginTime: 1, adminStatus: 1, createUser: 1}
   dao.getPageQuery('Admin', where, fields, sortOrder, offset, pageSize, cb)
 }
 
