@@ -78,6 +78,7 @@ class CmsAopAspect {
           delete session.adminSession.shopList
           delete session.adminSession.sessionID
           delete session.adminSession.orgRights
+          delete session.adminSession.isFirstLogin
           store.set(sessionID, session, err => {
             if (err) {
               console.error(err)

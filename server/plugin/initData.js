@@ -27,7 +27,8 @@ const initAdminInfo = async function (req, res, next) {
     }
     let field = {
         adminId: 1,
-        rights: 1
+        rights: 1,
+        isFirstLogin: 1
     }
     let adminInfo = await Admin._getAdminInfo(adminSession.adminId, adminSession.selfShop, field)
         .then(res => res).catch(err => {
@@ -50,6 +51,8 @@ const initAdminInfo = async function (req, res, next) {
     adminSession.rights = rights // 这个是换算后的权限列表,都是数字组成
     adminSession.orgRights = adminRights // 这个是用户原始的权限代码
     adminSession.sessionID = req.sessionID
+    adminSession.isFirstLogin = CGlobal.isEmpty(adminInfo.isFirstLogin) ? true : adminInfo.isFirstLogin
+    adminSession.lang = req.lang
 
     // 新增获取用户能操作的酒店列表
     const shopListResult = await adminInfoCache.getOperaShopList(adminSession)

@@ -82,6 +82,10 @@ let Admin = {
   },
   expireTime: {
     type: Date // 用户有效期
+  },
+  isFirstLogin: {
+    type: Boolean, // 新增用户默认true,设置用户密码时变成true,判断用户是否是第一次登录
+    default: true // 则需要修改密码
   }
 }
 let AdminSchema = new Schema(Admin)
@@ -337,7 +341,7 @@ AdminSchema.statics.searchAdmin = function (req, adminId, shopId) {
  */
 AdminSchema.statics.queryAdmins = function (req, session, cb) {
   const searchWhere = req.body
-  let input = searchWhere['input'] || ''
+  let input = searchWhere['cond'] || ''
   let where = {
     $or: [], $and: []
   }//查询条件
@@ -407,8 +411,8 @@ AdminSchema.statics.queryAdmins = function (req, session, cb) {
   let offset = searchWhere['offset']
   let pageSize = searchWhere['pageSize']
   let sortOrder = searchWhere['sortOrder']
-  // TODO 这里还是取1比较好
-  let fields = {password: 0, loginTime: 0, rights: 0, usedPws: 0}
+  let fields = {adminId: 1, adminName: 1, adminType: 1,
+    shopId: 1, rights: 1, email: 1, supplierCode: 1, loginTime: 1, adminStatus: 1, createUser: 1}
   dao.getPageQuery('Admin', where, fields, sortOrder, offset, pageSize, cb)
 }
 
@@ -821,7 +825,7 @@ AdminSchema.statics.setupPws = function (data, session, cb) {
 function setUpPwsLog(user, session) {
   AdminLog.createLog({
     userName: session.adminId,
-    content: CGlobal.serverLang('设置 {0} 用户的密码', user.adminId),
+    content: CGlobal.serverLang(session.lang, '设置 {0} 用户的密码', 'admin.setupPwd', user.adminId),
     shopId: user.shopId,
     type: CGlobal.GlobalStatic.Log_Type.USER
   }, session, function (err) {
@@ -838,6 +842,46 @@ AdminSchema.statics._getAdminInfo = function (adminId, shopId, field = {rights: 
         return reject(err)
       }
       resolve(user)
+    })
+  }))
+}
+
+AdminSchema.statics.changePassword = async function (req, session) {
+  const params = req.body
+  const oldPwd = params.oldPwd
+  const newPwd = params.newPwd
+  if (CGlobal.isEmpty(oldPwd)) {
+    return Promise.reject({message: CGlobal.serverLang(req.lang, '旧密码不能为空', 'admin.inputOldPwd')})
+  }
+  if (CGlobal.isEmpty(newPwd)) {
+    return Promise.reject({message: CGlobal.serverLang(req.lang, '新密码不能为空', 'admin.inputNewPwd')})
+  }
+  const adminInfo = await this._getAdminInfo(session.adminId, session.selfShop
+      , {password: 1, usedPws: 1, shopId: 1, adminId: 1}).then(result => result).catch(() => null)
+  if (!adminInfo) {
+    return Promise.reject({message: CGlobal.serverLang(req.lang, '该用户不存在', 'admin.noExistAdmin')})
+  }
+  const usedPws = adminInfo.usedPws//用户使用过的密码
+  if (adminInfo.password !== oldPwd) {
+    return Promise.reject({message: CGlobal.serverLang(req.lang, '旧密码不正确', 'admin.errorOldPwd')})
+  }
+  if (CGlobal.inArray(newPwd, usedPws) !== -1) {
+    return Promise.reject({message: CGlobal.serverLang(req.lang, '该密码已被使用过', 'admin.usedPwd')})
+  }
+  usedPws.push(newPwd)
+  if (usedPws.length > 3) {
+    usedPws.splice(0, 1)
+  }
+  let setData = {
+    password: newPwd,
+    usedPws: usedPws,
+    isFirstLogin: false
+  }
+  return new Promise(((resolve, reject) => {
+    this.updateOne({_id: adminInfo._id}, {$set: setData}, function (err) {
+      if (err) reject(err)
+      setUpPwsLog(adminInfo, session)
+      resolve()
     })
   }))
 }

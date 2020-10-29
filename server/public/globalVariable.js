@@ -45,7 +45,7 @@ let staticVal = {
     sequenceType: ['MESSAGE','ROOMNO'],
     baseUrl: '/index',
     tripleDES: {
-        key: 'ClothingShop',
+        key: 'ClothingShopClothingShopClothingShopClothingShopClothingShopAAAA',
         iv: '8890880'
     }
 };

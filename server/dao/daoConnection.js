@@ -14,9 +14,10 @@ let opt = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+  useFindAndModify: false
   // server:{
-  reconnectInterval: 10 * 1000,//1分钟重连一次数据库
-  reconnectTries: 100//尝试重连100次
+  // reconnectInterval: 10 * 1000,//1分钟重连一次数据库
+  // reconnectTries: 100//尝试重连100次
   // }
 }
 let conn = mongoose.createConnection(Utils.readConfig('db_url'), opt)
