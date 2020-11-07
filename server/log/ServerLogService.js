@@ -19,26 +19,41 @@ ServerLogService.searchLogs = function (req, res) {
           , 'admin.noRights', CGlobal.Rights.ServerLogs.code)
     })
   }
-  let dirs = fs.readdirSync(logpath, 'UTF-8')
-  let result = []
-  dirs.forEach(function (value) {
-    result.push({
-      name: value
-    })
-  })
-  res.send({code: 1, logs: result})
+  const dirs = fs.readdirSync(logpath, 'UTF-8')
+      .map(value => {
+        const time = fs.statSync(logpath + '/' + value).birthtimeMs // 取创建的时间
+        return {
+          name: value,
+          time: time,
+          date: CGlobal.dateFormat(time, 'YYYY-MM-DD')
+        }
+      })
+      .sort((t1, t2) => {
+        return t2.time - t1.time
+      })
+  // let result = []
+  // dirs.forEach(function (value) {
+  //   result.push({
+  //     name: value
+  //   })
+  // })
+  res.send({code: 1, logs: dirs})
 }
 
 ServerLogService.downloadLogs = function (req, res) {
   let logName = req.body.logName
   if (!logName) {
-    return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '日志文件名不能为空!'
-          , 'serverLog.logNameIsEmpty')})
+    return res.send({
+      code: 0, msg: CGlobal.serverLang(req.lang, '日志文件名不能为空!'
+          , 'serverLog.logNameIsEmpty')
+    })
   }
   let adminSession = Utils.getAdminSession(req)
   if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.ServerLogs.code)) {
-    return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
-          , 'admin.noRights', CGlobal.Rights.ServerLogs.code)})
+    return res.send({
+      code: 0, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+          , 'admin.noRights', CGlobal.Rights.ServerLogs.code)
+    })
   }
   //TODO 这里做成每次只读10M文件,当前端用户看到底部时,再加载10M
   //使用流来读文件
