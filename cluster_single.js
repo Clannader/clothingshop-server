@@ -236,6 +236,7 @@ function startHTTP() {
         //打印log
         console.log(CGlobal.logLang('clothingshop:server HTTP启动成功,{0} IP地址为:{1}', bind, ip || 'localhost'));
         console.timeEnd('HTTP service start time is');
+        console.log('界面访问 http://%s:%s/index', 'localhost', addr.port);
         // console.log('Node 界面访问 http://%s:%s/superLogin', hostname, addr.port);
         // console.log('Vue 界面访问 http://%s:%s/v-index', hostname, addr.port);
         // console.log('Angular 界面访问 http://%s:%s/ng-index', hostname, addr.port);
@@ -309,7 +310,7 @@ function startHTTPS() {
         console.log(CGlobal.logLang('clothingshop:server HTTPS启动成功,{0} IP地址为:{1}', bind, ip || 'localhost'));
         console.timeEnd('HTTPS service start time is');
         // console.log('Node 界面访问 https://%s:%s/superLogin', hostname, addr.port);
-        console.log('界面访问 https://%s:%s/index', hostname, addr.port);
+        // console.log('界面访问 https://%s:%s/index', hostname, addr.port);
         // console.log('Angular 界面访问 https://%s:%s/ng-index', hostname, addr.port);
     }
 }
