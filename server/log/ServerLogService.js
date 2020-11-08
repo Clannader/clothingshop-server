@@ -60,8 +60,8 @@ ServerLogService.downloadLogs = function (req, res) {
   // 1.下载文件判断大小,超过大小的,按最末尾的下载最大文件回去
   // 2.该方法兼容查看的api
   // 3.判断文件是否存在
-  const startByte = req.body.startByte
-  const endByte = req.body.endByte
+  let startByte = req.body.startByte
+  let endByte = req.body.endByte
 
   // Begin 这个写法虽然可以按照开始结束符读取文件,但是无法知道文件的总大小,有点坑爹
   const options = {
@@ -81,10 +81,41 @@ ServerLogService.downloadLogs = function (req, res) {
   stream.on('end', function () {
     // 读取文件结束时,查一下文件的总大小
     const fsStat = fs.statSync(logpath + '/' + logName)
+    startByte = endByte + 1 // 这里返回给前端下一次加载的开始位
+    endByte += 1024
+    // 判断bufferArr的最后一位是否是乱码,否则不返回
+    const lastChar = bufferArr.substr(bufferArr.length - 1, bufferArr.length)
+    if (lastChar === '�') {
+      // 这里占了1个位数
+      bufferArr = bufferArr.substr(0, bufferArr.length - 1)
+      // 这里确实有需要研究一下,因为中文在utf-8里面占用3个字节
+      // 然后满3位的时候可以变成真的中文,但是满1位或者2位的时候,会变成�
+      // 然后这时候bufferArr里面的�,并不知道是占了2位还是1位,所以才导致了
+      // 有时候要减2位或者1位的情况
+      /**
+       * 中文汉字：
+         字节数 : 2;编码：GB2312
+         字节数 : 2;编码：GBK
+         字节数 : 2;编码：GB18030
+         字节数 : 1;编码：ISO-8859-1
+         字节数 : 3;编码：UTF-8
+         字节数 : 4;编码：UTF-16
+         字节数 : 2;编码：UTF-16BE
+         字节数 : 2;编码：UTF-16LE
+       */
+      startByte -= 2
+    }
+    const firstChar = bufferArr.substr(0, 1)
+    if (firstChar === '�') {
+      // 如果startByte减多了1,就会导致第一个是乱码,去掉即可
+      bufferArr = bufferArr.substr(1)
+    }
     res.send({
       code: 1,
       content: Utils.stringToBase64(bufferArr),
-      hasMore: fsStat.size > endByte
+      hasMore: fsStat.size > endByte,
+      startByte: startByte,
+      endByte: endByte
     })
   })
 
