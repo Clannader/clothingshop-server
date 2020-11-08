@@ -23,12 +23,13 @@ ServerLogService.searchLogs = function (req, res) {
       .map(value => {
         const time = fs.statSync(logpath + '/' + value).birthtimeMs // 取创建的时间
         return {
-          name: value,
-          time: time,
-          date: CGlobal.dateFormat(time, 'YYYY-MM-DD')
+          name: value, // 文件名
+          time: time, // 创建日期的时间戳
+          date: CGlobal.dateFormat(time, 'YYYY-MM-DD') // 返回标准格式日期
         }
       })
       .sort((t1, t2) => {
+        // 按创建日期倒叙
         return t2.time - t1.time
       })
   // let result = []
@@ -55,14 +56,49 @@ ServerLogService.downloadLogs = function (req, res) {
           , 'admin.noRights', CGlobal.Rights.ServerLogs.code)
     })
   }
-  //TODO 这里做成每次只读10M文件,当前端用户看到底部时,再加载10M
   //使用流来读文件
-  fs.readFile(logpath + '/' + logName, function (err, text) {
-    if (err) return res.send({code: 0, msg: err.message})
-    res.send({code: 1, content: Utils.stringToBase64(text + '')})
+  // 1.下载文件判断大小,超过大小的,按最末尾的下载最大文件回去
+  // 2.该方法兼容查看的api
+  // 3.判断文件是否存在
+  const startByte = req.body.startByte
+  const endByte = req.body.endByte
+
+  // Begin 这个写法虽然可以按照开始结束符读取文件,但是无法知道文件的总大小,有点坑爹
+  const options = {
+    encoding: 'UTF-8'
+  }
+  if (!CGlobal.isEmpty(startByte) && !CGlobal.isEmpty(endByte)) {
+    options.start = startByte
+    options.end = endByte
+  }
+  const stream = fs.createReadStream(logpath + '/' + logName, options)
+  let bufferArr = ''
+  stream.on('data', function (chunk) {
+    bufferArr += chunk
   })
+
+  stream.on('end', function () {
+    const fsStat = fs.statSync(logpath + '/' + logName)
+    res.send({
+      code: 1,
+      content: Utils.stringToBase64(bufferArr),
+      hasMore: fsStat.size > endByte
+    })
+  })
+
+  stream.on('error', function (err) {
+    res.send({code: 0, msg: err.message})
+  })
+  // End
+
+  // 读取文件
+  // fs.readFile(logpath + '/' + logName, function (err, text) {
+  //   if (err) return res.send({code: 0, msg: err.message})
+  //   res.send({code: 1, content: Utils.stringToBase64(text + '')})
+  // })
 }
 
+// 服务器日志不能删除,所以该方法注掉
 // ServerLogService.deleteLogs = function (req, res) {
 //   let logname = req.body.logname
 //   if (!logname) {
