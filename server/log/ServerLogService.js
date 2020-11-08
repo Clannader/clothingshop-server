@@ -74,10 +74,12 @@ ServerLogService.downloadLogs = function (req, res) {
   const stream = fs.createReadStream(logpath + '/' + logName, options)
   let bufferArr = ''
   stream.on('data', function (chunk) {
+    // 这里也很坑爹,根本无法返回buffer对象,但是其他fs的方法读文件就能返回
     bufferArr += chunk
   })
 
   stream.on('end', function () {
+    // 读取文件结束时,查一下文件的总大小
     const fsStat = fs.statSync(logpath + '/' + logName)
     res.send({
       code: 1,
