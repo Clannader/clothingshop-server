@@ -67,7 +67,9 @@ ServerLogService.downloadLogs = function (req, res) {
   const options = {
     encoding: 'UTF-8'
   }
-  if (!CGlobal.isEmpty(startByte) && !CGlobal.isEmpty(endByte)) {
+  const isView = !CGlobal.isEmpty(startByte) && !CGlobal.isEmpty(endByte)
+  // 这里为了兼容下载,判断是否为空
+  if (isView) {
     options.start = startByte
     options.end = endByte
   }
@@ -81,19 +83,21 @@ ServerLogService.downloadLogs = function (req, res) {
   stream.on('end', function () {
     // 读取文件结束时,查一下文件的总大小
     const fsStat = fs.statSync(logpath + '/' + logName)
-    startByte = endByte + 1 // 这里返回给前端下一次加载的开始位
-    endByte += 1024
-    // 判断bufferArr的最后一位是否是乱码,否则不返回
-    const lastChar = bufferArr.substr(bufferArr.length - 1, bufferArr.length)
-    if (lastChar === '�') {
-      // 这里占了1个位数
-      bufferArr = bufferArr.substr(0, bufferArr.length - 1)
-      // 这里确实有需要研究一下,因为中文在utf-8里面占用3个字节
-      // 然后满3位的时候可以变成真的中文,但是满1位或者2位的时候,会变成�
-      // 然后这时候bufferArr里面的�,并不知道是占了2位还是1位,所以才导致了
-      // 有时候要减2位或者1位的情况
-      /**
-       * 中文汉字：
+    const hasMore = fsStat.size > endByte
+    if (isView) {
+      startByte = endByte + 1 // 这里返回给前端下一次加载的开始位
+      endByte += 10 * 1024
+      // 判断bufferArr的最后一位是否是乱码,否则不返回
+      const lastChar = bufferArr.substr(bufferArr.length - 1, bufferArr.length)
+      if (lastChar === '�') {
+        // 这里占了1个位数
+        bufferArr = bufferArr.substr(0, bufferArr.length - 1)
+        // 这里确实有需要研究一下,因为中文在utf-8里面占用3个字节
+        // 然后满3位的时候可以变成真的中文,但是满1位或者2位的时候,会变成�
+        // 然后这时候bufferArr里面的�,并不知道是占了2位还是1位,所以才导致了
+        // 有时候要减2位或者1位的情况
+        /**
+         * 中文汉字：
          字节数 : 2;编码：GB2312
          字节数 : 2;编码：GBK
          字节数 : 2;编码：GB18030
@@ -102,18 +106,19 @@ ServerLogService.downloadLogs = function (req, res) {
          字节数 : 4;编码：UTF-16
          字节数 : 2;编码：UTF-16BE
          字节数 : 2;编码：UTF-16LE
-       */
-      startByte -= 2
-    }
-    const firstChar = bufferArr.substr(0, 1)
-    if (firstChar === '�') {
-      // 如果startByte减多了1,就会导致第一个是乱码,去掉即可
-      bufferArr = bufferArr.substr(1)
+         */
+        startByte -= 2
+      }
+      const firstChar = bufferArr.substr(0, 1)
+      if (firstChar === '�') {
+        // 如果startByte减多了1,就会导致第一个是乱码,去掉即可
+        bufferArr = bufferArr.substr(1)
+      }
     }
     res.send({
       code: 1,
       content: Utils.stringToBase64(bufferArr),
-      hasMore: fsStat.size > endByte,
+      hasMore: hasMore,
       startByte: startByte,
       endByte: endByte
     })
