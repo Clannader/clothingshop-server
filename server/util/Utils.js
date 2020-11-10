@@ -326,6 +326,17 @@ Utils.base64ToString = function (base64) {
   return Buffer.from(base64, 'base64').toString()
 }
 
+/**
+ * 获取文件大小的文本值
+ */
+Utils.getFileSize = function (val = 0) {
+  if (val === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(val) / Math.log(k))
+  return (val / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i]
+}
+
 //Utils读关于CMS的配置,因为无法在全局函数初始化,只能在这里初始化了
 //给全局对象新增字段值
 //因为这些值是读配置的,配置类又得先加载全局类,所以只能这里加了- -

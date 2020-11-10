@@ -21,11 +21,12 @@ ServerLogService.searchLogs = function (req, res) {
   }
   const dirs = fs.readdirSync(logpath, 'UTF-8')
       .map(value => {
-        const time = fs.statSync(logpath + '/' + value).birthtimeMs // 取创建的时间
+        const stat = fs.statSync(logpath + '/' + value)
         return {
           name: value, // 文件名
-          time: time, // 创建日期的时间戳
-          date: CGlobal.dateFormat(time, 'YYYY-MM-DD') // 返回标准格式日期
+          time: stat.birthtimeMs, // 创建日期的时间戳 // 取创建的时间
+          size: Utils.getFileSize(stat.size),
+          date: CGlobal.dateFormat(stat.birthtimeMs, 'YYYY-MM-DD') // 返回标准格式日期
         }
       })
       .sort((t1, t2) => {
