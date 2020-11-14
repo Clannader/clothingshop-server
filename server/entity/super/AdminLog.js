@@ -71,11 +71,12 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
     })
   }
   let searchWhere = req.query
-  let input = searchWhere['input'] || ''
+  let input = searchWhere['cond'] || ''
   let shopId = searchWhere.shopId
   let adminId = searchWhere.adminId
   let type = searchWhere.type || 'ALL'
-  let date = searchWhere.date
+  let startDate = searchWhere.startDate
+  const endDate = searchWhere.endDate
   let where = {
     $or: [], $and: []
   }//查询条件
@@ -125,16 +126,26 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
     })
   }
 
-  if (date) {
+  if (!CGlobal.isEmpty(startDate)) {
     where.$and.push({
       date: {
-        $gte: date
+        $gte: startDate
+      }
+    })
+  }
+  if (!CGlobal.isEmpty(endDate)) {
+    where.$and.push({
+      date: {
+        $lte: endDate
       }
     })
   }
   let offset = searchWhere['offset']
   let pageSize = searchWhere['pageSize']
-  let sortOrder = searchWhere['sortOrder']
+  let sortOrder = searchWhere['sortOrder'] || {
+    sort: 'date',
+    order: 'desc'
+  }
 
   if (!CGlobal.isSupervisor(session) && session.shopId === 'SYSTEM') {
     where.$and.push({
