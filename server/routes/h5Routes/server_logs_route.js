@@ -3,11 +3,14 @@
  */
 'use strict'
 
-let express = require('express')
-let app = express.Router()
-let serverLogsService = require('../../log/ServerLogService')
+const express = require('express')
+const app = express.Router()
+const serverLogsService = require('../../log/ServerLogService')
+const userLogsService = require('../../log/UserLogService')
 
 app.get('/cms/h5/api/logs/server/search', serverLogsService.searchLogs)
 app.post('/cms/h5/api/logs/server/download', serverLogsService.downloadLogs)
+
+app.get('/cms/h5/api/logs/user/search', userLogsService.getUserLogsList)
 
 module.exports = app
