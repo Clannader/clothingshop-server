@@ -485,6 +485,10 @@ console.log('require globalServer');
 
             for (let i = 0; i < objectAProperties.length; i++) {
                 propName = objectAProperties[i]
+                // 这里暂时排除__ob__
+                if (propName === '__ob__') {
+                    continue
+                }
                 if (this.inArray(propName, objectBProperties) > -1) {
                     let isObj = this.isPlainObject(objA[propName]) && this.isPlainObject(objB[propName])
                     let isArr = Array.isArray(objA[propName]) && Array.isArray(objB[propName])
