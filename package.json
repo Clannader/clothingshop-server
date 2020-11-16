@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./app.js",
     "build": "webpack --config ./config/webpack.config.js",
-    "update": "npm uninstall all"
+    "update": "npm uninstall all",
+    "start:api": "node ./apiTest/exec-app.js",
+    "build:api": "webpack --config ./apiTest/config/webpack.config.js"
   },
   "dependencies": {
     "async": "~3.2.0",
@@ -22,6 +24,7 @@
     "express-session": "~1.17.1",
     "helmet": "~4.1.1",
     "iconv-lite": "~0.6.2",
+    "inquirer": "^7.3.3",
     "log4js": "~6.3.0",
     "moment": "~2.29.1",
     "mongoose": "~5.10.11",

@@ -5,7 +5,7 @@
 
 const AskConfig = require('./ask/AskConfig')
 const log4js = require('log4js')
-const CryptoJS = require('crypto.js')
+const CryptoJS = require('crypto-js')
 const HttpClient = require('./http/ApiHttpClient')
 
 class ApiTestApplication {
@@ -64,7 +64,7 @@ class ApiTestApplication {
         console.log('-------------------------测试登录-------------------------')
         const loginParams = {
             adminId: currentConfig.read('userName'),
-            adminPws: CryptoJS.sha256(currentConfig.read('password'))
+            adminPws: CryptoJS.SHA256(currentConfig.read('password')).toString()
         }
         const loginResult = await this.http.getHttp().post('/api/user/login', loginParams).then(res => res)
         // 校验用户名密码是否正确

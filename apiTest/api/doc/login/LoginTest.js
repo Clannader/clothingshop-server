@@ -23,7 +23,7 @@ class LoginTest extends ApiTestBase{
      * @return {Promise<void>}
      */
     async testLogin() {
-        const result = await this.login('supervisor', 's')
+        const result = await this.login('supervisor', 'a')
             .then(result => result)
         console.log(result['credential'])
         this.assertEqual(result.code === this.apiCode.Success)
