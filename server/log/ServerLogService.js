@@ -1,11 +1,12 @@
 'use strict'
 console.log('require ServerLogService')
 
-let Utils = require('../util/Utils')
-let fs = require('fs')
-let logpath = process.env.BASE_PATH + 'logs'
-// let conn = require('../dao/daoConnection')
-// let AdminLog = conn.getEntity('AdminLog')
+const Utils = require('../util/Utils')
+const fs = require('fs')
+const logpath = process.env.BASE_PATH + 'logs'
+const moment = require('moment')
+const conn = require('../dao/daoConnection')
+const AdminLog = conn.getEntity('AdminLog')
 
 class ServerLogService {
   static getAllLogs() {
@@ -149,24 +150,27 @@ class ServerLogService {
             , 'admin.noRights', CGlobal.Rights.DeleteServerLog.code)
       })
     }
-    const logStat = fs.statSync(logpath + '/' + logName)
-    return res.send({code: 0})
-    // const logsArr = this.getAllLogs()
-    // const logIndex = logsArr.find(v => v.name === logName)
-    // if (logIndex <= 30) {
-    //   return res.send({
-    //     code: 0, msg: CGlobal.serverLang(req.lang, '只能删除大于30天的日志'
-    //         , 'serverLog.delLogError')
-    //   })
-    // }
-    // fs.unlink(logpath + '/' + logname, function (err) {
-    //   if (err) return res.send({code: 0, msg: err.message})
-    //   AdminLog.createLog({
-    //     content: CGlobal.serverLang('删除服务器日志:{0}', logname),
-    //     type: CGlobal.GlobalStatic.Log_Type.SERVER_LOG
-    //   }, adminSession, CGlobal.noop)
-    //   res.send({code: 1})
-    // })
+    const logPath = logpath + '/' + logName
+    fs.stat(logPath, (err, stat) => {
+      if (err) {
+        return res.send({code: 0, msg: err.message})
+      }
+      const time = stat.birthtimeMs
+      const days = moment().diff(moment(time), 'days')
+      if (days <= 30 ) {
+        return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '无法删除30天内的日志'
+              , 'serverLog.delLogError')})
+      }
+      fs.unlink(logPath, function (err) {
+        if (err) return res.send({code: 0, msg: err.message})
+        AdminLog.createLog({
+          content: CGlobal.serverLang(req.lang, '删除服务器日志 {0}'
+              , 'serverLog.delLogName', logName),
+          type: CGlobal.GlobalStatic.Log_Type.SERVER_LOG
+        }, adminSession, CGlobal.noop)
+        res.send({code: 1})
+      })
+    })
   }
 }
 
