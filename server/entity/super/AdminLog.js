@@ -70,12 +70,12 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
           , 'admin.noRights', CGlobal.Rights.UserLogs.code)
     })
   }
-  let searchWhere = req.query
-  let input = searchWhere['cond'] || ''
-  let shopId = searchWhere.shopId
-  let adminId = searchWhere.adminId
-  let type = searchWhere.type || 'ALL'
-  let startDate = searchWhere.startDate
+  const searchWhere = req.query
+  const input = searchWhere['cond'] || ''
+  const shopId = searchWhere.shopId
+  const adminId = searchWhere.adminId
+  const type = searchWhere.type || 'ALL'
+  const startDate = searchWhere.startDate
   const endDate = searchWhere.endDate
   let where = {
     $or: [], $and: []
