@@ -20,7 +20,7 @@ class AdminInfoCache extends BaseCache {
     const key = session.sessionID
     let shopList = this.getCacheMap(key)
     if (!shopList) {
-      console.log('第一次初始化AdminInfoCache[getOperaShopList]')
+      console.log('第一次初始化AdminInfoCache[getOperaShopList][%s]', key)
       const shopListResult = await Admin.getOperaShopList(session).then(result => result).catch(err => {
         console.error(err)
         return null

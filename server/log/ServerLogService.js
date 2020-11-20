@@ -155,7 +155,7 @@ class ServerLogService {
       if (err) {
         return res.send({code: 0, msg: err.message})
       }
-      const time = stat.birthtimeMs
+      const time = moment(stat.birthtimeMs).format('YYYY-MM-DD')
       const days = moment().diff(moment(time), 'days')
       if (days <= 30 ) {
         return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '无法删除30天内的日志'

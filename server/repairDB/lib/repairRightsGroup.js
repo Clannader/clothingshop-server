@@ -32,7 +32,7 @@ async.eachSeries(defaultData, function (item, cb) {
           }
         })
         if (!contains) {
-          Rights.update({_id: rights._id}, {$set: {rightsCode: item.rightsCode}}, CGlobal.noop)
+          Rights.updateOne({_id: rights._id}, {$set: {rightsCode: item.rightsCode}}, CGlobal.noop)
           console.log('修复 %s 权限组', item.groupName)
         }
       } else {
