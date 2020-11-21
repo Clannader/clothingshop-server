@@ -216,7 +216,7 @@ function contrastConfig(type, oldConfig, newConfig, session) {
 
         AdminLog.createLog({
             userName: session.adminId,
-            content: content.join('<br>'),
+            content: content.join('\r\n'),
             shopId: session.shopId,
             type: CGlobal.GlobalStatic.Log_Type.CONFIG
         }, session, function (err) {

@@ -21,17 +21,21 @@ async.eachSeries(defaultData, function (item, cb) {
     compareRights: ['findRights', function (findResult, next) {
       let rights = findResult.findRights
       if (rights) {
-        let code = rights.rightsCode
-        let contains = true//是否包含的标志
-        let defaultCode = item.rightsCode.split(',')
-        defaultCode.forEach(function (value) {
-          if (code.indexOf(value) === -1) {
-            //不存在
-            contains = false
-            return false
-          }
+        const codeArr = rights.rightsCode.split(',').sort((r1, r2) => {
+          return r1 - r2
         })
-        if (!contains) {
+        // let contains = true//是否包含的标志
+        const defaultCodeArr = item.rightsCode.split(',').sort((r1, r2) => {
+          return r1 - r2
+        })
+        // defaultCode.forEach(function (value) {
+        //   if (code.indexOf(value) === -1) {
+        //     //不存在
+        //     contains = false
+        //     return false
+        //   }
+        // })
+        if (!CGlobal.compareObjects(codeArr, defaultCodeArr)) {
           Rights.updateOne({_id: rights._id}, {$set: {rightsCode: item.rightsCode}}, CGlobal.noop)
           console.log('修复 %s 权限组', item.groupName)
         }

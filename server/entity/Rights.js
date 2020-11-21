@@ -217,7 +217,7 @@ function contrastRights(req, newRights, oldRights, session) {
     content.unshift(CGlobal.serverLang(req.lang, '编辑 {0} 权限组:', 'rightsGroup.moiLogRights', oldRights.groupName))//在数组开头插入一个元素
     AdminLog.createLog({
       userName: session.adminId,
-      content: content.join('<br>'),
+      content: content.join('\r\n'),
       shopId: session.shopId,
       type: CGlobal.GlobalStatic.Log_Type.Right
     }, session, function (err) {
@@ -263,10 +263,10 @@ function isAllowUpdate(userRights, rightsCode) {
 //     let result = []
 //     result.push(CGlobal.serverLang('删除失败:{0}个', errRes.length))
 //     if (errRes.length !== 0) {
-//       result.push(CGlobal.serverLang('失败原因:{0}{1}', '<br>', errRes.join('<br>')))
+//       result.push(CGlobal.serverLang('失败原因:{0}{1}', '\r\n', errRes.join('\r\n')))
 //     }
 //     result.push(CGlobal.serverLang('成功删除:{0}个', successCount))
-//     cb(null, result.join('<br>'))
+//     cb(null, result.join('\r\n'))
 //   })
 // }
 

@@ -761,7 +761,7 @@ function contrastUser(newUser, oldUser, session) {
     content.unshift(CGlobal.serverLang('编辑 {0} 用户:', oldUser.adminId))//在数组开头插入一个元素
     AdminLog.createLog({
       userName: session.adminId,
-      content: content.join('<br>'),
+      content: content.join('\r\n'),
       shopId: oldUser.shopId,
       type: CGlobal.GlobalStatic.Log_Type.USER
     }, session, function (err) {
