@@ -8,7 +8,8 @@
     "build": "webpack --config ./config/webpack.config.js",
     "update": "npm uninstall all",
     "start:api": "node ./apiTest/exec-app.js",
-    "build:api": "webpack --config ./apiTest/config/webpack.config.js"
+    "build:api": "webpack --config ./apiTest/config/webpack.config.js",
+    "generator:api": "node ./apiGenerator/api-start.js"
   },
   "dependencies": {
     "async": "~3.2.0",
@@ -46,6 +47,8 @@
     "babel-preset-env": "~1.3.2",
     "babel-preset-stage-2": "~6.22.0",
     "copy-webpack-plugin": "~4.0.1",
+    "swagger-jsdoc": "^5.0.1",
+    "swagger-ui-express": "^4.1.5",
     "uglifyjs-webpack-plugin": "~1.1.1",
     "webpack": "~3.6.0"
   }
