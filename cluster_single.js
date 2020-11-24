@@ -143,6 +143,10 @@ app.use(function (req, res) {
   //     }
   // }
   // req.isUrlNotFound = true;
+
+  // 这里有个BUG,如果是在/cms/h5/api开头的地址,如果地址不存在,不会返回404,而会返回901,这个很尴尬
+  // 其实也可以做到返回404,但是做法有点尴尬,不好理解,可以在aop那边修改返回值,判断如果进入了404的方法则修改返回值即可
+  // 否则就是无效的凭证
   res.send({code: 404, msg: CGlobal.serverLang('请求 {0} 地址不存在', req.url)})
   //这里还有个隐患如果是用户session的话怎么办
   //这里无法区分是用户还是管理员访问的404页面BUG

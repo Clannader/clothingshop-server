@@ -4,6 +4,10 @@
 'use strict'
 const SwaggerGroup = require('../../schema/SwaggerGroup')
 
+const loginController = require('./LoginController')
+
+console.log(Object.getOwnPropertyNames(loginController))
+
 class Login extends SwaggerGroup {
   constructor() {
     super()
