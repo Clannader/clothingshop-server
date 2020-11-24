@@ -106,40 +106,11 @@ app.set('views', process.env.BASE_PATH + 'views')
 app.engine('.html', ejs.__express)
 app.set('view engine', 'html')
 
+app.use(require('./server/swagger/swagger-router'))
 // 初始化用户数据
 app.use(require('./server/plugin/initData'))
 //加载路由
 app.use(require('./server/routes/routes'))
-
-const swaggerUi = require('swagger-ui-express')
-const swaggerDocument = require('./swagger.json')
-// 新增swagger功能页面
-app.get('/v2/swagger.json', function (req, res) {
-  res.send(swaggerDocument)
-})
-app.get('/v2/swagger2.json', function (req, res) {
-  res.send(require('./swagger2.json'))
-})
-const swaggerOptions = {
-  explorer: true,
-  swaggerOptions: {
-    // validatorUrl: null
-    // url: 'http://petstore.swagger.io/v2/swagger.json'
-    urls: [
-      {
-        url: 'http://localhost:3000/v2/swagger.json',
-        name: 'Spec1'
-      },
-      {
-        url: 'http://localhost:3000/v2/swagger2.json',
-        name: 'Spec2'
-      }
-    ]
-  }
-  // customCss: '.swagger-ui .topbar { display: none }'
-}
-app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions))
-
 //修复必要数据
 require('./server/repairDB/repair')
 
@@ -191,7 +162,8 @@ app.use(function (err, req, res, next) {//这里的next一定不能少不然不�
 
 if (Utils.readConfig('startHTTP') === 'true') {
   startHTTP()
-} else {
+}
+else {
   //为了让定时器定时结束,否则这个console.time会一直计时下去的
   console.timeEnd('HTTP service start time is')
   console.log('But HTTP service did not start')
@@ -199,7 +171,8 @@ if (Utils.readConfig('startHTTP') === 'true') {
 
 if (Utils.readConfig('startHTTPS') === 'true') {
   startHTTPS()
-} else {
+}
+else {
   console.timeEnd('HTTPS service start time is')
   console.log('But HTTPS service did not start')
 }
@@ -268,6 +241,7 @@ function startHTTP() {
     console.log(CGlobal.logLang('clothingshop:server HTTP启动成功,{0} IP地址为:{1}', bind, ip || 'localhost'))
     console.timeEnd('HTTP service start time is')
     console.log('界面访问 http://%s:%s/index', 'localhost', addr.port)
+    console.log('swagger界面访问 http://%s:%s/swagger-ui/', 'localhost', addr.port)
     // console.log('Node 界面访问 http://%s:%s/superLogin', hostname, addr.port);
     // console.log('Vue 界面访问 http://%s:%s/v-index', hostname, addr.port);
     // console.log('Angular 界面访问 http://%s:%s/ng-index', hostname, addr.port);
