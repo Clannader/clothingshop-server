@@ -3,12 +3,13 @@
  */
 'use strict'
 
-const SwaggerResources = require('../schema/SwaggerResources')
+const SwaggerResources = require('./../schema/SwaggerResources')
 const Login = require('./Login')
 const Rights = require('./Rights')
+const Logs = require('./Logs')
 
 const mudules = {
-  Login, Rights
+  Login, Rights, Logs
 }
 
 const resources = []

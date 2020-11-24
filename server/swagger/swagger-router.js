@@ -29,6 +29,9 @@ const swaggerOptions = {
   // customCss: '.swagger-ui .topbar { display: none }'
 }
 
-app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(require('./swagger.json'), swaggerOptions))
+app.use('/swagger-ui',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerService.mudules[swaggerService.urls[0].name], swaggerOptions)
+)
 
 module.exports = app

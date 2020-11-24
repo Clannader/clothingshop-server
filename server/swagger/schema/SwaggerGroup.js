@@ -15,6 +15,19 @@ class SwaggerGroup {
     this.path = {}
     this.definitions = {}
   }
+
+  setTags(tag) {
+    this.tags.push(tag)
+  }
+
+  setDefinitions(def) {
+    const defTemp = {}
+    defTemp[def.constructor.name] = def
+    this.definitions = {
+      ...this.definitions,
+      ...defTemp
+    }
+  }
 }
 
 module.exports = SwaggerGroup
