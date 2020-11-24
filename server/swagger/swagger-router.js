@@ -7,15 +7,16 @@ const express = require('express')
 const app = express.Router()
 
 const swaggerUi = require('swagger-ui-express')
-const swaggerDocument = require('./swagger.json')
+const swaggerService = require('./service')
 
 // 新增swagger功能页面
-app.get('/v2/swagger.json', function (req, res) {
-  res.send(swaggerDocument)
+app.get('/v2/api-docs', function (req, res) {
+  const module = req.query.group
+  res.send(swaggerService.mudules[module])
 })
 
-app.get('/v2/swagger2.json', function (req, res) {
-  res.send(require('./swagger2.json'))
+app.get('/swagger-resources', function (req, res) {
+  res.send(swaggerService.resources)
 })
 
 const swaggerOptions = {
@@ -23,20 +24,11 @@ const swaggerOptions = {
   swaggerOptions: {
     // validatorUrl: null
     // url: 'http://petstore.swagger.io/v2/swagger.json'
-    urls: [
-      {
-        url: 'http://localhost:3000/v2/swagger.json',
-        name: 'Spec1'
-      },
-      {
-        url: 'http://localhost:3000/v2/swagger2.json',
-        name: 'Spec2'
-      }
-    ]
+    urls: swaggerService.urls
   }
   // customCss: '.swagger-ui .topbar { display: none }'
 }
 
-app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions))
+app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(require('./swagger.json'), swaggerOptions))
 
 module.exports = app
