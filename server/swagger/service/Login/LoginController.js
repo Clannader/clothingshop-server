@@ -14,7 +14,10 @@ class LoginController {
 
   userLogin() {
     const userLoginPath = new SwaggerPath(`${this.path}/login`, 'post')
-
+    userLoginPath.description = '系统登录接口'
+    userLoginPath.summary = '系统登录接口 Summary'
+    userLoginPath.operationId = 'userLogin'
+    userLoginPath.tags.push(this.tags)
     return userLoginPath
   }
 }

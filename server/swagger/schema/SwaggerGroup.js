@@ -12,7 +12,7 @@ class SwaggerGroup {
     this.info = new SwaggerGroupInfo()
     this.host = 'localhost:3000'
     this.tags = []
-    this.path = {}
+    this.paths = {}
     this.definitions = {}
   }
 

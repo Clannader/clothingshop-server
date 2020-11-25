@@ -8,7 +8,7 @@ const CommonResult = require('../schema/CommonResult')
 
 const respArr = []
 
-const successResp = new ResponseSchema(1, '业务成功')
+const successResp = new ResponseSchema(1, '业务成功', new CommonResult())
 const failResp = new ResponseSchema(0, '业务失败')
 const exceptionResp = new ResponseSchema(999, '未知的错误异常')
 const noFoundResp = new ResponseSchema(404, '地址找不到')
