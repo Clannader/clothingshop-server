@@ -1,0 +1,72 @@
+{
+  "swagger": "2.0",
+  "basePath": "/",
+  "info": {
+    "description": "Clothingshop Public API",
+    "version": "1.0",
+    "title": "Clothingshop RESTful API",
+    "contact": {
+      "name": "Oliver",
+      "url": "http://localhost:3000/index",
+      "email": "Oliver.wu@shijigroup.com"
+    }
+  },
+  "host": "localhost:3000",
+  "tags": [],
+  "paths": {
+    "/cms/h5/api/user/login": {
+      "post": {
+        "tags": [
+          "LoginApi"
+        ],
+        "path": "/cms/h5/api/user/login",
+        "method": "post",
+        "description": "系统登录接口",
+        "summary": "系统登录接口",
+        "operationId": "userLogin",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [],
+        "responses": {
+          "0": {
+            "code": 0,
+            "description": "业务失败"
+          },
+          "1": {
+            "code": 1,
+            "description": "业务成功"
+          },
+          "200": {
+            "code": 200,
+            "description": "OK"
+          },
+          "404": {
+            "code": 404,
+            "description": "地址找不到"
+          },
+          "900": {
+            "code": 900,
+            "description": "请求头错误"
+          },
+          "901": {
+            "code": 901,
+            "description": "无效的凭证"
+          },
+          "902": {
+            "code": 902,
+            "description": "凭证过期"
+          },
+          "999": {
+            "code": 999,
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

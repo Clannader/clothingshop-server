@@ -6,7 +6,7 @@
 class ResponseSchema {
   constructor(code = 1, desc = '', schema) {
     this.code = code
-    this.desc = desc
+    this.description = desc
     if (CGlobal.isPlainObject(schema)) {
       this.schema = {
         '$ref': '#/definitions/' + this.schema.constructor.name

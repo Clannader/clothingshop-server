@@ -13,6 +13,7 @@ const swaggerService = require('./service')
 app.get('/v2/api-docs', function (req, res) {
   const module = req.query.group
   res.send(swaggerService.mudules[module])
+  // res.send(require('./swagger2.json'))
 })
 
 app.get('/swagger-resources', function (req, res) {

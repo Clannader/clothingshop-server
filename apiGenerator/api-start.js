@@ -4,44 +4,120 @@
  */
 'use strict'
 
+const fs = require('fs')
+const axios = require('axios')
+const ejs = require('ejs')
+const moment = require('moment')
+const apiPath = __dirname + '/api'
 
-// const jsEjs = __dirname + '/template/js.ejs'
-// const apiFile = __dirname + '/api/Login.js'
-// const data = {
-//   isNode: false,
-//   isES6: false,
-//   description: 'Clothes Public API',
-//   isSecure: false,
-//   moduleName: undefined,
-//   className: 'Upload',
-//   imports: undefined,
-//   domain: '',
-//   methods: [
-//     {
-//       path: '/api/file/upload',
-//       className: 'Upload',
-//       methodName: 'uploadFile',
-//       method: 'POST',
-//       isGET: false,
-//       isPOST: true,
-//       summary: '上传文件',
-//       externalDocs: undefined,
-//       isSecure: false,
-//       isSecureToken: false,
-//       isSecureApiKey: false,
-//       isSecureBasic: false,
-//       parameters: [Array],
-//       headers: [Array],
-//       response: 'object',
-//       group: 'File upload api'
-//     }
-//   ],
-//   definitions: [],
-//   apiGroups: { 'File upload api': { desc: 'File upload', items: [Array] } },
-//   defaultDomain: 'http://localhost:8090'
-// }
-//
-// fs.copyTpl(jsEjs, apiFile, data)
-// fs.write("somefile.js", "var a = 1;");
+if (!fs.existsSync(apiPath)) {
+  fs.mkdirSync(apiPath)
+}
+
+const apiHost = 'https://cambridge-api.shijicloud.com/CambridgeAPI'
+
+const service = axios.create({
+  baseURL: apiHost,
+  timeout: 30000,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json'
+  }
+})
+
+// 添加响应拦截器
+service.interceptors.response.use(
+    response => {
+      return response.data
+    },
+    error => {
+      return Promise.reject(error)
+    }
+)
+
+const apiResource = function () {
+  return service.get('/swagger-resources', {})
+}
+
+const createEjsApiFile = function (ejsData) {
+  return new Promise(((resolve, reject) => {
+    ejs.renderFile(
+        __dirname + '/template/js.ejs',
+        ejsData,
+        (err, data) => {
+          if (err) {
+            return reject(err)
+          }
+          resolve(data)
+        }
+    )
+  }))
+}
+
+const createApiFile = async function (resource) {
+  const groupPath = `${apiPath}/${resource.name}`
+  if (!fs.existsSync(groupPath)) {
+    fs.mkdirSync(groupPath)
+  }
+  const swaggerDocument = await service.get(resource.url, {}).then(res => res).catch(() => null)
+  if (!swaggerDocument) {
+    return
+  }
+  const ejsData = {
+    author: 'Oliver',
+    createData: moment().format('YYYY-MM-DD')
+  }
+  const swaggerPaths = swaggerDocument.paths
+  const swaggerTags = swaggerDocument.tags
+  const apiFileTags = {}
+  swaggerTags.map(tags => {
+    const tagName = tags.name.replace(/ /g, '_')
+    apiFileTags[tagName] = {
+      urls: [],
+      apiFilePath: `${groupPath}/${tagName}.js`,
+      ...ejsData
+    }
+  })
+  for (let url in swaggerPaths) {
+    const methodValue = swaggerPaths[url]
+    for (const method in methodValue) {
+      const pathValue = methodValue[method]
+      const tagName = pathValue.tags[0].replace(/ /g, '_')
+      let isReplace = false
+      let pathParams = ''
+      url = url.replace(/\{[\w]+\}/g, function (match) {
+        isReplace = true
+        pathParams = match.substring(1, match.length - 1)
+        return `$${match}`
+      })
+      const urlSchema = {
+        description: pathValue.description,
+        functionName: pathValue.operationId,
+        url: isReplace ? '`' + url + '`' : url,
+        isReplace: isReplace,
+        pathParams: pathParams,
+        method: method
+      }
+      apiFileTags[tagName].urls.push(urlSchema)
+    }
+  }
+  for (const tags in apiFileTags) {
+    const tagsValue = apiFileTags[tags]
+    const fileData = await createEjsApiFile(tagsValue).then(data => data)
+    fs.writeFileSync(tagsValue.apiFilePath, fileData)
+  }
+}
+
+const start = async function () {
+  const resource = await apiResource().then(res => res).catch(() => null)
+  if (!resource) return
+  resource.map(v => {
+    createApiFile(v)
+  })
+}
+start()
+
+
+
 
 
