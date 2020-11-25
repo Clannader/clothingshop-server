@@ -22,7 +22,7 @@
         "path": "/cms/h5/api/user/login",
         "method": "post",
         "description": "系统登录接口",
-        "summary": "系统登录接口",
+        "summary": "系统登录接口 Summary",
         "operationId": "userLogin",
         "consumes": [
           "application/json"
@@ -38,11 +38,10 @@
           },
           "1": {
             "code": 1,
-            "description": "业务成功"
-          },
-          "200": {
-            "code": 200,
-            "description": "OK"
+            "description": "业务成功",
+            "schema": {
+              "$ref": "#/definitions/CommonResult"
+            }
           },
           "404": {
             "code": 404,
@@ -68,5 +67,33 @@
       }
     }
   },
-  "definitions": {}
+  "definitions": {
+    "CommonResult": {
+      "type": "object",
+      "title": "CommonResult",
+      "required": [],
+      "properties": {
+        "code": {
+          "type": false,
+          "description": "响应代码",
+          "allowEmptyValue": true
+        },
+        "msg": {
+          "type": "",
+          "description": "错误信息",
+          "allowEmptyValue": true
+        }
+      },
+      "code": {
+        "type": false,
+        "description": "响应代码",
+        "allowEmptyValue": true
+      },
+      "msg": {
+        "type": "",
+        "description": "错误信息",
+        "allowEmptyValue": true
+      }
+    }
+  }
 }
