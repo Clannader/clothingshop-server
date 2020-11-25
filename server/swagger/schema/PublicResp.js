@@ -28,9 +28,7 @@ respArr.push(expireSession)
 
 const responses = {}
 CGlobal.forEach(respArr, (i, v) => {
-  const code = v.code
-  delete v.code
-  responses[code] = v
+  responses[v.code] = v
 })
 
 module.exports = responses

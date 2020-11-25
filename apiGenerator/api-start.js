@@ -14,7 +14,7 @@ if (!fs.existsSync(apiPath)) {
   fs.mkdirSync(apiPath)
 }
 
-const apiHost = 'https://cambridge-api.shijicloud.com/CambridgeAPI'
+const apiHost = 'http://localhost:3000'
 
 const service = axios.create({
   baseURL: apiHost,
