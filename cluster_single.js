@@ -106,7 +106,7 @@ app.set('views', process.env.BASE_PATH + 'views')
 app.engine('.html', ejs.__express)
 app.set('view engine', 'html')
 
-app.use(require('./server/swagger/swagger-router'))
+// app.use(require('./server/swagger/swagger-router'))
 // 初始化用户数据
 app.use(require('./server/plugin/initData'))
 //加载路由
