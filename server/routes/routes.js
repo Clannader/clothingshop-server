@@ -54,6 +54,8 @@ app.use(require('./h5Routes/rights_route'))
 // app.use(require('./h5Routes/upload_route'))// 上传文件路由
 app.use(require('./h5Routes/server_logs_route'))
 app.use(require('./h5Routes/system_config_route'))
+// swagger 路由
+app.use(require('../swagger/swagger-router'))
 
 module.exports = app
 
