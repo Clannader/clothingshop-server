@@ -105,6 +105,7 @@ const AdminService = {
     }
     //登录成功写log
     //登录时用cookie做默认语言
+    const userAgent = req.headers['user-agent']
     let store = req.sessionStore
     //重新获取一个新的sessionID
     store.regenerate(req, function () {
@@ -112,6 +113,7 @@ const AdminService = {
         adminId: admin.adminId,
         adminName: admin.adminName,
         adminType: admin.adminType,
+        mobile: userAgent.indexOf('Mobile') !== -1,
         //权限这个也可以每次进来的时候查一遍,避免自己权限被别人更改,没有刷新最新的权限
         //以后会考虑压缩数据,加密后存库,使用参数控制
         //还可以避免数据库内存溢出
