@@ -141,7 +141,8 @@ Utils.getTemplateSession = function (session) {
     selfShop: session.selfShop,
     supplierCode: session.supplierCode,
     shopName: session.shopName,
-    isFirstLogin: session.isFirstLogin
+    isFirstLogin: session.isFirstLogin,
+    mobile: session.mobile
   }
 }
 
