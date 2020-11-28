@@ -10,8 +10,15 @@ class SwaggerParameter {
     this.description = ''
     this.required = false
     this.type = 'string'
-    this.default = ''
+    this.default = undefined
     this.enum = null
+    this.schema = {}
+  }
+
+  setSchema(schemaName) {
+    this.schema = {
+      '$ref': `#/definitions/${schemaName}`
+    }
   }
 }
 

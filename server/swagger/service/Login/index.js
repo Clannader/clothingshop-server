@@ -6,12 +6,12 @@ const SwaggerGroup = require('../../schema/SwaggerGroup')
 
 const loginController = require('./LoginController')
 const CommonResult = require('../../schema/CommonResult')
+const lib = require('./lib')
 
 class Login extends SwaggerGroup {
   constructor() {
     super()
     this.initPaths()
-
     this.setDefinitions(new CommonResult())
   }
 
@@ -26,6 +26,10 @@ class Login extends SwaggerGroup {
       tags: [swaggerPath.tags],
       ...swaggerPath
     }
+    const schemaList = this.getSchemaList(swaggerPath)// 获取全部ref结构
+    schemaList.forEach(v => {
+      this.setDefinitions(new lib[v])
+    })
     this.paths = {
       ...this.paths,
       ...path

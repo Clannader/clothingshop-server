@@ -1,66 +1,1114 @@
 {
   "swagger": "2.0",
-  "basePath": "/",
   "info": {
-    "description": "Clothingshop Public API",
+    "description": "Pms restful api",
     "version": "1.0",
-    "title": "Clothingshop RESTful API",
+    "title": "Cambridge System API",
     "contact": {
-      "name": "Oliver",
-      "url": "http://localhost:3000/index",
-      "email": "Oliver.wu@shijigroup.com"
+      "name": "shiji"
     }
   },
-  "host": "localhost:3000",
-  "tags": [],
+  "host": "cambridge-api.shijicloud.com",
+  "basePath": "/CambridgeAPI",
+  "tags": [
+    {
+      "name": "Login api",
+      "description": "Login api controller"
+    },
+    {
+      "name": "Public api",
+      "description": "Public api controller"
+    }
+  ],
   "paths": {
-    "/cms/h5/api/user/login": {
+    "/api/common/app_download_url": {
+      "get": {
+        "tags": [
+          "Public api"
+        ],
+        "summary": "获取APP下载的网页地址",
+        "description": "获取APP下载的网页地址",
+        "operationId": "appDownloadUrlUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RespAppDownloadUrl"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/common/health_check": {
+      "get": {
+        "tags": [
+          "Public api"
+        ],
+        "summary": "公开接口",
+        "description": "健康检查",
+        "operationId": "healCheckUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommonResult"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/common/public_api": {
+      "get": {
+        "tags": [
+          "Public api"
+        ],
+        "summary": "公开接口",
+        "description": "不需要登陆api接口",
+        "operationId": "getServiceLineUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "类型（sl:售后热线和公告 ）",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Resp_PublicData"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/cashier/login": {
       "post": {
         "tags": [
-          "LoginApi"
+          "Login api"
         ],
-        "path": "/cms/h5/api/user/login",
-        "method": "post",
-        "description": "系统登录接口",
-        "summary": "系统登录接口 Summary",
-        "operationId": "userLogin",
+        "summary": "Login Cashier",
+        "description": "收银员登录接口",
+        "operationId": "loginCashierUsingPOST",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "*/*"
         ],
-        "parameters": [],
-        "responses": {
-          "0": {
-            "code": 0,
-            "description": "业务失败"
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
           },
-          "1": {
-            "code": 1,
-            "description": "业务成功",
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "name": "credential",
+            "in": "header",
+            "description": "credential",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "params",
+            "description": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestLoginCashier"
+            }
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RespLoginCashier"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/change_password": {
+      "post": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "Change password",
+        "description": "修改密码",
+        "operationId": "changePasswordUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "name": "credential",
+            "in": "header",
+            "description": "credential",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "params",
+            "description": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReqChangePassword"
+            }
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
             "schema": {
               "$ref": "#/definitions/CommonResult"
             }
           },
-          "404": {
-            "code": 404,
-            "description": "地址找不到"
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/get-sso-parameter": {
+      "get": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "Get SSO parameters",
+        "description": "获取SSO所需参数",
+        "operationId": "getSSOParameterUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
           },
-          "900": {
-            "code": 900,
-            "description": "请求头错误"
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
           },
-          "901": {
-            "code": 901,
+          {
+            "name": "redirectURL",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
             "description": "无效的凭证"
           },
-          "902": {
-            "code": 902,
-            "description": "凭证过期"
+          "1101": {
+            "description": "抱歉,你没有权限操作"
           },
-          "999": {
-            "code": 999,
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SSOParameter"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "Login",
+        "description": "登录API系统",
+        "operationId": "loginUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "params",
+            "description": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReqLogin"
+            }
+          },
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "hotelcode",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "Login Successfully."
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseLogin"
+            }
+          },
+          "2001": {
+            "description": "Invalid login attempt."
+          },
+          "2002": {
+            "description": "Invalid Password."
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/logout": {
+      "post": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "Logout",
+        "description": "退出系统",
+        "operationId": "loginOutUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "name": "credential",
+            "in": "header",
+            "description": "credential",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommonResult"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/post-cookie-access": {
+      "post": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "SSO Login by cookie",
+        "description": "通过首次SSO获得的cookie session再次登录",
+        "operationId": "postCookieAccessUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "action",
+            "description": "action",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostCookieAccess"
+            }
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SSOAccessResponse"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/post-sso-access": {
+      "post": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "Post SSO login action",
+        "description": "执行SSO登录",
+        "operationId": "postSSOAccessUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "action",
+            "description": "action",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostSSOAccess"
+            }
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SSOAccessResponse"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/publickey": {
+      "get": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "获取系统公钥",
+        "description": "获取系统公钥",
+        "operationId": "getPublicKeyUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RespPublicKey"
+            }
+          },
+          "9999": {
+            "description": "未知的错误异常"
+          }
+        }
+      }
+    },
+    "/api/user/reset_password": {
+      "post": {
+        "tags": [
+          "Login api"
+        ],
+        "summary": "忘记密码",
+        "description": "忘记密码",
+        "operationId": "reSetPasswordUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "hotelcode",
+            "in": "header",
+            "description": "登录的酒店ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "in": "header",
+            "description": "语言",
+            "required": false,
+            "type": "string",
+            "default": "English",
+            "enum": [
+              "English",
+              "Chinese"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "params",
+            "description": "params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReqReSetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "1000": {
+            "description": "成功"
+          },
+          "1001": {
+            "description": "请求参数不能为空"
+          },
+          "1100": {
+            "description": "无效的凭证"
+          },
+          "1101": {
+            "description": "抱歉,你没有权限操作"
+          },
+          "1102": {
+            "description": "无效的酒店代码"
+          },
+          "1103": {
+            "description": "Elastic查询异常"
+          },
+          "1104": {
+            "description": "系统参数没有开启"
+          },
+          "1105": {
+            "description": "无效的日期格式"
+          },
+          "1501": {
+            "description": "请求的地址不存在"
+          },
+          "1502": {
+            "description": "不支持该请求方式"
+          },
+          "1503": {
+            "description": "服务器异常"
+          },
+          "1504": {
+            "description": "服务器空指针异常"
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/CommonResult"
+            }
+          },
+          "9999": {
             "description": "未知的错误异常"
           }
         }
@@ -68,32 +1116,463 @@
     }
   },
   "definitions": {
-    "CommonResult": {
+    "Announcement": {
       "type": "object",
-      "title": "CommonResult",
-      "required": [],
+      "required": [
+        "context",
+        "title"
+      ],
       "properties": {
-        "code": {
-          "type": false,
-          "description": "响应代码",
-          "allowEmptyValue": true
+        "context": {
+          "type": "string",
+          "description": "内容",
+          "allowEmptyValue": false
         },
-        "msg": {
-          "type": "",
-          "description": "错误信息",
-          "allowEmptyValue": true
+        "title": {
+          "type": "string",
+          "description": "标题",
+          "allowEmptyValue": false
         }
       },
-      "code": {
-        "type": false,
-        "description": "响应代码",
-        "allowEmptyValue": true
+      "title": "Announcement"
+    },
+    "CommonResult": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "响应代码",
+          "allowEmptyValue": false
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回的错误信息",
+          "allowEmptyValue": false
+        }
       },
-      "msg": {
-        "type": "",
-        "description": "错误信息",
-        "allowEmptyValue": true
-      }
+      "title": "CommonResult"
+    },
+    "PostCookieAccess": {
+      "type": "object",
+      "properties": {
+        "hotelCode": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "sessionID": {
+          "type": "string"
+        }
+      },
+      "title": "PostCookieAccess"
+    },
+    "PostSSOAccess": {
+      "type": "object",
+      "properties": {
+        "hotelCode": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "ssoCode": {
+          "type": "string"
+        },
+        "ssoState": {
+          "type": "string"
+        },
+        "station": {
+          "type": "string"
+        },
+        "valid_redirectURL": {
+          "type": "string"
+        }
+      },
+      "title": "PostSSOAccess"
+    },
+    "ReqChangePassword": {
+      "type": "object",
+      "required": [
+        "new_password",
+        "new_secret_password",
+        "old_password",
+        "old_secret_password"
+      ],
+      "properties": {
+        "new_password": {
+          "type": "string",
+          "description": "用户新密码",
+          "allowEmptyValue": false
+        },
+        "new_secret_password": {
+          "type": "string",
+          "description": "加密后的新密码",
+          "allowEmptyValue": false
+        },
+        "old_password": {
+          "type": "string",
+          "description": "用户旧密码",
+          "allowEmptyValue": false
+        },
+        "old_secret_password": {
+          "type": "string",
+          "description": "加密后的旧密码",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ReqChangePassword"
+    },
+    "ReqLogin": {
+      "type": "object",
+      "required": [
+        "password",
+        "username"
+      ],
+      "properties": {
+        "password": {
+          "type": "string",
+          "description": "密码",
+          "allowEmptyValue": false
+        },
+        "return_permisson": {
+          "type": "boolean",
+          "example": false,
+          "description": "是否返回权限字段的内容?为空或者false的时候不返回,为true的时候返回",
+          "allowEmptyValue": false
+        },
+        "secret_password": {
+          "type": "string",
+          "description": "加密传输的密码",
+          "allowEmptyValue": false
+        },
+        "station": {
+          "type": "string",
+          "description": "授权的工作站",
+          "allowEmptyValue": false
+        },
+        "username": {
+          "type": "string",
+          "description": "用户名",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ReqLogin"
+    },
+    "ReqReSetPassword": {
+      "type": "object",
+      "required": [
+        "email",
+        "hotelcode",
+        "username"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "邮箱地址",
+          "allowEmptyValue": false
+        },
+        "hotelcode": {
+          "type": "string",
+          "description": "酒店ID",
+          "allowEmptyValue": false
+        },
+        "username": {
+          "type": "string",
+          "description": "用户名",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ReqReSetPassword"
+    },
+    "RequestLoginCashier": {
+      "type": "object",
+      "required": [
+        "cashierid",
+        "password"
+      ],
+      "properties": {
+        "cashierid": {
+          "type": "string",
+          "description": "收银员ID号",
+          "allowEmptyValue": false
+        },
+        "open": {
+          "type": "boolean",
+          "example": false,
+          "description": "打开收银员的参数,如果当收银员关闭了,传入true把收银员打开,默认false",
+          "allowEmptyValue": false
+        },
+        "password": {
+          "type": "string",
+          "description": "密码",
+          "allowEmptyValue": false
+        },
+        "secret_password": {
+          "type": "string",
+          "description": "加密传输的密码",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "RequestLoginCashier"
+    },
+    "RespAppDownloadUrl": {
+      "type": "object",
+      "required": [
+        "app_name",
+        "app_url",
+        "code",
+        "size",
+        "url",
+        "version_code",
+        "version_name"
+      ],
+      "properties": {
+        "app_name": {
+          "type": "string",
+          "description": "APP名字",
+          "allowEmptyValue": false
+        },
+        "app_url": {
+          "type": "string",
+          "description": "APP下载地址",
+          "allowEmptyValue": false
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "响应代码",
+          "allowEmptyValue": false
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回的错误信息",
+          "allowEmptyValue": false
+        },
+        "size": {
+          "type": "string",
+          "description": "APP大小",
+          "allowEmptyValue": false
+        },
+        "url": {
+          "type": "string",
+          "description": "网页地址",
+          "allowEmptyValue": false
+        },
+        "version_code": {
+          "type": "string",
+          "description": "APP版本号",
+          "allowEmptyValue": false
+        },
+        "version_name": {
+          "type": "string",
+          "description": "APP版本名字",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "RespAppDownloadUrl"
+    },
+    "RespLoginCashier": {
+      "type": "object",
+      "required": [
+        "close",
+        "code"
+      ],
+      "properties": {
+        "close": {
+          "type": "boolean",
+          "example": false,
+          "description": "收银员是否关闭,true(关闭),false(打开)",
+          "allowEmptyValue": false
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "响应代码",
+          "allowEmptyValue": false
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回的错误信息",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "RespLoginCashier"
+    },
+    "RespPublicKey": {
+      "type": "object",
+      "required": [
+        "code",
+        "public_key"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "响应代码",
+          "allowEmptyValue": false
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回的错误信息",
+          "allowEmptyValue": false
+        },
+        "public_key": {
+          "type": "string",
+          "description": "系统公钥",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "RespPublicKey"
+    },
+    "Resp_PublicData": {
+      "type": "object",
+      "required": [
+        "announcement",
+        "code",
+        "service_line"
+      ],
+      "properties": {
+        "announcement": {
+          "description": "公告",
+          "allowEmptyValue": false,
+          "$ref": "#/definitions/Announcement"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "响应代码",
+          "allowEmptyValue": false
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回的错误信息",
+          "allowEmptyValue": false
+        },
+        "service_line": {
+          "type": "string",
+          "description": "售后热线",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "Resp_PublicData"
+    },
+    "ResponseLogin": {
+      "type": "object",
+      "required": [
+        "cashierid",
+        "code",
+        "credential",
+        "expired",
+        "first_login",
+        "hotelcode",
+        "username"
+      ],
+      "properties": {
+        "cashierid": {
+          "type": "string",
+          "description": "Cashier id",
+          "allowEmptyValue": false
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "响应代码",
+          "allowEmptyValue": false
+        },
+        "credential": {
+          "type": "string",
+          "description": "User system credential",
+          "allowEmptyValue": false
+        },
+        "expired": {
+          "type": "boolean",
+          "example": false,
+          "description": "用户密码是否过期,true:已过期",
+          "allowEmptyValue": false
+        },
+        "expired_day": {
+          "type": "integer",
+          "format": "int32",
+          "description": "用户密码是否准备过期,仅只有准备过期时,返回距离多少天过期",
+          "allowEmptyValue": false
+        },
+        "first_login": {
+          "type": "boolean",
+          "example": false,
+          "description": "用户是否是第一次登录,true:第一次登录",
+          "allowEmptyValue": false
+        },
+        "fullname": {
+          "type": "string",
+          "description": "User full name",
+          "allowEmptyValue": false
+        },
+        "hotelcode": {
+          "type": "string",
+          "description": "Hotel code",
+          "allowEmptyValue": false
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回的错误信息",
+          "allowEmptyValue": false
+        },
+        "permission": {
+          "type": "string",
+          "description": "User permissions",
+          "allowEmptyValue": false
+        },
+        "username": {
+          "type": "string",
+          "description": "User name",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ResponseLogin"
+    },
+    "SSOAccessResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "cookieSessionID": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "sessionID": {
+          "type": "string"
+        },
+        "userMetadata": {
+          "$ref": "#/definitions/ResponseLogin"
+        }
+      },
+      "title": "SSOAccessResponse"
+    },
+    "SSOParameter": {
+      "type": "object",
+      "properties": {
+        "authorizationURL": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "SSOParameter"
     }
   }
 }

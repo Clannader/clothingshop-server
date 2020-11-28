@@ -28,6 +28,18 @@ class SwaggerGroup {
       ...defTemp
     }
   }
+
+  getSchemaList(controller) {
+    const map = []
+    controller.parameters.map(value => {
+      const ref = value.schema.$ref
+      if (ref) {
+        const objectName = ref.substring(ref.lastIndexOf('/') + 1)
+        map.push(objectName)
+      }
+    })
+    return map
+  }
 }
 
 module.exports = SwaggerGroup
