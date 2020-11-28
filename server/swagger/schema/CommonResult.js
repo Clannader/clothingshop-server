@@ -9,8 +9,8 @@ const ModelProperty = require('./ModelProperty')
 class CommonResult extends DefinitionsBase{
   constructor() {
     super()
-    this.code = new ModelProperty('响应代码', 'string', false)
-    this.msg = new ModelProperty('错误信息')
+    this.code = new ModelProperty('响应代码', 'number')
+    this.msg = new ModelProperty('错误信息', 'string', false)
 
     this.setProperties()
     this.initRequired()
