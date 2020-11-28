@@ -5,6 +5,7 @@
 
 const SwaggerPath = require('../../schema/SwaggerPath')
 const SwaggerParameter = require('../../schema/SwaggerParameter')
+const ResponseSchema = require('../../schema/ResponseSchema')
 
 class LoginController {
   constructor() {
@@ -19,6 +20,7 @@ class LoginController {
     userLoginPath.summary = '系统登录接口 Summary'
     userLoginPath.operationId = 'userLogin'
     userLoginPath.tags.push(this.tags)
+    userLoginPath.responses['200'] = new ResponseSchema(200, 'OK', 'RespLogin')
 
     const params = new SwaggerParameter('params')
     params.in = 'body'

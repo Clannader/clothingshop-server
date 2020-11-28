@@ -7,11 +7,16 @@ class ResponseSchema {
   constructor(code = 1, desc = '', schema) {
     this.code = code
     this.description = desc
-    if (!CGlobal.isEmpty(schema)
-        && schema.toString() === '[object Object]'
-        && schema.constructor.name !== 'Object') {
+    // if (!CGlobal.isEmpty(schema)
+    //     && schema.toString() === '[object Object]'
+    //     && schema.constructor.name !== 'Object') {
+    //   this.schema = {
+    //     '$ref': '#/definitions/' + schema.constructor.name
+    //   }
+    // }
+    if (!CGlobal.isEmpty(schema)) {
       this.schema = {
-        '$ref': '#/definitions/' + schema.constructor.name
+        '$ref': '#/definitions/' + schema
       }
     }
   }

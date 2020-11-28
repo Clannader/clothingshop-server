@@ -5,14 +5,14 @@
 const SwaggerGroup = require('../../schema/SwaggerGroup')
 
 const loginController = require('./LoginController')
-const CommonResult = require('../../schema/CommonResult')
+// const CommonResult = require('../../schema/CommonResult')
 const lib = require('./lib')
 
 class Login extends SwaggerGroup {
   constructor() {
     super()
     this.initPaths()
-    this.setDefinitions(new CommonResult())
+    // this.setDefinitions(new CommonResult())
   }
 
   initPaths() {

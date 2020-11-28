@@ -38,6 +38,13 @@ class SwaggerGroup {
         map.push(objectName)
       }
     })
+    CGlobal.forEach(controller.responses, (key, value) => {
+      if (value.schema && value.schema.$ref) {
+        const ref = value.schema.$ref
+        const objectName = ref.substring(ref.lastIndexOf('/') + 1)
+        map.push(objectName)
+      }
+    })
     return map
   }
 }
