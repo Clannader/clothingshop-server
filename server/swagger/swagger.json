@@ -1,36 +1,29 @@
 {
   "swagger": "2.0",
+  "basePath": "/",
   "info": {
-    "description": "Clothes Public API",
+    "description": "Clothingshop Public API",
     "version": "1.0",
-    "title": "Clothes Shop RESTful API",
+    "title": "Clothingshop RESTful API",
     "contact": {
       "name": "Oliver",
-      "url": "http://cc:3000/index",
+      "url": "http://localhost:3000/index",
       "email": "Oliver.wu@shijigroup.com"
     }
   },
-  "host": "localhost:8090",
-  "basePath": "/",
-  "tags": [
-    {
-      "name": "Login api interface",
-      "description": "Login api"
-    },
-    {
-      "name": "User api interface",
-      "description": "User api"
-    }
-  ],
+  "host": "localhost:3000",
+  "tags": [],
   "paths": {
-    "/api/user/create/setup": {
+    "/cms/h5/api/user/login": {
       "post": {
         "tags": [
-          "User api interface"
+          "LoginApi"
         ],
-        "summary": "获取用户列表",
-        "description": "获取用户列表",
-        "operationId": "createSetupUsingPOST",
+        "path": "/cms/h5/api/user/login",
+        "method": "post",
+        "description": "系统登录接口",
+        "summary": "系统登录接口 Summary",
+        "operationId": "userLogin",
         "consumes": [
           "application/json"
         ],
@@ -41,347 +34,83 @@
           {
             "name": "language",
             "in": "header",
-            "description": "用户语言",
+            "description": "语言类型",
             "required": false,
             "type": "string",
+            "default": "CN",
             "enum": [
-              "EN",
-              "CN"
-            ]
+              "CN",
+              "EN"
+            ],
+            "schema": {}
           },
           {
-            "in": "body",
+            "name": "x-requested-with",
+            "in": "header",
+            "description": "固定请求头",
+            "required": true,
+            "type": "string",
+            "default": "XMLHttpRequest",
+            "enum": null,
+            "schema": {}
+          },
+          {
             "name": "params",
-            "description": "params",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Setup"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/CommonResult"
-            }
-          },
-          "404": {
-            "description": "地址不存在"
-          },
-          "997": {
-            "description": "服务器报空指针异常"
-          },
-          "998": {
-            "description": "请求方式不支持"
-          },
-          "999": {
-            "description": "服务器报错"
-          }
-        }
-      }
-    },
-    "/api/user/create/user": {
-      "post": {
-        "tags": [
-          "User api interface"
-        ],
-        "summary": "获取用户列表",
-        "description": "获取用户列表",
-        "operationId": "createSetupUsingPOST_1",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "language",
-            "in": "header",
-            "description": "用户语言",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "EN",
-              "CN"
-            ]
-          },
-          {
             "in": "body",
-            "name": "u",
-            "description": "u",
+            "description": "请求参数",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/RespUserList"
-            }
-          },
-          "404": {
-            "description": "地址不存在"
-          },
-          "997": {
-            "description": "服务器报空指针异常"
-          },
-          "998": {
-            "description": "请求方式不支持"
-          },
-          "999": {
-            "description": "服务器报错"
-          }
-        }
-      }
-    },
-    "/api/user/find": {
-      "get": {
-        "tags": [
-          "User api interface"
-        ],
-        "summary": "获取用户列表",
-        "description": "获取用户列表",
-        "operationId": "createSetupUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "language",
-            "in": "header",
-            "description": "用户语言",
-            "required": false,
             "type": "string",
-            "enum": [
-              "EN",
-              "CN"
-            ]
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "name",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/RespUserList"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/user/login": {
-      "post": {
-        "tags": [
-          "Login api interface"
-        ],
-        "summary": "用户登录",
-        "description": "用户登录接口",
-        "operationId": "userLoginUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "language",
-            "in": "header",
-            "description": "用户语言",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "EN",
-              "CN"
-            ]
-          },
-          {
-            "in": "body",
-            "name": "params",
-            "description": "params",
-            "required": true,
+            "default": "",
+            "enum": null,
             "schema": {
               "$ref": "#/definitions/ReqLogin"
             }
           }
         ],
         "responses": {
-          "-302": {
-            "description": "成功登录"
+          "0": {
+            "code": 0,
+            "description": "业务失败"
           },
-          "-503": {
-            "description": "请求头错误"
-          },
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/RespLogin"
-            }
-          },
-          "404": {
-            "description": "地址不存在"
-          },
-          "997": {
-            "description": "服务器报空指针异常"
-          },
-          "998": {
-            "description": "请求方式不支持"
-          },
-          "999": {
-            "description": "服务器报错"
-          }
-        }
-      }
-    },
-    "/api/user/logout": {
-      "post": {
-        "tags": [
-          "Login api interface"
-        ],
-        "summary": "用户退出",
-        "description": "用户退出接口",
-        "operationId": "userLogoutUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "language",
-            "in": "header",
-            "description": "用户语言",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "EN",
-              "CN"
-            ]
-          },
-          {
-            "name": "credential",
-            "in": "header",
-            "description": "credential",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "-201": {
-            "description": "无效的凭证"
-          },
-          "-302": {
-            "description": "成功退出"
+          "1": {
+            "code": 1,
+            "description": "业务成功"
           },
           "200": {
+            "code": 200,
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/CommonResult"
             }
           },
           "404": {
-            "description": "地址不存在"
+            "code": 404,
+            "description": "地址找不到"
           },
-          "997": {
-            "description": "服务器报空指针异常"
+          "900": {
+            "code": 900,
+            "description": "请求头错误"
           },
-          "998": {
-            "description": "请求方式不支持"
+          "901": {
+            "code": 901,
+            "description": "无效的凭证"
+          },
+          "902": {
+            "code": 902,
+            "description": "凭证过期"
           },
           "999": {
-            "description": "服务器报错"
-          }
-        }
-      }
-    },
-    "/api/user/search": {
-      "get": {
-        "tags": [
-          "User api interface"
-        ],
-        "summary": "获取用户列表",
-        "description": "获取用户列表",
-        "operationId": "userLoginUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "language",
-            "in": "header",
-            "description": "用户语言",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "EN",
-              "CN"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/RespUserList"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+            "code": 999,
+            "description": "未知的错误异常"
           }
         }
       }
     }
   },
   "definitions": {
-    "CommonResult": {
-      "type": "object",
-      "required": [
-        "code"
-      ],
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "响应代码",
-          "allowEmptyValue": false
-        },
-        "msg": {
-          "type": "string",
-          "description": "错误信息",
-          "allowEmptyValue": false
-        }
-      },
-      "title": "CommonResult"
-    },
     "ReqLogin": {
       "type": "object",
+      "title": "ReqLogin",
       "required": [
         "adminId",
         "adminPws"
@@ -389,130 +118,62 @@
       "properties": {
         "adminId": {
           "type": "string",
-          "example": "OLIVER",
-          "description": "用户名",
-          "allowEmptyValue": false
+          "description": "用户ID",
+          "allowEmptyValue": false,
+          "required": true
         },
         "adminPws": {
           "type": "string",
-          "example": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
           "description": "用户密码",
-          "allowEmptyValue": false
+          "allowEmptyValue": false,
+          "required": true
         }
       },
-      "title": "ReqLogin"
+      "adminId": {
+        "type": "string",
+        "description": "用户ID",
+        "allowEmptyValue": false,
+        "required": true
+      },
+      "adminPws": {
+        "type": "string",
+        "description": "用户密码",
+        "allowEmptyValue": false,
+        "required": true
+      }
     },
-    "RespLogin": {
+    "CommonResult": {
       "type": "object",
+      "title": "CommonResult",
       "required": [
-        "code",
-        "credential"
+        "code"
       ],
       "properties": {
         "code": {
-          "type": "integer",
-          "format": "int32",
+          "type": "number",
           "description": "响应代码",
-          "allowEmptyValue": false
-        },
-        "credential": {
-          "type": "string",
-          "description": "用户凭证",
-          "allowEmptyValue": false
+          "allowEmptyValue": false,
+          "required": true
         },
         "msg": {
           "type": "string",
           "description": "错误信息",
-          "allowEmptyValue": false
-        }
-      },
-      "title": "RespLogin"
-    },
-    "RespUserList": {
-      "type": "object",
-      "required": [
-        "code",
-        "setup",
-        "users"
-      ],
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "响应代码",
-          "allowEmptyValue": false
-        },
-        "msg": {
-          "type": "string",
-          "description": "错误信息",
-          "allowEmptyValue": false
-        },
-        "setup": {
-          "type": "array",
-          "description": "用户列表",
           "allowEmptyValue": false,
-          "items": {
-            "$ref": "#/definitions/Setup"
-          }
-        },
-        "users": {
-          "type": "array",
-          "description": "用户列表",
-          "allowEmptyValue": false,
-          "items": {
-            "$ref": "#/definitions/User"
-          }
+          "required": false
         }
       },
-      "title": "RespUserList"
-    },
-    "Setup": {
-      "type": "object",
-      "properties": {
-        "allow": {
-          "type": "boolean"
-        },
-        "name": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        }
+      "code": {
+        "type": "number",
+        "description": "响应代码",
+        "allowEmptyValue": false,
+        "required": true
       },
-      "title": "Setup"
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "message": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "password": {
-          "type": "string"
-        },
-        "points": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "status": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "uname": {
-          "type": "string"
-        }
-      },
-      "title": "User"
+      "msg": {
+        "type": "string",
+        "description": "错误信息",
+        "allowEmptyValue": false,
+        "required": false
+      }
     }
   }
 }
