@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([["chunk-2d213187"],{aae6:function(e,n,t){"use strict";t.r(n);var a={name:"PhoneHomePage",mixins:[t("43e0").a]},i=t("2877"),c=Object(i.a)(a,(function(){var e=this.$createElement,n=this._self._c||e;return n("div",[n("router-view")],1)}),[],!1,null,"4925c0d9",null);n.default=c.exports}}]);
