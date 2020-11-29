@@ -4,11 +4,11 @@
 'use strict'
 
 class ModelProperty {
-    constructor(desc = '',  type= 'string', required = true) {
+    constructor(desc = '',  type= 'string') {
       this.type = type
       this.description = desc
       this.allowEmptyValue = false
-      this.required = required
+      this.required = true
     }
 
     setRequired(required = true) {
