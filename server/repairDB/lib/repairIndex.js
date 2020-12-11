@@ -19,8 +19,13 @@ async.eachSeries(mustIndex, function (item, cb) {
   //这里要判断是否存在索引,因为考虑到当数据量大的时候再次创建重复的索引会很耗时.
   //得到表的索引
   entity.getIndexes(function (err, getIndex) {
+    // TODO 发现使用mongo4.2发现一个bug,那就是索引的值是一样的,但是索引名不一样,这样好像我判断是
+    // 没有索引的,导致去创建索引,但是又不能创建索引的
     //这里有错为什么不回调,原因是获取索引失败不一定不能创建索引
-    if (err) console.error(CGlobal.logLang('获取索引失败:原因{0}', err.message))
+    if (err) {
+      console.error(err)
+      console.error(CGlobal.logLang('获取索引失败:原因{0}', err.message))
+    }
     //这里返回的错误只有出现不存在这个表时进行创建索引,或者有这个表的存在没有这个索引。
     //判断表是否存在这个索引,有就就不创建
     //这个判断还是有个BUG 的,如果比较1,2,3 和 3,1,2 就会返回false

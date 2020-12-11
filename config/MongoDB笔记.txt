@@ -1,0 +1,26 @@
+4.1 账户权限配置中常用的命令
+show users; # 查看当前库下的用户
+db.dropUser(“username”) # 删除用户username
+db.updateUser( “admin”,{pwd:“password”}); # 修改用户密码
+db.auth(“admin”,“password”); # 密码认证
+use admin; db.updateUser("test",{roles:[{role:"readWriteAnyDatabase",db:"admin"}]})#使用 admin 账号(其为超级用户角色), 将 用户test的权限改为 readWriteAnyDatabase
+show collections; # 查看有哪些表
+use DATABASE_NAME; # 如果数据库不存在，则创建数据库，否则切换到指定数据库
+use testdb; db.dropDatabase(); # 删除数据库()
+db.createCollection(name, options) # 创建集合 name: 新创建的集合名称 options: 创建参数
+
+4.2 MongoDB 数据库角色
+1.数据库用户角色：read、readWrite;
+2.数据库管理角色：dbAdmin、dbOwner、userAdmin；
+3.集群管理角色：clusterAdmin、clusterManager、clusterMonitor、hostManager；
+4.备份恢复角色：backup、restore；
+5.所有数据库角色：readAnyDatabase、readWriteAnyDatabase、userAdminAnyDatabase、 dbAdminAnyDatabase
+6.超级用户角色：root
+
+4.3 给 config 数据库创建一个用户 只能访问 config 不能访问其他数据库
+use config
+db.createUser({
+    user:'configadmin',
+    pwd:'123456',
+    roles:[{role:'dbOwner',db:'config'}]
+})
