@@ -40,18 +40,18 @@ const apiResource = function () {
 }
 
 const createEjsApiFile = function (ejsData) {
-  return new Promise(((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     ejs.renderFile(
-        __dirname + '/template/js.ejs',
-        ejsData,
-        (err, data) => {
-          if (err) {
-            return reject(err)
-          }
-          resolve(data)
+      __dirname + '/template/js.ejs',
+      ejsData,
+      (err, data) => {
+        if (err) {
+          return reject(err)
         }
+        resolve(data)
+      }
     )
-  }))
+  })
 }
 
 const createApiFile = async function (resource) {

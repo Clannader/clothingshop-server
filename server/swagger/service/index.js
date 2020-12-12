@@ -7,7 +7,9 @@ const SwaggerResources = require('./../schema/SwaggerResources')
 const Login = require('./Login')
 const Rights = require('./Rights')
 const Logs = require('./Logs')
+// 1.以后新增模块在这里引入
 
+// 2.把module加入进去
 const mudules = {
   Login, Rights, Logs
 }

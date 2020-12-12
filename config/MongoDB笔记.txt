@@ -1,8 +1,8 @@
 4.1 账户权限配置中常用的命令
 show users; # 查看当前库下的用户
-db.dropUser(“username”) # 删除用户username
-db.updateUser( “admin”,{pwd:“password”}); # 修改用户密码
-db.auth(“admin”,“password”); # 密码认证
+db.dropUser("username") # 删除用户username
+db.updateUser("admin",{pwd:"password"}); # 修改用户密码
+db.auth("admin","password"); # 密码认证
 use admin; db.updateUser("test",{roles:[{role:"readWriteAnyDatabase",db:"admin"}]})#使用 admin 账号(其为超级用户角色), 将 用户test的权限改为 readWriteAnyDatabase
 show collections; # 查看有哪些表
 use DATABASE_NAME; # 如果数据库不存在，则创建数据库，否则切换到指定数据库
