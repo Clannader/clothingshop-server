@@ -5,14 +5,6 @@ export default [
   {
     url: '<%=apiObj.url%>',
     type: '<%=apiObj.type%>',
-    response: () => {
-      return {
-        code: 200,
-        "data": {
-          "token": "12344567"
-          },
-        "msg": "成功"
-      }
-    }
+    response: <%-apiObj.response%>
   }<% if (i !== fetchArr.length - 1) { %>,<%}%><% })%>
 ]

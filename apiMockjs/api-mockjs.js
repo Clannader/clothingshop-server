@@ -45,12 +45,12 @@ class ApiMockjs {
     const modules = this.findModules()
     const modulesFileData = await createEjsApiFile({modules}, 'index').then(data => data)
     fs.writeFileSync(indexPath, modulesFileData)
-    console.log(JSON.stringify(this.allMockData))
+
     // 循环创建并覆盖文件
-    // for (const fileName in this.mockData) {
-    //   const fileData = await createEjsApiFile(this.mockData[fileName], 'module').then(data => data)
-    //   fs.writeFileSync(`${apiPath}/${fileName}.js`, fileData)
-    // }
+    for (const fileName in this.mockData) {
+      const fileData = await createEjsApiFile(this.mockData[fileName], 'module').then(data => data)
+      fs.writeFileSync(`${apiPath}/${fileName}.js`, fileData)
+    }
   }
 
   /**
@@ -79,7 +79,7 @@ class ApiMockjs {
             type: fetch,
             response: this.getDefinitions(paths[path][fetch]['responses']['200']['schema']['$ref']) // ref对应响应的结构
           }
-
+          fetchObj.response = JSON.stringify(fetchObj.response)
           this.mockData[group].fetchArr.push(fetchObj)
           this.allMockData.push(fetchObj)
         }
@@ -94,6 +94,10 @@ class ApiMockjs {
     const valueRef = this.swaggerJSON['definitions'][nameRef]
     const properties = valueRef['properties']
     const resp = {}
+    const arr = ['菜单对象', 'SelectDataNode']
+    if (arr.includes(nameRef)) {
+      return {}
+    }
     for (const key in properties) {
       resp[key] = this.getProperties(properties[key], key)
     }
@@ -119,8 +123,20 @@ class ApiMockjs {
         break
       case 'array':
         value = []
-        // value[proKey] = []
-        // value[proKey].push(this.getDefinitions($pro['items']['$ref']))
+        if ($pro['items'].hasOwnProperty('$ref')) {
+          value.push(this.getDefinitions($pro['items']['$ref']))
+        } else {
+          const arrType = $pro['items']['type']
+
+          switch (arrType) {
+            case 'number':
+            case 'integer':
+              value.push(0)
+              break
+            default:
+              value.push('string')
+          }
+        }
         break
       case 'object':
         if ($pro.hasOwnProperty('$ref')) {
