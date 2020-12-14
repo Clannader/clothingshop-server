@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["chunk-2d2228fb"],{cead:function(n,t,e){"use strict";e.r(t);var a={name:"PhoneSettings"},c=e("2877"),s=Object(c.a)(a,(function(){var n=this.$createElement,t=this._self._c||n;return t("div",{staticClass:"v-application--wrap"},[t("phone-toolbar")],1)}),[],!1,null,"7cadcb4c",null);t.default=s.exports}}]);

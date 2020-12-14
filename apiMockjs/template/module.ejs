@@ -1,0 +1,10 @@
+'use strict'
+
+export default [
+<% fetchArr.forEach( (apiObj, i) => {%>
+  {
+    url: '<%=apiObj.url%>',
+    type: '<%=apiObj.type%>',
+    response: <%-apiObj.response%>
+  }<% if (i !== fetchArr.length - 1) { %>,<%}%><% })%>
+]

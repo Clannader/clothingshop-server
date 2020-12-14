@@ -1,7 +1,7 @@
 /**
  * Created by CC on 2017/12/17.
  */
-'use strict';
+'use strict'
 // let fs = require('fs');
 // function registerEntity(path) {
 //     let dirs = fs.readdirSync(path, 'UTF-8');
@@ -33,15 +33,15 @@
 /**
  * 更换webpack打包不能按照上面这样写了
  */
-require('../entity/super/Admin');
-require('../entity/super/AdminAccess');
-require('../entity/super/AdminLog');
-require('../entity/system/Sequence');
-require('../entity/system/SystemConfig');
-require('../entity/Cart');
-require('../entity/Clothes');
-require('../entity/Order');
-require('../entity/Rights');
-require('../entity/Shop');
-require('../entity/Supplier');
-require('../entity/Test');
+require('../entity/super/Admin')
+require('../entity/super/AdminAccess')
+require('../entity/super/AdminLog')
+require('../entity/system/Sequence')
+require('../entity/system/SystemConfig')
+require('../entity/Cart')
+require('../entity/Clothes')
+require('../entity/Order')
+require('../entity/Rights')
+require('../entity/Shop')
+require('../entity/Supplier')
+require('../entity/Test')
