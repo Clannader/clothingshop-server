@@ -15,14 +15,14 @@ if (!fs.existsSync(apiPath)) {
 const createEjsApiFile = function (ejsData, templateName) {
   return new Promise((resolve, reject) => {
     ejs.renderFile(
-        __dirname + `/template/${templateName}.ejs`,
-        ejsData,
-        (err, data) => {
-          if (err) {
-            return reject(err)
-          }
-          resolve(data)
+      __dirname + `/template/${templateName}.ejs`,
+      ejsData,
+      (err, data) => {
+        if (err) {
+          return reject(err)
         }
+        resolve(data)
+      }
     )
   })
 }
@@ -99,12 +99,12 @@ class ApiMockjs {
       return {}
     }
     for (const key in properties) {
-      resp[key] = this.getProperties(properties[key], key)
+      resp[key] = this.getProperties(properties[key])
     }
     return resp
   }
 
-  getProperties($pro, proKey) {
+  getProperties($pro) {
     const type = $pro['type'] || 'object'
     let value = 'string'
     switch (type) {
@@ -140,7 +140,7 @@ class ApiMockjs {
         break
       case 'object':
         if ($pro.hasOwnProperty('$ref')) {
-          value = this.getDefinitions($pro['$ref'], proKey)
+          value = this.getDefinitions($pro['$ref'])
         } else {
           value = {}
         }
