@@ -21,19 +21,23 @@ module.exports = {
       {
         from: resolve('config/export.bat'),
         to: 'export.bat'
+      },
+      {
+        from: resolve('../node_modules/shelljs/src/exec-child.js'),
+        to: 'exec-child.js'
       }
     ]),
   ],
   module: {
     rules: [
-      // {
-      //   test: /\.js$/,
-      //   loader: 'babel-loader',
-      //   include: resolve(),
-      //   options: {
-      //     presets: ['env', 'stage-2']
-      //   }
-      // }
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: resolve('../node_modules/inquirer'),
+        options: {
+          presets: ['env', 'stage-2']
+        }
+      }
     ]
   }
 }
