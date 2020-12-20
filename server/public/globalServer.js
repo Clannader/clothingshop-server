@@ -78,7 +78,7 @@ log4js.configure({
     appenders: {
         fileLogs: {
             type: 'file',
-            filename: escapePath(process.env.BASE_PATH + 'file_logs\\file.log'),
+            filename: escapePath(process.env.BASE_PATH + 'fileLogs\\fileLog.log'),
             maxLogSize: 10 * 1024 * 1024, // = 10Mb
             numBackups: 5, // keep five backup files
             alwaysIncludePattern: true,
