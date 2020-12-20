@@ -3,7 +3,7 @@
  */
 'use strict'
 const inquirer = require('inquirer')
-const shell = require('shell')
+// const shell = require('shell')
 
 const promiseQuestion = function (promptList) {
   return new Promise(resolve => {
@@ -22,7 +22,13 @@ const choicesType = function () {
       type: 'list',
       message: '选择你要的操作',
       name: 'type',
-      choices: ['Import', 'Export']
+      choices: [{
+        name: 'Import(导入)',
+        value: 'Import'
+      }, {
+        name: 'Export(导出)',
+        value: 'Export'
+      }]
     }
   ]
   return promiseQuestion(promptList)
@@ -73,14 +79,15 @@ const askMongoConfig = function (type) {
 
 const start = async function () {
   const {type} = await choicesType() // {type: 'XXX'}
+  console.log(type)
   // 询问mongoDB的bin目录和目标路径
-  const { binPath, username, pwd, dbName, path } = await askMongoConfig(type)
-  const dir = binPath.substring(0, 2)
-  shell.cd(dir)
-  shell.cd(binPath)
-  const command = type === 'Import' ? 'mongoimport' : 'mongoexport'
-  const mongoCommand = `${command} -u ${username} -p ${pwd} -d ${dbName} -o ${path}`
-  shell.exec(mongoCommand)
+  // const { binPath, username, pwd, dbName, path } = await askMongoConfig(type)
+  // const dir = binPath.substring(0, 2)
+  // shell.cd(dir)
+  // shell.cd(binPath)
+  // const command = type === 'Import' ? 'mongoimport' : 'mongoexport'
+  // const mongoCommand = `${command} -u ${username} -p ${pwd} -d ${dbName} -o ${path}`
+  // shell.exec(mongoCommand)
 }
 
 start()

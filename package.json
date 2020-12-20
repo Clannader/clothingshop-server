@@ -9,7 +9,8 @@
     "start:api": "node ./apiTest/exec-app.js",
     "build:api": "webpack --config ./apiTest/config/webpack.config.js",
     "generator:api": "node ./apiGenerator/api-start.js",
-    "build:mongoExport": "webpack --config ./mongoCLI/config/webpack.export.config.js"
+    "build:mongoExport": "webpack --config ./mongoCLI/config/webpack.export.config.js",
+    "build:mongoStart": "webpack --config ./mongoCLI/config/webpack.start.config.js"
   },
   "dependencies": {
     "async": "~3.2.0",
