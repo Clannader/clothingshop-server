@@ -3,7 +3,7 @@
  */
 'use strict'
 const shell = require('shelljs')
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 
 // 配置信息,暂时不做cli,避免出现一堆bug,浪费太多时间
 const user = 'sa'
@@ -24,8 +24,8 @@ const option = {
   useFindAndModify: false
 }
 
-const dbConn = mongoose.createConnection(`mongodb://${host}:${port}/${dbName}`, option)
-const dbClient = dbConn.getClient()
+// const dbConn = mongoose.createConnection(`mongodb://${host}:${port}/${dbName}`, option)
+// const dbClient = dbConn.getClient()
 
 const getCollections = function () {
   return new Promise(resolve => {
@@ -53,4 +53,7 @@ const start = async function() {
 
   process.exit(0)
 }
-start()
+
+// start()
+shell.echo('Hello World')
+shell.exec('java -version')

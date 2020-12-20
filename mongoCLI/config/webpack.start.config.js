@@ -8,19 +8,19 @@ function resolve(dir) {
 }
 
 module.exports = {
-  entry: './mongoCLI/mongo-export.js',
+  entry: './mongoCLI/mongo-start.js',
   target: 'node',
   output: {
-    path: resolve('dist/export'),
-    filename: 'mongo-export.js'
+    path: resolve('dist/start'),
+    filename: 'mongo-start.js'
   },
   plugins: [
     new webpack.DefinePlugin({}),
     new uglify(),
     new CopyPlugin([
       {
-        from: resolve('config/export.bat'),
-        to: 'export.bat'
+        from: resolve('config/start.bat'),
+        to: 'start.bat'
       },
       {
         from: resolve('../node_modules/shelljs/src/exec-child.js'),
