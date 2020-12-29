@@ -41,7 +41,7 @@ let mustIndex = [
     {
         dbname: 'adminlogs',
         fields: {date: 1},
-        option: {name: 'expire_log', expireAfterSeconds: 7 * 24 * 3600}
+        option: {name: 'expire_log', expireAfterSeconds: 30 * 24 * 3600}
     }
 ];
 
