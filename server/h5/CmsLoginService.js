@@ -35,7 +35,7 @@ CmsLoginService.checkCors = function (req, res, next) {
     return res.send({code: 900, msg: CGlobal.serverLang(req.lang, '缺少x-requested-with头信息', 'admin.invRequest')})
   }
   let url = req.url
-  if (url === '/cms/h5/api/user/login') {
+  if (url === '/user/login') {
     return next()
   }
   adminService.allSuper.apply(adminService, arguments)
