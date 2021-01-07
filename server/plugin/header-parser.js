@@ -6,7 +6,7 @@ let Config = require('../util/Config');
 let cookies = require('cookie');
 
 module.exports = function () {
-    return function (req, res, next) {
+    return function headerParser(req, res, next) {
         let credential = req.headers['credential'];
         //这里有点坑爹啊,坑了我2天,由于我写的swagger的httpClient只实例化一次
         //这边的登录会设置cookie,导致那边的client存了一个cookie,并且不知道怎么删除

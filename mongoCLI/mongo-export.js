@@ -55,5 +55,15 @@ const start = async function() {
 }
 
 // start()
-shell.echo('Hello World')
-shell.exec('java -version')
+// shell.echo('Hello World')
+// shell.exec('java -version')
+
+const arr = [1,2,3,4,5,6]
+
+arr.some(v => {
+  console.log(1)
+  if (v >= 2) {
+    return true
+  }
+  // console.log(2)
+})

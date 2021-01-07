@@ -338,6 +338,13 @@ Utils.getFileSize = function (val = 0) {
   return (val / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i]
 }
 
+/**
+ * 获取node上下文配置路径ContextPath
+ */
+Utils.getContextPath = function () {
+  return this.readConfig('contextPath') || '/'
+}
+
 //Utils读关于CMS的配置,因为无法在全局函数初始化,只能在这里初始化了
 //给全局对象新增字段值
 //因为这些值是读配置的,配置类又得先加载全局类,所以只能这里加了- -

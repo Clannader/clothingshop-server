@@ -3,16 +3,18 @@ console.time('HTTP service start time is')
 console.time('HTTPS service start time is')
 
 //Express框架
-let express = require('express')
-let app = express()
-// let path = require('path');
-let helmet = require('helmet')//防止XSS攻击
-let Utils = require('./server/util/Utils')
+const express = require('express')
+const app = express()
+// const path = require('path');
+const helmet = require('helmet')//防止XSS攻击
+const Utils = require('./server/util/Utils')
+const contextPath = Utils.getContextPath()
 
+// 如果不加contextPath的话,默认是/,加了的话,就是匹配contextPath才会进入接口了
 app.use(helmet())
 //设置响应头
 app.disable('x-powered-by')//不要这个头
-app.use(function (req, res, next) {
+app.use(contextPath, function initXmlData(req, res, next) {
   // res.setHeader('Strict-Transport-Security','max-age=31536000');
   // res.setHeader('X-Content-Type-Options','nosniff');
   // res.setHeader('X-Frame-Options','SAMEORIGIN');
@@ -21,7 +23,7 @@ app.use(function (req, res, next) {
 
   //解析格式化xml请求体
   if (Utils.isHasSoapHeader(req)) {
-    let xmlData = []
+    const xmlData = []
     let xmlLen = 0
     req.on('data', data => {
       xmlData.push(data)
@@ -37,25 +39,25 @@ app.use(function (req, res, next) {
 })
 
 //请求中加cookie
-let cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
 //请求解析body
-let bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 app.use(bodyParser.json({limit: '10mb'}))
 app.use(bodyParser.urlencoded({extended: false, limit: '10mb'}))
 
 //加载静态资源
-app.use(express.static('./public'))
+app.use(contextPath, express.static('./public'))
 
-let headerParser = require('./server/plugin/header-parser')//自定义解析头部信息中间件
-app.use(headerParser())
+const headerParser = require('./server/plugin/header-parser')//自定义解析头部信息中间件
+app.use(contextPath, headerParser())
 
 //请求中加log
 //以后看看这个模块是怎么获取每次请求的时间的
 //研究如何记录每个请求的响应时间,记录在哪还是单纯的写LOG
 //是否是在这里写个回调就是req最后end的地方了吗?BUG
-// let logger = require('morgan');
+// const logger = require('morgan');
 //log模块包使用例子,打印url Log
 // logger.token('url',function (req,res) {
 //     console.log(req.url);
@@ -64,15 +66,15 @@ app.use(headerParser())
 // app.use(logger('dev'));
 
 //请求中加session
-let session = require('express-session')
-let MongoStore = require('connect-mongo')(session)
-// let db_url = 'mongodb://'+Utils.readConfig('db_user')+':'+Utils.readConfig('db_pws')+
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
+// const db_url = 'mongodb://'+Utils.readConfig('db_user')+':'+Utils.readConfig('db_pws')+
 //         '@'+Utils.readConfig('db_url').split('//')[1];
-// let db_url = Utils.readConfig('db_url').replace('\/\/'
+// const db_url = Utils.readConfig('db_url').replace('\/\/'
 //     , '\/\/' + Utils.readConfig('db_user') + ':' + Utils.readConfig('db_pws') + '@');
-let conn = require('./server/dao/daoConnection')
+const conn = require('./server/dao/daoConnection')
 require('./server/dao/registerEntity')
-app.use(session({
+app.use(contextPath, session({
   name: CGlobal.GlobalStatic.sessionName, secret: CGlobal.GlobalStatic.sessionSecret,
   // saveUninitialized: false, resave: true,//这种模式每次产生的session都是相同的
   saveUninitialized: false,// 是否自动保存未初始化的会话
@@ -96,11 +98,11 @@ app.use(session({
 }))
 
 //添加网站的图标
-//let favicon = require('serve-favicon');
+//const favicon = require('serve-favicon');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 //加载ejs视图框架包
-let ejs = require('ejs')
+const ejs = require('ejs')
 //页面视图采用html
 app.set('views', process.env.BASE_PATH + 'views')
 app.engine('.html', ejs.__express)
@@ -108,15 +110,15 @@ app.set('view engine', 'html')
 
 // app.use(require('./server/swagger/swagger-router'))
 // 初始化用户数据
-app.use(require('./server/plugin/initData'))
+app.use(contextPath, require('./server/plugin/initData'))
 //加载路由
-app.use(require('./server/routes/routes'))
+app.use(contextPath, require('./server/routes/routes'))
 //修复必要数据
 require('./server/repairDB/repair')
 
 // catch 404 and forward to error handler
 // 404的产生是访问服务器没有匹配的路由才会调到这里来
-app.use(function (req, res) {
+app.use(function notFoundError(req, res) {
   //有三个参数req,res,next
   // console.error(CGlobal.logLang('错误LOG:请求路径为 {0} 的网页找不到,发生404错误', req.url));
   // 如果有的去404页面,如果是user进来的再说,如果是新页面进来的又再说,
@@ -129,11 +131,11 @@ app.use(function (req, res) {
      4.不满足上面的,不管有没有session都返回一个json即可,考虑到接口问题
    */
 
-  // let url = req.url;
-  // let isSuper = url.startsWith('/super');
+  // const url = req.url;
+  // const isSuper = url.startsWith('/super');
   //要以super开头,并且没有"x-requested-with"这个头才是网页调用
-  // let isHasXMLHeader = Utils.isHasXMLHeader(req);//是否有x-requested-with头???
-  // let isHasJsonHeader = req.headers['content-type']
+  // const isHasXMLHeader = Utils.isHasXMLHeader(req);//是否有x-requested-with头???
+  // const isHasJsonHeader = req.headers['content-type']
   //     && req.headers['content-type'] === 'application/json';
   // if (isSuper && !isHasXMLHeader) {
   //     if (req.session.adminSession) {
@@ -155,13 +157,17 @@ app.use(function (req, res) {
 // production error handler
 // no stacktraces leaked to user
 // 这里就是请求回调错误处理的地方
-app.use(function (err, req, res, next) {//这里的next一定不能少不然不会进来,不知道为什么...
+app.use(function unknownError(err, req, res, next) {//这里的next一定不能少不然不会进来,不知道为什么...
   if (Utils.readConfig('printError') === 'true') {
     console.error(err.stack || 'error stack:null')
     console.error(CGlobal.logLang('错误LOG:请求服务器 {0} 错误', err.message))
   }
   res.send({code: 999, msg: err.message})
   next()
+})
+
+app._router.stack.forEach(v => {
+  console.log(v.name)
 })
 
 if (Utils.readConfig('startHTTP') === 'true') {
@@ -183,9 +189,9 @@ else {
 
 //这里如果设置ip为127.0.0.1就是localhost,但是如果其他服务用了这个端口,
 //用127.0.0.1这个ip是检测不出被占用的,所以要定义undefined
-// let ip = Utils.readConfig('ip');
-// let os = require('os');
-// let hostname = Utils.readConfig('ip');
+// const ip = Utils.readConfig('ip');
+// const os = require('os');
+// const hostname = Utils.readConfig('ip');
 // if (ip === '127.0.0.1' || ip === 'localhost') {
 //     ip = undefined;
 //     hostname = os.hostname();
@@ -199,8 +205,8 @@ function startHTTP() {
   if (ip === '127.0.0.1' || ip === 'localhost') {
     ip = undefined
   }
-  let http = require('http')
-  let server = http.createServer(app)
+  const http = require('http')
+  const server = http.createServer(app)
       .listen(Utils.readConfig('http_port'), ip)
       .on('error', onError)
       .on('listening', onListening)
@@ -214,7 +220,7 @@ function startHTTP() {
       throw error
     }
 
-    let bind = typeof Utils.readConfig('http_port') === 'string'
+    const bind = typeof Utils.readConfig('http_port') === 'string'
         ? 'Pipe ' + Utils.readConfig('http_port')
         : 'Port ' + Utils.readConfig('http_port')
 
@@ -237,15 +243,15 @@ function startHTTP() {
    * Event listener for HTTP server "listening" event.
    */
   function onListening() {
-    let addr = server.address()
-    let bind = typeof addr === 'string'
+    const addr = server.address()
+    const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port: ' + addr.port
     //打印log
     console.log(CGlobal.logLang('clothingshop:server HTTP启动成功,{0} IP地址为:{1}', bind, ip || 'localhost'))
     console.timeEnd('HTTP service start time is')
-    console.log('界面访问 http://%s:%s/index', 'localhost', addr.port)
-    console.log('swagger界面访问 http://%s:%s/swagger-ui/', 'localhost', addr.port)
+    console.log('界面访问 http://%s:%s%s/index', 'localhost', addr.port, contextPath)
+    console.log('swagger界面访问 http://%s:%s%s/swagger-ui/', 'localhost', addr.port, contextPath)
     // console.log('Node 界面访问 http://%s:%s/superLogin', hostname, addr.port);
     // console.log('Vue 界面访问 http://%s:%s/v-index', hostname, addr.port);
     // console.log('Angular 界面访问 http://%s:%s/ng-index', hostname, addr.port);
@@ -255,9 +261,9 @@ function startHTTP() {
 function startHTTPS() {
   /************启动HTTPS服务********************/
       //Create HTTPS server
-  let https = require('https')
-  let fs = require('fs')
-  let os = require('os')
+  const https = require('https')
+  const fs = require('fs')
+  const os = require('os')
   let ip = Utils.readConfig('ip')
   let hostname = ip
   if (ip === '127.0.0.1' || ip === 'localhost') {
@@ -266,11 +272,11 @@ function startHTTPS() {
       hostname = os.hostname
     }
   }
-  let options = {
+  const options = {
     key: fs.readFileSync('./certs/privateKey.pem'),
     cert: fs.readFileSync('./certs/certificate.pem')
   }
-  let https_server = https.createServer(options, app)
+  const https_server = https.createServer(options, app)
       .listen(Utils.readConfig('https_port'), ip)
       .on('error', onHttpsError)
       .on('listening', onHttpsListening)
@@ -288,7 +294,7 @@ function startHTTPS() {
       throw error
     }
 
-    let bind = typeof Utils.readConfig('https_port') === 'string'
+    const bind = typeof Utils.readConfig('https_port') === 'string'
         ? 'Pipe ' + Utils.readConfig('https_port')
         : 'Port ' + Utils.readConfig('https_port')
 
@@ -311,8 +317,8 @@ function startHTTPS() {
    * Event listener for HTTPS server "listening" event.
    */
   function onHttpsListening() {
-    let addr = https_server.address()
-    let bind = typeof addr === 'string'
+    const addr = https_server.address()
+    const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port: ' + addr.port
     //打印log

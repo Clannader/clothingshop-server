@@ -47,13 +47,13 @@ app.all('/*', function (req, res, next) {
 })
 
 //h5专用路由
-app.use(require('./h5Routes/login_route'))
-app.use(require('./h5Routes/user_route'))
+app.use('/cms/h5/api', require('./h5Routes/login_route'))
+app.use('/cms/h5/api/user', require('./h5Routes/user_route'))
 app.use(require('./h5Routes/about_cms_route'))
-app.use(require('./h5Routes/rights_route'))
+app.use('/cms/h5/api/rights', require('./h5Routes/rights_route'))
 // app.use(require('./h5Routes/upload_route'))// 上传文件路由
-app.use(require('./h5Routes/server_logs_route'))
-app.use(require('./h5Routes/system_config_route'))
+app.use('/cms/h5/api/logs', require('./h5Routes/server_logs_route'))
+app.use('/cms/h5/api/system', require('./h5Routes/system_config_route'))
 // swagger 路由
 app.use(require('../swagger/swagger-router'))
 
