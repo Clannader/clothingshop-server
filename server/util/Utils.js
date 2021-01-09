@@ -345,6 +345,18 @@ Utils.getContextPath = function () {
   return this.readConfig('contextPath') || '/'
 }
 
+/**
+ * 解密config.ini配置的内容
+ */
+Utils.getSecurityConfig = function (str = '') {
+  const isSecurity = this.convertStringToBoolean(this.readConfig('security') || '')
+  return isSecurity ? this.tripleDESdecrypt(this.readConfig(str)) : this.readConfig(str)
+}
+
+Utils.convertStringToBoolean = function (str = '') {
+  return (typeof str === 'string' && str === 'true') || (typeof str === 'boolean' && str)
+}
+
 //Utils读关于CMS的配置,因为无法在全局函数初始化,只能在这里初始化了
 //给全局对象新增字段值
 //因为这些值是读配置的,配置类又得先加载全局类,所以只能这里加了- -
