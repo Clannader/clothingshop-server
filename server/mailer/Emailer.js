@@ -9,12 +9,12 @@ let Utils = require('../util/Utils');
 function Emailer(opt) {
     opt = opt || {};
     let options = {
-        host: opt.host || Utils.readConfig('mail_host'),
+        host: opt.host || Utils.getSecurityConfig('mail_host'),
         secureConnection: opt.secureConnection || true,
         port: opt.port || Utils.readConfig('mail_port'),
         auth: {
-            user: opt.user || Utils.readConfig('mail_user'),
-            pass: opt.pass || Utils.readConfig('mail_pws')
+            user: opt.user || Utils.getSecurityConfig('mail_user'),
+            pass: opt.pass || Utils.getSecurityConfig('mail_pws')
         },
         logger: opt.logger || false
     };

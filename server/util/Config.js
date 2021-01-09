@@ -102,7 +102,8 @@ Config.parse = Config.prototype.parse = function (qs, sep, eq) {
     let obj = {},
         _sep = sep || '\r\n',
         _eq = eq || '=',
-        regex = new RegExp('^(.+)' + _eq + '(.+)$');
+        regex = new RegExp('^(.+)(?<!=)' + _eq + '(?!=)(.+)$');// 由于部分配置进行了加密,正则需要匹配
+        // 第一个等号的分隔
 
     if (typeof qs !== 'string' || qs.length === 0) {
         return obj;

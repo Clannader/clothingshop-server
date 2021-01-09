@@ -9,8 +9,8 @@ let Utils = require('../util/Utils')
 let that = module.exports
 //这个数据库连接是需要电脑有网络才能通的,否则报连接异常
 let opt = {
-  user: Utils.readConfig('db_user'),
-  pass: Utils.readConfig('db_pws'),
+  user: Utils.getSecurityConfig('db_user'),
+  pass: Utils.getSecurityConfig('db_pws'),
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -20,7 +20,7 @@ let opt = {
   // reconnectTries: 100//尝试重连100次
   // }
 }
-let conn = mongoose.createConnection(Utils.readConfig('db_url'), opt)
+let conn = mongoose.createConnection(Utils.getSecurityConfig('db_url'), opt)
 //数据库连接错误时报错
 conn.on('error', function (err) {
   console.log('数据库出错')

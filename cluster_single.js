@@ -167,6 +167,7 @@ app.use(function unknownError(err, req, res, next) {//这里的next一定不能�
 })
 
 app._router.stack.forEach(v => {
+  // TODO 统计所有注册的路由
   console.log(v.name)
 })
 
@@ -250,8 +251,8 @@ function startHTTP() {
     //打印log
     console.log(CGlobal.logLang('clothingshop:server HTTP启动成功,{0} IP地址为:{1}', bind, ip || 'localhost'))
     console.timeEnd('HTTP service start time is')
-    console.log('界面访问 http://%s:%s%s/index', 'localhost', addr.port, contextPath)
-    console.log('swagger界面访问 http://%s:%s%s/swagger-ui/', 'localhost', addr.port, contextPath)
+    console.log('界面访问 http://%s:%s%s/index', 'localhost', addr.port, contextPath === '/' ? '' : contextPath)
+    console.log('swagger界面访问 http://%s:%s%s/swagger-ui/', 'localhost', addr.port, contextPath === '/' ? '' : contextPath)
     // console.log('Node 界面访问 http://%s:%s/superLogin', hostname, addr.port);
     // console.log('Vue 界面访问 http://%s:%s/v-index', hostname, addr.port);
     // console.log('Angular 界面访问 http://%s:%s/ng-index', hostname, addr.port);
