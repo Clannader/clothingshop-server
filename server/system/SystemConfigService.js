@@ -31,7 +31,35 @@ SystemConfigService.getSystemGroup = async function (req, res) {
   if (err) {
     return res.send({code: 0, msg: err.message})
   }
-  res.send({
+  return res.send({
+    ...result,
+    code: 1
+  })
+}
+
+SystemConfigService.createSystemGroup = function (req, res) {
+
+}
+
+SystemConfigService.modifySystemGroup = function (req, res) {
+
+}
+
+SystemConfigService.getSystemInfo = async function (req, res) {
+  const session = Utils.getAdminSession(req)
+  const id = req.query.id
+  if (CGlobal.isEmpty(id)) {
+    return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '查询ID不能为空'
+          , 'systemConfig.isEmptyId')})
+  }
+  // 避免前端乱传值进来
+  req.body = Object.assign({}, { id })
+  const [err, result] = await SystemConfig.findGroupByWhere(req, session)
+      .then(result => [null, result]).catch(err => [err])
+  if (err) {
+    return res.send({code: 0, msg: err.message})
+  }
+  return res.send({
     ...result,
     code: 1
   })
