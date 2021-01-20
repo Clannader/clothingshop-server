@@ -14,7 +14,7 @@ const AboutCmsService = {
      * 测试缓存类是否有效
      */
     let setup = setUpCache.getCacheAboutCMS()
-    return res.send(CGlobal.extend({code: 1}, setup))
+    return res.send(CGlobal.extend({code: 100}, setup))
   },
   gotoIndex(req, res) {
     return res.render('index')
@@ -26,17 +26,17 @@ const AboutCmsService = {
     console.log(req.lang)
     if (req.lang === 'EN') {
       setTimeout(() => {
-        return res.send({lang: req.lang, code: 1})
+        return res.send({lang: req.lang, code: 100})
       }, 1000)
     } else {
       process.nextTick(() => {
-        return res.send({lang: req.lang, code: 1})
+        return res.send({lang: req.lang, code: 100})
       })
     }
   },
   getAppVersion(req, res) {
     // 这里也不知道为什么加了这个接口,感觉没什么用
-    return res.send({code: 1, version: Utils.readConfig('version')})
+    return res.send({code: 100, version: Utils.readConfig('version')})
   },
   gotoNaReport(req, res) {
     // const url = 'https://cambridge-dev.shijicloud.com/CambridgeAPI'
@@ -55,8 +55,8 @@ const AboutCmsService = {
   gotoWord(req, res) {
     // 测试word文件预览问题
     fs.readFile(__dirname + '/../../public/video/1.docx', function (err, text) {
-      if (err) return res.send({code: 0, msg: err.message})
-      res.send({code: 1, text: text})
+      if (err) return res.send({code: 999, msg: err.message})
+      res.send({code: 100, text: text})
     })
   }
 }

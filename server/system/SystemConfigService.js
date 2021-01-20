@@ -19,7 +19,7 @@ SystemConfigService.getSystemConfig = function (req, res) {
       author: Utils.readConfig('author'),
       copyright: Utils.readConfig('copyright')
     },
-    code: 1
+    code: 100
   }
   return res.send(config)
 }
@@ -29,11 +29,11 @@ SystemConfigService.getSystemGroup = async function (req, res) {
   const [err, result] = await SystemConfig.getSystemGroupPage(req, session)
       .then(result => [null, result]).catch(err => [err])
   if (err) {
-    return res.send({code: 0, msg: err.message})
+    return res.send({code: 999, msg: err.message})
   }
   return res.send({
     ...result,
-    code: 1
+    code: 100
   })
 }
 
@@ -49,7 +49,7 @@ SystemConfigService.getSystemInfo = async function (req, res) {
   const session = Utils.getAdminSession(req)
   const id = req.query.id
   if (CGlobal.isEmpty(id)) {
-    return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '查询ID不能为空'
+    return res.send({code: 999, msg: CGlobal.serverLang(req.lang, '查询ID不能为空'
           , 'systemConfig.isEmptyId')})
   }
   // 避免前端乱传值进来
@@ -57,11 +57,11 @@ SystemConfigService.getSystemInfo = async function (req, res) {
   const [err, result] = await SystemConfig.findGroupByWhere(req, session)
       .then(result => [null, result]).catch(err => [err])
   if (err) {
-    return res.send({code: 0, msg: err.message})
+    return res.send({code: 999, msg: err.message})
   }
   return res.send({
     ...result,
-    code: 1
+    code: 100
   })
 }
 

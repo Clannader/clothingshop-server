@@ -45,7 +45,7 @@ CmsUserService.getUserRoles = async function (req, res) {
   const rights = session.rights.join(',')
   // delete session.rights
   return res.send({
-    code: 1,
+    code: 100,
     roles: rights,
     session: Utils.getTemplateSession(session)
   })
@@ -54,9 +54,9 @@ CmsUserService.getUserRoles = async function (req, res) {
 CmsUserService.changePassword = function (req, res) {
   let session = Utils.getAdminSession(req)
   Admin.changePassword(req, session).then(() => {
-    res.send({code: 1})
+    res.send({code: 100})
   }).catch(err => {
-    res.send({code: 0, msg: err.message})
+    res.send({code: 999, msg: err.message})
   })
 }
 

@@ -31,25 +31,25 @@ class ServerLogService {
     let adminSession = Utils.getAdminSession(req)
     if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.ServerLogs.code)) {
       return res.send({
-        code: 0, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+        code: 999, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
             , 'admin.noRights', CGlobal.Rights.ServerLogs.code)
       })
     }
-    res.send({code: 1, logs: ServerLogService.getAllLogs()})
+    res.send({code: 100, logs: ServerLogService.getAllLogs()})
   }
 
   static downloadLogs(req, res) {
     let logName = req.body.logName
     if (!logName) {
       return res.send({
-        code: 0, msg: CGlobal.serverLang(req.lang, '日志文件名不能为空!'
+        code: 999, msg: CGlobal.serverLang(req.lang, '日志文件名不能为空!'
             , 'serverLog.logNameIsEmpty')
       })
     }
     let adminSession = Utils.getAdminSession(req)
     if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.ServerLogs.code)) {
       return res.send({
-        code: 0, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+        code: 999, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
             , 'admin.noRights', CGlobal.Rights.ServerLogs.code)
       })
     }
@@ -113,7 +113,7 @@ class ServerLogService {
         }
       }
       res.send({
-        code: 1,
+        code: 100,
         content: Utils.stringToBase64(bufferArr),
         hasMore: hasMore,
         startByte: startByte,
@@ -122,14 +122,14 @@ class ServerLogService {
     })
 
     stream.on('error', function (err) {
-      res.send({code: 0, msg: err.message})
+      res.send({code: 999, msg: err.message})
     })
     // End
 
     // 读取文件
     // fs.readFile(logpath + '/' + logName, function (err, text) {
-    //   if (err) return res.send({code: 0, msg: err.message})
-    //   res.send({code: 1, content: Utils.stringToBase64(text + '')})
+    //   if (err) return res.send({code: 999, msg: err.message})
+    //   res.send({code: 100, content: Utils.stringToBase64(text + '')})
     // })
   }
 
@@ -139,36 +139,36 @@ class ServerLogService {
     const logName = req.body.logName
     if (!logName) {
       return res.send({
-        code: 0, msg: CGlobal.serverLang(req.lang, '日志文件名不能为空!'
+        code: 999, msg: CGlobal.serverLang(req.lang, '日志文件名不能为空!'
             , 'serverLog.logNameIsEmpty')
       })
     }
     const adminSession = Utils.getAdminSession(req)
     if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.DeleteServerLog.code)) {
       return res.send({
-        code: 0, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
+        code: 999, msg: CGlobal.serverLang(req.lang, '抱歉,你没有 [{0}] 权限访问!'
             , 'admin.noRights', CGlobal.Rights.DeleteServerLog.code)
       })
     }
     const logPath = logpath + '/' + logName
     fs.stat(logPath, (err, stat) => {
       if (err) {
-        return res.send({code: 0, msg: err.message})
+        return res.send({code: 999, msg: err.message})
       }
       const time = moment(stat.birthtimeMs).format('YYYY-MM-DD')
       const days = moment().diff(moment(time), 'days')
       if (days <= 30 ) {
-        return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '无法删除30天内的日志'
+        return res.send({code: 999, msg: CGlobal.serverLang(req.lang, '无法删除30天内的日志'
               , 'serverLog.delLogError')})
       }
       fs.unlink(logPath, function (err) {
-        if (err) return res.send({code: 0, msg: err.message})
+        if (err) return res.send({code: 999, msg: err.message})
         AdminLog.createLog({
           content: CGlobal.serverLang(req.lang, '删除服务器日志 {0}'
               , 'serverLog.delLogName', logName),
           type: CGlobal.GlobalStatic.Log_Type.SERVER_LOG
         }, adminSession, CGlobal.noop)
-        res.send({code: 1})
+        res.send({code: 100})
       })
     })
   }
