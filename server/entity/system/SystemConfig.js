@@ -386,11 +386,7 @@ SystemConfigSchema.statics.getFindWhere = function (req, session) {
   if (!CGlobal.isSupervisor(session)) {
     // 如果不是超级管理员,需要只能查询自己管理的店铺列表
     // 这里需要加入可以查SYSTEM的配置
-    const shopArr = Utils.getShopIds(session.shopList)
-    // 新增判断是否能查询SYSTEM
-    if (CGlobal.isPermission(session.rights, CGlobal.Rights.CreateSYSAny.code)) {
-      shopArr.push('SYSTEM')
-    }
+    const shopArr = Utils.getShopIds(session)
     searchWhere.$and.push({shopId: {$in: shopArr}})
   }
   if (searchWhere.$or.length === 0) delete searchWhere.$or
@@ -474,10 +470,7 @@ SystemConfigSchema.statics.findGroupByWhere = function (req, session) {
   }
 
   if (!CGlobal.isSupervisor(session)) {
-    const shopArr = Utils.getShopIds(session.shopList)
-    if (CGlobal.isPermission(session.rights, CGlobal.Rights.CreateSYSAny.code)) {
-      shopArr.push('SYSTEM')
-    }
+    const shopArr = Utils.getShopIds(session)
     searchWhere.$and.push({shopId: {$in: shopArr}})
   }
 
