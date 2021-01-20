@@ -55,7 +55,6 @@ app.all('/*', function (req, res, next) {
           this.set('Content-Length', chunk.length) // 如果不设置这句话,修改chunk是没有返回的
         }
       }catch (e) {
-
       }
     }
     return _end.apply(this, [chunk, encoding])

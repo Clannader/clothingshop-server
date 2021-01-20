@@ -18,7 +18,7 @@ RightsService.getRightsList = function (req, res) {
   Rights.getAllRights(req, session, function (err, result) {
     if (err) {
       console.error(err)
-      return res.send({code: -1, msg: err.message})
+      return res.send({code: 300, msg: err.message})
     }
     res.send({code: 100, rights: result.rows, total: result.total})
   })
