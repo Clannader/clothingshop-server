@@ -94,7 +94,10 @@ class ApiMockjs {
     const valueRef = this.swaggerJSON['definitions'][nameRef]
     const properties = valueRef['properties']
     const resp = {}
-    const arr = ['菜单对象', 'SelectDataNode']
+    const arr = ['菜单对象', 'SelectDataNode'
+      , 'Channelcancel_Head', 'Channelhotel_Head'
+    , 'GticketBooking_Head']
+    // console.log(nameRef)
     if (arr.includes(nameRef)) {
       return {}
     }
