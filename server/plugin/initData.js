@@ -36,7 +36,7 @@ const initAdminInfo = async function (req, res, next) {
             return null
         })
     if (!adminInfo) {
-        return res.send({code: 0,
+        return res.send({code: 999,
             msg: CGlobal.serverLang(req.lang, '获取权限失败', 'admin.errorRights')})
     }
     const adminRights = adminInfo.rights
@@ -45,7 +45,7 @@ const initAdminInfo = async function (req, res, next) {
         return null
     })
     if(!rights){
-        return res.send({code: 0,
+        return res.send({code: 999,
             msg: CGlobal.serverLang(req.lang, '获取权限失败', 'admin.errorRights')})
     }
     adminSession.rights = rights // 这个是换算后的权限列表,都是数字组成

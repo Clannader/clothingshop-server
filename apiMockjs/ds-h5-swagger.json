@@ -17,7 +17,7 @@
     },
     {
       "name": "日志消息模块",
-      "description": "Msg Controller"
+      "description": "Interface Log Controller"
     },
     {
       "name": "档案模块",
@@ -6061,6 +6061,62 @@
         "x-order": "4"
       }
     },
+    "/api/interfacelog/log_list": {
+      "post": {
+        "tags": [
+          "日志消息模块"
+        ],
+        "summary": "接口日志 - 日志列表",
+        "description": "获取接口日志列表",
+        "operationId": "log_listUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "common_InterfaceLog_Req",
+            "description": "common_InterfaceLog_Req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Common_InterfaceLog_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Common_InterfaceLog_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "11"
+      }
+    },
     "/api/interfaceop/exec_method": {
       "post": {
         "tags": [
@@ -7123,7 +7179,7 @@
         ],
         "summary": "短信 - 短信日志列表",
         "description": "获取短信日志列表",
-        "operationId": "log_listUsingPOST",
+        "operationId": "log_listUsingPOST_1",
         "consumes": [
           "application/json"
         ],
@@ -9720,62 +9776,6 @@
         "x-order": "25"
       }
     },
-    "/api/report/report_cancel_order": {
-      "post": {
-        "tags": [
-          "统计报表模块"
-        ],
-        "summary": "报表 - 取消订单数据",
-        "description": "取消订单数据",
-        "operationId": "report_cancel_orderUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "认证token",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "req",
-            "description": "req",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Statistic_Report_Req"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ResultJson«Report_Cancel_Order_Res»"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "deprecated": false,
-        "x-order": "28"
-      }
-    },
     "/api/report/report_change_collections": {
       "post": {
         "tags": [
@@ -9812,7 +9812,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ResultJson«Set«string»»"
+              "$ref": "#/definitions/ResultJson«List«Report_Data»»"
             }
           },
           "201": {
@@ -9830,6 +9830,398 @@
         },
         "deprecated": false,
         "x-order": "22"
+      }
+    },
+    "/api/report/report_channelarrivals": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道预抵订单统计",
+        "description": "渠道预抵订单统计",
+        "operationId": "report_channelarrivalsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelarrivals_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelarrivals_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "34"
+      }
+    },
+    "/api/report/report_channelbooking": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道当日预定",
+        "description": "渠道当日预定",
+        "operationId": "report_channelbookingUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelbooking_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelbooking_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "32"
+      }
+    },
+    "/api/report/report_channelcancel": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道订单取消统计",
+        "description": "渠道订单取消统计",
+        "operationId": "report_channelcancelUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelcancel_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelcancel_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "29"
+      }
+    },
+    "/api/report/report_channelgroup": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道分组统计",
+        "description": "渠道分组统计",
+        "operationId": "report_channelgroupUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelgroup_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelgroup_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "26"
+      }
+    },
+    "/api/report/report_channelhotel": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道酒店预订统计",
+        "description": "渠道酒店预订统计",
+        "operationId": "report_channelhotelUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelhotel_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelhotel_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "27"
+      }
+    },
+    "/api/report/report_channelprecontrol": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道预控房统计",
+        "description": "渠道预控房统计",
+        "operationId": "report_channelprecontrolUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelprecontrol_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelprecontrol_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "31"
+      }
+    },
+    "/api/report/report_channelroomtype": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 渠道房型预订统计",
+        "description": "渠道房型预订统计",
+        "operationId": "report_channelroomtypeUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Channelroomtype_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Channelroomtype_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "28"
       }
     },
     "/api/report/report_collections": {
@@ -9859,7 +10251,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ResultJson«Set«string»»"
+              "$ref": "#/definitions/ResultJson«List«Report_Data»»"
             }
           },
           "201": {
@@ -9879,14 +10271,14 @@
         "x-order": "21"
       }
     },
-    "/api/report/report_data_by_hotel": {
+    "/api/report/report_dailyarrivals": {
       "post": {
         "tags": [
           "统计报表模块"
         ],
-        "summary": "报表 - 酒店预订数据",
-        "description": "酒店预订数据",
-        "operationId": "report_data_by_hotelUsingPOST",
+        "summary": "报表 - 每日预抵订单统计",
+        "description": "每日预抵订单统计",
+        "operationId": "report_dailyarrivalsUsingPOST",
         "consumes": [
           "application/json"
         ],
@@ -9907,7 +10299,7 @@
             "description": "req",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Report_Hotel_Roomtype_Req"
+              "$ref": "#/definitions/Report_Dailyarrivals_Req"
             }
           }
         ],
@@ -9915,7 +10307,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ResultJson«Report_Hotel_Roomtype_Res»"
+              "$ref": "#/definitions/ResultJson«Report_Dailyarrivals_Res»"
             }
           },
           "201": {
@@ -9932,119 +10324,7 @@
           }
         },
         "deprecated": false,
-        "x-order": "26"
-      }
-    },
-    "/api/report/report_data_by_roomtype": {
-      "post": {
-        "tags": [
-          "统计报表模块"
-        ],
-        "summary": "报表 - 房型预订数据",
-        "description": "房型预订数据",
-        "operationId": "report_data_by_roomtypeUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "认证token",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "req",
-            "description": "req",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Report_Hotel_Roomtype_Req"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ResultJson«Report_Hotel_Roomtype_Res»"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "deprecated": false,
-        "x-order": "27"
-      }
-    },
-    "/api/report/report_data_by_type": {
-      "post": {
-        "tags": [
-          "统计报表模块"
-        ],
-        "summary": "报表 - 分类预订数据",
-        "description": "分类预订数据",
-        "operationId": "report_data_by_typeUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "认证token",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "req",
-            "description": "req",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Statistic_Report_Req"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ResultJson«Report_Type_Res»"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "deprecated": false,
-        "x-order": "25"
+        "x-order": "33"
       }
     },
     "/api/report/report_gticketbooking": {
@@ -10083,7 +10363,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ResultJson«List«Report_GticketBooking_Res»»"
+              "$ref": "#/definitions/ResultJson«Report_GticketBooking_Res»"
             }
           },
           "201": {
@@ -10100,7 +10380,7 @@
           }
         },
         "deprecated": false,
-        "x-order": "24"
+        "x-order": "25"
       }
     },
     "/api/report/report_gticketdaily": {
@@ -10139,7 +10419,63 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ResultJson«List«Report_GticketDaily_Res»»"
+              "$ref": "#/definitions/ResultJson«Report_GticketDaily_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "24"
+      }
+    },
+    "/api/report/report_list": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 获取报表列表",
+        "description": "获取报表列表",
+        "operationId": "report_listUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_List_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«List«Report_Data»»"
             }
           },
           "201": {
@@ -10157,6 +10493,174 @@
         },
         "deprecated": false,
         "x-order": "23"
+      }
+    },
+    "/api/report/report_packagesale": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 套餐销售统计",
+        "description": "套餐销售统计",
+        "operationId": "report_packagesaleUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Packagesale_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Packagesale_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "36"
+      }
+    },
+    "/api/report/report_reservationrate": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 酒店预定率",
+        "description": "酒店预定率",
+        "operationId": "report_reservationrateUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Reservationrate_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Reservationrate_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "30"
+      }
+    },
+    "/api/report/report_salesstatistics": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "报表 - 销售员统计",
+        "description": "销售员统计",
+        "operationId": "report_salesstatisticsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report_Salesstatistics_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Report_Salesstatistics_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "35"
       }
     },
     "/api/rmtype/del": {
@@ -10381,6 +10885,315 @@
         },
         "deprecated": false,
         "x-order": "3"
+      }
+    },
+    "/api/schedule/delete_naParam": {
+      "post": {
+        "tags": [
+          "设置模块"
+        ],
+        "summary": "夜审设置 - 删除夜审参数",
+        "description": "删除审参数",
+        "operationId": "delete_naParamUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Common_Load_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "183"
+      }
+    },
+    "/api/schedule/load_naLog": {
+      "post": {
+        "tags": [
+          "设置模块"
+        ],
+        "summary": "夜审设置 - 获取夜审日志",
+        "description": "获取夜审日志",
+        "operationId": "load_naLogUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NaDailyLog_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«NaDailyLog_Entity»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "185"
+      }
+    },
+    "/api/schedule/load_naRunInfo": {
+      "post": {
+        "tags": [
+          "设置模块"
+        ],
+        "summary": "夜审设置 - 获取夜审状态",
+        "description": "获取夜审状态",
+        "operationId": "load_naRunInfoUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«NaRunInfo_Entity»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "184"
+      }
+    },
+    "/api/schedule/naParam_list": {
+      "post": {
+        "tags": [
+          "设置模块"
+        ],
+        "summary": "夜审设置 - 获取夜审配置和参数列表",
+        "description": "获取夜审步骤参数配置列表",
+        "operationId": "naParam_listUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«NaConfig_Entity»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "181"
+      }
+    },
+    "/api/schedule/refresh_naStatus": {
+      "post": {
+        "tags": [
+          "设置模块"
+        ],
+        "summary": "夜审设置 - 重设夜审",
+        "description": "重设夜审",
+        "operationId": "refresh_naStatusUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "185"
+      }
+    },
+    "/api/schedule/save_naParam": {
+      "post": {
+        "tags": [
+          "设置模块"
+        ],
+        "summary": "夜审设置 - 保存夜审配置和参数",
+        "description": "保存夜审参数",
+        "operationId": "save_naParamUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NaConfig_Entity"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "182"
       }
     },
     "/api/spa/cancel_spas": {
@@ -11332,6 +12145,62 @@
           }
         },
         "deprecated": false,
+        "x-order": "3"
+      }
+    },
+    "/api/statistic/index2_data": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "统计数据 - 获取首页相关统计数据2",
+        "description": "获取首页相关统计数据2",
+        "operationId": "index2_dataUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Statistic_IndexData2_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Statistic_IndexData2_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
         "x-order": "2"
       }
     },
@@ -11391,6 +12260,286 @@
         "x-order": "1"
       }
     },
+    "/api/statistic/room_status": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "统计数据 - 房态表",
+        "description": "房态表数据",
+        "operationId": "room_statusUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "room_Status_Req",
+            "description": "room_Status_Req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room_Status_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Room_Status_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "5"
+      }
+    },
+    "/api/statistic/room_status_bad_list": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "统计数据 - 房态表详情坏房列表",
+        "description": "房态表详情坏房列表",
+        "operationId": "room_status_bad_listUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "room_status_detail_list_req",
+            "description": "room_status_detail_list_req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room_Status_Detail_List_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Room_Status_Bad_List_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "9"
+      }
+    },
+    "/api/statistic/room_status_block_list": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "统计数据 - 房态表详情预留占用列表",
+        "description": "房态表详情预留占用列表",
+        "operationId": "room_status_block_listUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "room_status_detail_list_req",
+            "description": "room_status_detail_list_req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room_Status_Detail_List_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Room_Status_Block_List_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "8"
+      }
+    },
+    "/api/statistic/room_status_booking_list": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "统计数据 - 房态表详情预定占用列表",
+        "description": "房态表详情预定占用列表",
+        "operationId": "room_status_booking_listUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "room_status_detail_list_req",
+            "description": "room_status_detail_list_req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room_Status_Detail_List_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Room_Status_Booking_List_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "7"
+      }
+    },
+    "/api/statistic/room_status_detail": {
+      "post": {
+        "tags": [
+          "统计报表模块"
+        ],
+        "summary": "统计数据 - 房态表详情",
+        "description": "房态表详情数据",
+        "operationId": "room_status_detailUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "认证token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "room_status_detail_req",
+            "description": "room_status_detail_req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Room_Status_Detail_Req"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResultJson«Room_Status_Detail_Res»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false,
+        "x-order": "6"
+      }
+    },
     "/api/statistic/sync_availrooms": {
       "post": {
         "tags": [
@@ -11444,7 +12593,7 @@
           }
         },
         "deprecated": false,
-        "x-order": "3"
+        "x-order": "4"
       }
     },
     "/api/subratecode/del": {
@@ -16457,6 +17606,494 @@
       "title": "Channel_Strategy_Entity",
       "description": "退款策略对象"
     },
+    "Channel_price": {
+      "type": "object",
+      "properties": {
+        "sub_price": {
+          "type": "array",
+          "description": "渠道订单金额汇总",
+          "items": {
+            "$ref": "#/definitions/Channel_price_sub"
+          }
+        },
+        "total_price": {
+          "type": "number",
+          "format": "double",
+          "example": 20.55,
+          "description": "总订单金额"
+        }
+      },
+      "title": "Channel_price"
+    },
+    "Channel_price_sub": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "E网",
+          "description": "渠道名称"
+        },
+        "price": {
+          "type": "number",
+          "format": "double",
+          "example": 100.0,
+          "description": "订单金额"
+        }
+      },
+      "title": "Channel_price_sub"
+    },
+    "Channel_res": {
+      "type": "object",
+      "properties": {
+        "sub_res": {
+          "type": "array",
+          "description": "渠道订单汇总",
+          "items": {
+            "$ref": "#/definitions/Channel_res_sub"
+          }
+        },
+        "total_res": {
+          "type": "integer",
+          "format": "int64",
+          "example": 30,
+          "description": "总新增订单"
+        }
+      },
+      "title": "Channel_res"
+    },
+    "Channel_res_sub": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "E网",
+          "description": "渠道名称"
+        },
+        "res": {
+          "type": "integer",
+          "format": "int64",
+          "example": 20,
+          "description": "订单数"
+        }
+      },
+      "title": "Channel_res_sub"
+    },
+    "Channelarrivals_Data": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "WEW",
+          "description": "渠道"
+        },
+        "channelrowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格渠道行数 如果>1就合并单元格"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021年1月1日",
+          "description": "日期/小计"
+        },
+        "daterowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格日期行数 如果>1就合并单元格"
+        },
+        "days": {
+          "type": "string",
+          "example": 1,
+          "description": "天数/小计"
+        },
+        "daysrowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格天数行数 如果>1就合并单元格"
+        },
+        "hotel": {
+          "type": "string",
+          "example": "ZS",
+          "description": "酒店"
+        },
+        "hotelrowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格酒店行数 如果>1就合并单元格"
+        },
+        "prices": {
+          "type": "number",
+          "example": 100.0,
+          "description": "销售额"
+        },
+        "rooms": {
+          "type": "number",
+          "example": 1.0,
+          "description": "房间数"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "ZS11",
+          "description": "房型"
+        }
+      },
+      "title": "Channelarrivals_Data"
+    },
+    "Channelarrivals_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelarrivals_Head"
+    },
+    "Channelbooking_Data": {
+      "type": "object",
+      "properties": {
+        "bookingtype": {
+          "type": "string",
+          "example": "单订/套餐",
+          "description": "订单类型"
+        },
+        "channel": {
+          "type": "string",
+          "example": "WEW",
+          "description": "渠道"
+        },
+        "channelrowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格渠道行数 如果>1就合并单元格"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-01",
+          "description": "日期"
+        },
+        "daterowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格日期行数 如果>1就合并单元格"
+        },
+        "hotel": {
+          "type": "string",
+          "example": "ZS",
+          "description": "酒店"
+        },
+        "nights": {
+          "type": "number",
+          "example": 1.0,
+          "description": "间夜数"
+        },
+        "rooms": {
+          "type": "number",
+          "example": 1.0,
+          "description": "房间数"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "ZS11",
+          "description": "房型"
+        },
+        "sales": {
+          "type": "string",
+          "example": "小王",
+          "description": "销售员"
+        },
+        "type": {
+          "type": "string",
+          "example": "民宿",
+          "description": "类别"
+        }
+      },
+      "title": "Channelbooking_Data"
+    },
+    "Channelbooking_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelbooking_Head"
+    },
+    "Channelcancel_Data": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "携程",
+          "description": "渠道名称/合计"
+        },
+        "values": {
+          "type": "array",
+          "description": "统计数据",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "title": "Channelcancel_Data"
+    },
+    "Channelcancel_Head": {
+      "type": "object",
+      "properties": {
+        "childcol": {
+          "type": "array",
+          "description": "子列",
+          "items": {
+            "$ref": "#/definitions/Channelcancel_Head"
+          }
+        },
+        "colcode": {
+          "type": "string",
+          "example": "channel",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "渠道",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelcancel_Head"
+    },
+    "Channelgroup_Data": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "携程",
+          "description": "渠道名称/合计"
+        },
+        "desc": {
+          "type": "string",
+          "example": "房数",
+          "description": "房数/销售额"
+        },
+        "isRevenue": {
+          "type": "boolean",
+          "description": "是否是价格行数据,用于计算汇总"
+        },
+        "room": {
+          "type": "number",
+          "example": 1.0,
+          "description": "客房数据"
+        },
+        "total": {
+          "type": "number",
+          "example": 1.0,
+          "description": "合计"
+        }
+      },
+      "title": "Channelgroup_Data"
+    },
+    "Channelgroup_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "room",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "客房",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelgroup_Head"
+    },
+    "Channelhotel_Data": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "携程",
+          "description": "渠道名称"
+        },
+        "values": {
+          "type": "array",
+          "description": "统计数据",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "title": "Channelhotel_Data"
+    },
+    "Channelhotel_Head": {
+      "type": "object",
+      "properties": {
+        "childcol": {
+          "type": "array",
+          "description": "子列",
+          "items": {
+            "$ref": "#/definitions/Channelhotel_Head"
+          }
+        },
+        "colcode": {
+          "type": "string",
+          "example": "channel",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "渠道",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelhotel_Head"
+    },
+    "Channelprecontrol_Data": {
+      "type": "object",
+      "properties": {
+        "avail": {
+          "type": "number",
+          "example": 1.0,
+          "description": "可卖数"
+        },
+        "block": {
+          "type": "string",
+          "example": "WEW",
+          "description": "锁房"
+        },
+        "channel": {
+          "type": "string",
+          "example": "WEW",
+          "description": "渠道"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-01",
+          "description": "日期"
+        },
+        "hotel": {
+          "type": "string",
+          "example": "ZS",
+          "description": "酒店"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "ZS11",
+          "description": "房型"
+        }
+      },
+      "title": "Channelprecontrol_Data"
+    },
+    "Channelprecontrol_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelprecontrol_Head"
+    },
+    "Channelroomtype_Data": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "携程",
+          "description": "渠道名称"
+        },
+        "values": {
+          "type": "array",
+          "description": "统计数据",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "title": "Channelroomtype_Data"
+    },
+    "Channelroomtype_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "channel",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "渠道",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Channelroomtype_Head"
+    },
     "Col_Entity": {
       "type": "object",
       "required": [
@@ -17129,6 +18766,86 @@
       },
       "title": "Col_rs"
     },
+    "Common_InterfaceLog_Req": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "日期"
+        },
+        "method": {
+          "type": "string",
+          "example": "NEW",
+          "description": "接口方法"
+        },
+        "onlyException": {
+          "type": "boolean",
+          "example": true,
+          "description": "仅显示错误的"
+        },
+        "pages": {
+          "description": "分页数据",
+          "$ref": "#/definitions/PageData"
+        },
+        "regno": {
+          "type": "string",
+          "example": 1111,
+          "description": "订单号"
+        },
+        "time": {
+          "example": "00:00:00",
+          "description": "时间",
+          "$ref": "#/definitions/TimeRange"
+        },
+        "type": {
+          "type": "string",
+          "example": "ota,crs,crs2pms",
+          "description": "接口类型"
+        }
+      },
+      "title": "Common_InterfaceLog_Req",
+      "description": "接口日志请求"
+    },
+    "Common_InterfaceLog_Res": {
+      "type": "object",
+      "properties": {
+        "currentpage": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "当前页码"
+        },
+        "pagesize": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "每页记录数"
+        },
+        "records": {
+          "type": "array",
+          "description": "分页表格数据数组",
+          "items": {
+            "type": "object"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "总记录数"
+        },
+        "totalpage": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "总页数"
+        }
+      },
+      "title": "Common_InterfaceLog_Res",
+      "description": "pms接口日志响应"
+    },
     "Common_InterfaceOp_Req": {
       "type": "object",
       "properties": {
@@ -17530,6 +19247,102 @@
       },
       "title": "Custom_Op_Req",
       "description": "操作请求"
+    },
+    "Dailyarrivals_Data": {
+      "type": "object",
+      "properties": {
+        "arrival": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2021-01-06",
+          "description": "入住时间"
+        },
+        "colno": {
+          "type": "string",
+          "example": "Z123456789",
+          "description": "综合预定号"
+        },
+        "create": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2021-01-06",
+          "description": "预定时间"
+        },
+        "departure": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2021-01-06",
+          "description": "离店时间"
+        },
+        "hotel": {
+          "type": "string",
+          "example": "ZS",
+          "description": "酒店"
+        },
+        "kitcode": {
+          "type": "string",
+          "example": "001",
+          "description": "套餐"
+        },
+        "market": {
+          "type": "string",
+          "example": "SMS",
+          "description": "市场"
+        },
+        "mobile": {
+          "type": "string",
+          "example": 13517799999,
+          "description": "联系电话"
+        },
+        "name": {
+          "type": "string",
+          "example": "小王",
+          "description": "客人姓名"
+        },
+        "nights": {
+          "type": "number",
+          "example": 1.0,
+          "description": "间夜数"
+        },
+        "onlineno": {
+          "type": "string",
+          "example": 123456,
+          "description": "网络预定号"
+        },
+        "price": {
+          "type": "number",
+          "example": 100.0,
+          "description": "房价"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "ZS11",
+          "description": "房型"
+        }
+      },
+      "title": "Dailyarrivals_Data"
+    },
+    "Dailyarrivals_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Dailyarrivals_Head"
     },
     "DepCode_List_Data": {
       "type": "object",
@@ -18513,6 +20326,180 @@
       },
       "title": "Grid_Sync_Req",
       "description": "同步预留请求"
+    },
+    "GticketBooking_Data": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "城市"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "日期"
+        },
+        "guide": {
+          "type": "string",
+          "description": "导游联系方式"
+        },
+        "info": {
+          "type": "string",
+          "description": "备注"
+        },
+        "name": {
+          "type": "string",
+          "description": "旅行社名称"
+        },
+        "nature": {
+          "type": "string",
+          "description": "纯玩/住宿"
+        },
+        "num": {
+          "type": "number",
+          "description": "人数"
+        },
+        "province": {
+          "type": "string",
+          "description": "省份"
+        },
+        "status": {
+          "type": "string",
+          "description": "订单状态"
+        },
+        "ticket": {
+          "type": "string",
+          "description": "门票描述"
+        }
+      },
+      "title": "GticketBooking_Data"
+    },
+    "GticketBooking_Head": {
+      "type": "object",
+      "properties": {
+        "childcol": {
+          "type": "array",
+          "description": "子列",
+          "items": {
+            "$ref": "#/definitions/GticketBooking_Head"
+          }
+        },
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "GticketBooking_Head"
+    },
+    "GticketDaily_Data": {
+      "type": "object",
+      "properties": {
+        "area": {
+          "type": "string",
+          "description": "客源地"
+        },
+        "checker": {
+          "type": "string",
+          "description": "操作员"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "日期"
+        },
+        "group": {
+          "type": "string",
+          "description": "门票归属组"
+        },
+        "gtype": {
+          "type": "string",
+          "description": "单/散"
+        },
+        "guesttype": {
+          "type": "string",
+          "description": "客户类型"
+        },
+        "info": {
+          "type": "string",
+          "description": "备注"
+        },
+        "inorout": {
+          "type": "string",
+          "description": "内宾/外宾"
+        },
+        "itinerary": {
+          "type": "string",
+          "description": "电子行程单"
+        },
+        "market": {
+          "type": "string",
+          "description": "门市"
+        },
+        "month": {
+          "type": "integer",
+          "format": "int32",
+          "description": "月份"
+        },
+        "name": {
+          "type": "string",
+          "description": "旅行社名称"
+        },
+        "nature": {
+          "type": "string",
+          "description": "纯玩/住宿"
+        },
+        "num": {
+          "type": "number",
+          "description": "人数"
+        },
+        "price": {
+          "type": "number",
+          "description": "价格"
+        },
+        "ticket": {
+          "type": "string",
+          "description": "门票描述"
+        },
+        "week": {
+          "type": "string",
+          "description": "周末/非周末"
+        }
+      },
+      "title": "GticketDaily_Data"
+    },
+    "GticketDaily_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "month",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "月份",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "GticketDaily_Head"
     },
     "Gticket_Cancel_All_Res": {
       "type": "object",
@@ -19808,6 +21795,10 @@
           "example": "水镇大酒店",
           "description": "描述"
         },
+        "group": {
+          "type": "string",
+          "description": "类别"
+        },
         "sqlid": {
           "type": "integer",
           "format": "int32",
@@ -20828,6 +22819,263 @@
       },
       "title": "Msg_List_Data"
     },
+    "NaConfig_Entity": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/NaconfigReq"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NaParamReq"
+          }
+        }
+      },
+      "title": "NaConfig_Entity",
+      "description": "夜审配置实体"
+    },
+    "NaDailyLogRes": {
+      "type": "object",
+      "required": [
+        "endtime",
+        "nadate",
+        "progressid",
+        "runtime",
+        "starttime",
+        "totaltime"
+      ],
+      "properties": {
+        "endtime": {
+          "type": "string",
+          "example": "2020-12-31 14:20:13",
+          "description": "结束时间"
+        },
+        "nadate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "夜审日期"
+        },
+        "progressid": {
+          "type": "string",
+          "example": "01",
+          "description": "进程ID"
+        },
+        "runtime": {
+          "type": "string",
+          "example": "资源表更新日常任务",
+          "description": "步奏"
+        },
+        "sqlid": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "夜审日志唯一id"
+        },
+        "starttime": {
+          "type": "string",
+          "example": "2020-12-31 14:20:13",
+          "description": "开始时间"
+        },
+        "totaltime": {
+          "type": "string",
+          "example": "0ms",
+          "description": "步奏运行的总时间"
+        }
+      },
+      "title": "NaDailyLogRes"
+    },
+    "NaDailyLog_Entity": {
+      "type": "object",
+      "properties": {
+        "log": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NaDailyLogRes"
+          }
+        }
+      },
+      "title": "NaDailyLog_Entity",
+      "description": "夜审日志实体"
+    },
+    "NaDailyLog_Req": {
+      "type": "object",
+      "required": [
+        "querydate"
+      ],
+      "properties": {
+        "querydate": {
+          "type": "string",
+          "example": "2021-01-03",
+          "description": "查询日期"
+        }
+      },
+      "title": "NaDailyLog_Req",
+      "description": "获取夜审日志数据请求"
+    },
+    "NaParamReq": {
+      "type": "object",
+      "required": [
+        "paramname",
+        "paramvalue",
+        "progressid"
+      ],
+      "properties": {
+        "paramname": {
+          "type": "string",
+          "example": "key",
+          "description": "参数名"
+        },
+        "paramvalue": {
+          "type": "string",
+          "example": "value",
+          "description": "参数值"
+        },
+        "progressid": {
+          "type": "string",
+          "example": 1,
+          "description": "进程ID"
+        },
+        "sqlid": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "夜审参数唯一id"
+        }
+      },
+      "title": "NaParamReq"
+    },
+    "NaRunInfo_Entity": {
+      "type": "object",
+      "required": [
+        "lastend",
+        "laststart",
+        "nadate",
+        "nextprogress",
+        "rundate",
+        "running",
+        "runprogress",
+        "start"
+      ],
+      "properties": {
+        "lastend": {
+          "type": "string",
+          "example": "2020-12-31 14:20:13",
+          "description": "上次结束"
+        },
+        "laststart": {
+          "type": "string",
+          "example": "2020-12-31 14:20:13",
+          "description": "上次开始时间"
+        },
+        "nadate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "夜审任务统计处理的日期,一般是当前日期-1.比如现在是10号.这个字段是9号.做9号的统计"
+        },
+        "nextprogress": {
+          "type": "string",
+          "example": "01",
+          "description": "下一个步奏ID"
+        },
+        "rundate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "夜审任务执行日期"
+        },
+        "running": {
+          "type": "string",
+          "example": 0,
+          "description": "运行状态:0等待,1运行中"
+        },
+        "runprogress": {
+          "type": "string",
+          "example": "01",
+          "description": "当前运行步奏ID"
+        },
+        "sqlid": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "夜审运行状态唯一id"
+        },
+        "start": {
+          "type": "string",
+          "example": "2020-12-31 14:20:13",
+          "description": "本次任务开始时间"
+        }
+      },
+      "title": "NaRunInfo_Entity",
+      "description": "夜审运行状态实体"
+    },
+    "NaconfigReq": {
+      "type": "object",
+      "required": [
+        "runtime"
+      ],
+      "properties": {
+        "crontime": {
+          "type": "string",
+          "example": "key",
+          "description": "每日运行时间转quartz时间表达式.转换后进行存储"
+        },
+        "progress": {
+          "type": "string",
+          "example": "value",
+          "description": "配置每日运行的步奏.任务列表."
+        },
+        "runtime": {
+          "type": "string",
+          "example": "01:00",
+          "description": "每日运行时间"
+        },
+        "serverip": {
+          "type": "string",
+          "example": "10.99.11.107",
+          "description": "运行的服务器IP.可以指定符号IP 要求的机器才能运行."
+        },
+        "sqlid": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "夜审配置唯一id"
+        }
+      },
+      "title": "NaconfigReq"
+    },
+    "New_res": {
+      "type": "object",
+      "properties": {
+        "catering": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1,
+          "description": "今日新增餐饮订单数"
+        },
+        "col": {
+          "type": "integer",
+          "format": "int64",
+          "example": 20,
+          "description": "今日新增综合订单数"
+        },
+        "room": {
+          "type": "integer",
+          "format": "int64",
+          "example": 20,
+          "description": "今日新增客房订单数"
+        },
+        "ticket": {
+          "type": "integer",
+          "format": "int64",
+          "example": 3,
+          "description": "今日新增票务订单数"
+        }
+      },
+      "title": "New_res"
+    },
     "Oauthsign_Req": {
       "type": "object",
       "properties": {
@@ -20850,6 +23098,30 @@
       },
       "title": "Oauthsign_Req",
       "description": "CTI登录请求"
+    },
+    "Occupancy": {
+      "type": "object",
+      "properties": {
+        "arrivals": {
+          "type": "integer",
+          "format": "int64",
+          "example": 20,
+          "description": "预计到店"
+        },
+        "depatures": {
+          "type": "integer",
+          "format": "int64",
+          "example": 3,
+          "description": "预计离店"
+        },
+        "occupancies": {
+          "type": "number",
+          "format": "double",
+          "example": 20.55,
+          "description": "入住率"
+        }
+      },
+      "title": "Occupancy"
     },
     "OpRole_List_Data": {
       "type": "object",
@@ -21100,6 +23372,80 @@
       "title": "Opuser_Profile_Res",
       "description": "获取渠道关联列表数据返回"
     },
+    "Packagesale_Data": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "E网",
+          "description": "渠道名"
+        },
+        "colno": {
+          "type": "string",
+          "example": "Z123456789",
+          "description": "综合预定号"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-17",
+          "description": "日期/销售员小计"
+        },
+        "num": {
+          "type": "number",
+          "example": 1.0,
+          "description": "数量"
+        },
+        "packagecode": {
+          "type": "string",
+          "example": "001",
+          "description": "套餐名"
+        },
+        "price": {
+          "type": "number",
+          "example": 100.0,
+          "description": "单价"
+        },
+        "sales": {
+          "type": "string",
+          "example": 1234,
+          "description": "销售员ID"
+        },
+        "salesrowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格销售员行数 如果>1就合并单元格"
+        },
+        "totalprice": {
+          "type": "number",
+          "example": 100.0,
+          "description": "总价"
+        }
+      },
+      "title": "Packagesale_Data"
+    },
+    "Packagesale_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Packagesale_Head"
+    },
     "PageData": {
       "type": "object",
       "properties": {
@@ -21127,6 +23473,42 @@
         }
       },
       "title": "PageData"
+    },
+    "Passenger_flow": {
+      "type": "object",
+      "properties": {
+        "passenger_flows": {
+          "type": "integer",
+          "format": "int64",
+          "example": 801,
+          "description": "客流量"
+        },
+        "passenger_group": {
+          "type": "array",
+          "description": "分组统计",
+          "items": {
+            "$ref": "#/definitions/Passenger_group"
+          }
+        }
+      },
+      "title": "Passenger_flow"
+    },
+    "Passenger_group": {
+      "type": "object",
+      "properties": {
+        "group_name": {
+          "type": "string",
+          "example": "景区",
+          "description": "分组名"
+        },
+        "group_value": {
+          "type": "integer",
+          "format": "int64",
+          "example": 800,
+          "description": "分组数据"
+        }
+      },
+      "title": "Passenger_group"
     },
     "Pay_Entity": {
       "type": "object",
@@ -21456,6 +23838,27 @@
       },
       "title": "PieData",
       "description": "饼状图数据"
+    },
+    "Price_top10": {
+      "type": "object",
+      "properties": {
+        "hotels": {
+          "type": "array",
+          "description": "酒店数组",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prices": {
+          "type": "array",
+          "description": "收入",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "title": "Price_top10"
     },
     "ProductKit_Entity": {
       "type": "object",
@@ -22409,23 +24812,47 @@
         },
         "price1": {
           "type": "number",
-          "description": "1人价"
+          "description": "1人价/如果是房价的话.对应的是周一一人价"
         },
         "price2": {
           "type": "number",
           "description": "2人价"
         },
+        "price21": {
+          "type": "number",
+          "description": "周二1人价.默认先只显示全部的1人价"
+        },
         "price3": {
           "type": "number",
           "description": "3人价"
+        },
+        "price31": {
+          "type": "number",
+          "description": "周三1人价.默认先只显示全部的1人价"
         },
         "price4": {
           "type": "number",
           "description": "4人价"
         },
+        "price41": {
+          "type": "number",
+          "description": "周四1人价.默认先只显示全部的1人价"
+        },
         "price5": {
           "type": "number",
           "description": "5人价"
+        },
+        "price51": {
+          "type": "number",
+          "description": "周五1人价.默认先只显示全部的1人价"
+        },
+        "price61": {
+          "type": "number",
+          "description": "周六1人价.默认先只显示全部的1人价"
+        },
+        "price71": {
+          "type": "number",
+          "description": "周日1人价.默认先只显示全部的1人价"
         },
         "productcode": {
           "type": "string",
@@ -22489,7 +24916,31 @@
         },
         "price1": {
           "type": "number",
-          "description": "平时1人价"
+          "description": "平时1人价/对于房价.是周一价格"
+        },
+        "price21": {
+          "type": "number",
+          "description": "周二1人价"
+        },
+        "price31": {
+          "type": "number",
+          "description": "周三1人价"
+        },
+        "price41": {
+          "type": "number",
+          "description": "周四1人价"
+        },
+        "price51": {
+          "type": "number",
+          "description": "周五1人价"
+        },
+        "price61": {
+          "type": "number",
+          "description": "周六1人价"
+        },
+        "price71": {
+          "type": "number",
+          "description": "周日1人价"
         },
         "productcode": {
           "type": "string",
@@ -22987,25 +25438,311 @@
       "title": "Related_Select_Req",
       "description": "选择档案相关人员请求"
     },
-    "Report_Cancel_Order_Res": {
+    "Report_Channelarrivals_Req": {
       "type": "object",
       "properties": {
-        "datas": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        }
+      },
+      "title": "Report_Channelarrivals_Req",
+      "description": "获取渠道预抵订单统计请求"
+    },
+    "Report_Channelarrivals_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
           "type": "array",
           "description": "数据",
           "items": {
-            "$ref": "#/definitions/Common_item"
+            "$ref": "#/definitions/Channelarrivals_Data"
           }
         },
-        "headers": {
+        "tableHead": {
           "type": "array",
+          "description": "表头",
           "items": {
-            "$ref": "#/definitions/Common_item"
+            "$ref": "#/definitions/Channelarrivals_Head"
           }
         }
       },
-      "title": "Report_Cancel_Order_Res",
-      "description": "入住及预订报表响应"
+      "title": "Report_Channelarrivals_Res",
+      "description": "渠道预抵订单响应"
+    },
+    "Report_Channelbooking_Req": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        }
+      },
+      "title": "Report_Channelbooking_Req",
+      "description": "获取渠道每日预定请求"
+    },
+    "Report_Channelbooking_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Channelbooking_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Channelbooking_Head"
+          }
+        }
+      },
+      "title": "Report_Channelbooking_Res",
+      "description": "渠道每日预定响应"
+    },
+    "Report_Channelcancel_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        },
+        "subchannel": {
+          "type": "string",
+          "description": "二级渠道,多个用逗号分隔"
+        }
+      },
+      "title": "Report_Channelcancel_Req",
+      "description": "获取渠道取消报表数据请求"
+    },
+    "Report_Channelcancel_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Channelcancel_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Channelcancel_Head"
+          }
+        }
+      },
+      "title": "Report_Channelcancel_Res",
+      "description": "渠道订单取消统计响应"
+    },
+    "Report_Channelgroup_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        },
+        "subchannel": {
+          "type": "string",
+          "description": "二级渠道,多个用逗号分隔"
+        }
+      },
+      "title": "Report_Channelgroup_Req",
+      "description": "获取渠道分组报表数据请求"
+    },
+    "Report_Channelgroup_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Channelgroup_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Channelgroup_Head"
+          }
+        }
+      },
+      "title": "Report_Channelgroup_Res",
+      "description": "渠道分组统计响应"
+    },
+    "Report_Channelhotel_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "hotel": {
+          "type": "string",
+          "example": "SZ",
+          "description": "酒店代码代码,多个用逗号分隔,为空查全部"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        },
+        "subchannel": {
+          "type": "string",
+          "example": "EW,WXC",
+          "description": "二级渠道,多个用逗号分隔"
+        }
+      },
+      "title": "Report_Channelhotel_Req",
+      "description": "获取渠道酒店统计报表数据请求"
+    },
+    "Report_Channelhotel_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Channelhotel_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Channelhotel_Head"
+          }
+        }
+      },
+      "title": "Report_Channelhotel_Res",
+      "description": "渠道酒店分组统计响应"
+    },
+    "Report_Channelprecontrol_Req": {
+      "type": "object",
+      "properties": {
+        "block": {
+          "type": "string",
+          "description": "锁房,多个用逗号分隔"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        }
+      },
+      "title": "Report_Channelprecontrol_Req",
+      "description": "获取渠道预控房统计请求"
+    },
+    "Report_Channelprecontrol_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Channelprecontrol_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Channelprecontrol_Head"
+          }
+        }
+      },
+      "title": "Report_Channelprecontrol_Res",
+      "description": "渠道预控房统计响应"
+    },
+    "Report_Channelroomtype_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "SZ11",
+          "description": "房型代码代码,多个用逗号分隔,为空查全部"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        },
+        "subchannel": {
+          "type": "string",
+          "example": "EW,WXC",
+          "description": "二级渠道,多个用逗号分隔"
+        }
+      },
+      "title": "Report_Channelroomtype_Req",
+      "description": "获取渠道房型统计报表数据请求"
+    },
+    "Report_Channelroomtype_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Channelroomtype_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Channelroomtype_Head"
+          }
+        }
+      },
+      "title": "Report_Channelroomtype_Res",
+      "description": "渠道房型分组统计响应"
     },
     "Report_Collections_Op_Req": {
       "type": "object",
@@ -23023,49 +25760,79 @@
       "title": "Report_Collections_Op_Req",
       "description": "添加/取消报表收藏"
     },
+    "Report_Dailyarrivals_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        }
+      },
+      "title": "Report_Dailyarrivals_Req",
+      "description": "获取每日预抵订单统计请求"
+    },
+    "Report_Dailyarrivals_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Dailyarrivals_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Dailyarrivals_Head"
+          }
+        }
+      },
+      "title": "Report_Dailyarrivals_Res",
+      "description": "每日预抵订单统计响应"
+    },
+    "Report_Data": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "C01",
+          "description": "报表代码"
+        },
+        "desc": {
+          "type": "string",
+          "example": "渠道分组统计报表",
+          "description": "报表名称"
+        }
+      },
+      "title": "Report_Data",
+      "description": "报表数据"
+    },
     "Report_GticketBooking_Res": {
       "type": "object",
       "properties": {
-        "city": {
-          "type": "string",
-          "description": "城市"
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/GticketBooking_Data"
+          }
         },
-        "date": {
-          "type": "string",
-          "format": "date-time",
-          "description": "日期"
-        },
-        "guide": {
-          "type": "string",
-          "description": "导游联系方式"
-        },
-        "info": {
-          "type": "string",
-          "description": "备注"
-        },
-        "name": {
-          "type": "string",
-          "description": "旅行社名称"
-        },
-        "nature": {
-          "type": "string",
-          "description": "纯玩/住宿"
-        },
-        "num": {
-          "type": "number",
-          "description": "人数"
-        },
-        "province": {
-          "type": "string",
-          "description": "省份"
-        },
-        "status": {
-          "type": "string",
-          "description": "订单状态"
-        },
-        "ticket": {
-          "type": "string",
-          "description": "门票描述"
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/GticketBooking_Head"
+          }
         }
       },
       "title": "Report_GticketBooking_Res",
@@ -23074,87 +25841,132 @@
     "Report_GticketDaily_Res": {
       "type": "object",
       "properties": {
-        "area": {
-          "type": "string",
-          "description": "客源地"
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/GticketDaily_Data"
+          }
         },
-        "checker": {
-          "type": "string",
-          "description": "操作员"
-        },
-        "date": {
-          "type": "string",
-          "format": "date-time",
-          "description": "日期"
-        },
-        "group": {
-          "type": "string",
-          "description": "门票归属组"
-        },
-        "gtype": {
-          "type": "string",
-          "description": "单/散"
-        },
-        "guesttype": {
-          "type": "string",
-          "description": "客户类型"
-        },
-        "info": {
-          "type": "string",
-          "description": "备注"
-        },
-        "inorout": {
-          "type": "string",
-          "description": "内宾/外宾"
-        },
-        "itinerary": {
-          "type": "string",
-          "description": "电子行程单"
-        },
-        "market": {
-          "type": "string",
-          "description": "门市"
-        },
-        "month": {
-          "type": "integer",
-          "format": "int32",
-          "description": "月份"
-        },
-        "name": {
-          "type": "string",
-          "description": "旅行社名称"
-        },
-        "nature": {
-          "type": "string",
-          "description": "纯玩/住宿"
-        },
-        "num": {
-          "type": "number",
-          "description": "人数"
-        },
-        "price": {
-          "type": "number",
-          "description": "价格"
-        },
-        "ticket": {
-          "type": "string",
-          "description": "门票描述"
-        },
-        "week": {
-          "type": "string",
-          "description": "周末/非周末"
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/GticketDaily_Head"
+          }
         }
       },
       "title": "Report_GticketDaily_Res",
       "description": "团购票每日登记报表返回"
     },
-    "Report_Hotel_Roomtype_Req": {
+    "Report_List_Req": {
       "type": "object",
       "properties": {
         "code": {
           "type": "string",
-          "example": "lj(酒店),lj51(房型)",
-          "description": "代码"
+          "example": "G01",
+          "description": "报表代码"
+        },
+        "group": {
+          "type": "string",
+          "example": "gticket",
+          "description": "报表组 gticket-团购票 channel-渠道 other-其它"
+        }
+      },
+      "title": "Report_List_Req",
+      "description": "获取报表列表请求"
+    },
+    "Report_Packagesale_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        }
+      },
+      "title": "Report_Packagesale_Req",
+      "description": "获取套餐销售统计请求"
+    },
+    "Report_Packagesale_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Packagesale_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Packagesale_Head"
+          }
+        }
+      },
+      "title": "Report_Packagesale_Res",
+      "description": "套餐销售统计响应"
+    },
+    "Report_Reservationrate_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "hotel": {
+          "type": "string",
+          "description": "酒店,多个用逗号分隔,为空查全部"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        }
+      },
+      "title": "Report_Reservationrate_Req",
+      "description": "获取酒店预定率请求"
+    },
+    "Report_Reservationrate_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Reservationrate_Data"
+          }
+        },
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Reservationrate_Head"
+          }
+        }
+      },
+      "title": "Report_Reservationrate_Res",
+      "description": "酒店预定率响应"
+    },
+    "Report_Salesstatistics_Req": {
+      "type": "object",
+      "properties": {
+        "defvalue": {
+          "type": "string",
+          "example": "market",
+          "description": "类型 market-市场 channel-渠道"
         },
         "end": {
           "type": "string",
@@ -23167,55 +25979,92 @@
           "format": "date-time",
           "example": "2019-09-09",
           "description": "开始日期"
+        }
+      },
+      "title": "Report_Salesstatistics_Req",
+      "description": "获取销售员统计请求"
+    },
+    "Report_Salesstatistics_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Salesstatistics_Data"
+          }
         },
-        "type": {
+        "tableHead": {
+          "type": "array",
+          "description": "表头",
+          "items": {
+            "$ref": "#/definitions/Salesstatistics_Head"
+          }
+        }
+      },
+      "title": "Report_Salesstatistics_Res",
+      "description": "销售员统计响应"
+    },
+    "Res_top10": {
+      "type": "object",
+      "properties": {
+        "hotels": {
+          "type": "array",
+          "description": "酒店数组",
+          "items": {
+            "type": "string"
+          }
+        },
+        "res_nums": {
+          "type": "array",
+          "description": "预定数",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "title": "Res_top10"
+    },
+    "Reservationrate_Data": {
+      "type": "object",
+      "properties": {
+        "date": {
           "type": "string",
-          "example": "hotelcode(酒店),roomtype(房型)",
-          "description": "报表类型"
+          "example": "2021-01-01",
+          "description": "日期"
+        },
+        "values": {
+          "type": "array",
+          "description": "统计数据",
+          "items": {
+            "type": "string"
+          }
         }
       },
-      "title": "Report_Hotel_Roomtype_Req",
-      "description": "获取报表数据请求"
+      "title": "Reservationrate_Data"
     },
-    "Report_Hotel_Roomtype_Res": {
+    "Reservationrate_Head": {
       "type": "object",
       "properties": {
-        "datas": {
-          "type": "array",
-          "description": "数据",
-          "items": {
-            "$ref": "#/definitions/Common_item"
-          }
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
         },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Common_item"
-          }
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
         }
       },
-      "title": "Report_Hotel_Roomtype_Res",
-      "description": "入住及预订报表响应"
-    },
-    "Report_Type_Res": {
-      "type": "object",
-      "properties": {
-        "datas": {
-          "type": "array",
-          "description": "数据",
-          "items": {
-            "$ref": "#/definitions/Common_item"
-          }
-        },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Common_item"
-          }
-        }
-      },
-      "title": "Report_Type_Res",
-      "description": "按类型报表响应"
+      "title": "Reservationrate_Head"
     },
     "Restaurant_Entity": {
       "type": "object",
@@ -23805,6 +26654,27 @@
         }
       },
       "title": "ResultJson«Col_List_Res»"
+    },
+    "ResultJson«Common_InterfaceLog_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Common_InterfaceLog_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Common_InterfaceLog_Res»"
     },
     "ResultJson«Common_InterfaceOp_Res»": {
       "type": "object",
@@ -24640,7 +27510,7 @@
       },
       "title": "ResultJson«List«Profile_Statistic_Res»»"
     },
-    "ResultJson«List«Report_GticketBooking_Res»»": {
+    "ResultJson«List«Report_Data»»": {
       "type": "object",
       "properties": {
         "code": {
@@ -24653,7 +27523,7 @@
           "type": "array",
           "description": "返回数据",
           "items": {
-            "$ref": "#/definitions/Report_GticketBooking_Res"
+            "$ref": "#/definitions/Report_Data"
           }
         },
         "msg": {
@@ -24662,31 +27532,7 @@
           "description": "响应描述"
         }
       },
-      "title": "ResultJson«List«Report_GticketBooking_Res»»"
-    },
-    "ResultJson«List«Report_GticketDaily_Res»»": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "example": 200,
-          "description": "响应代码 200-成功 其它-失败"
-        },
-        "data": {
-          "type": "array",
-          "description": "返回数据",
-          "items": {
-            "$ref": "#/definitions/Report_GticketDaily_Res"
-          }
-        },
-        "msg": {
-          "type": "string",
-          "example": "成功",
-          "description": "响应描述"
-        }
-      },
-      "title": "ResultJson«List«Report_GticketDaily_Res»»"
+      "title": "ResultJson«List«Report_Data»»"
     },
     "ResultJson«List«SendMsgData»»": {
       "type": "object",
@@ -24900,6 +27746,69 @@
         }
       },
       "title": "ResultJson«MsgResult»"
+    },
+    "ResultJson«NaConfig_Entity»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/NaConfig_Entity"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«NaConfig_Entity»"
+    },
+    "ResultJson«NaDailyLog_Entity»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/NaDailyLog_Entity"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«NaDailyLog_Entity»"
+    },
+    "ResultJson«NaRunInfo_Entity»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/NaRunInfo_Entity"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«NaRunInfo_Entity»"
     },
     "ResultJson«OpRole_List_Res»": {
       "type": "object",
@@ -25279,7 +28188,7 @@
       },
       "title": "ResultJson«Related_List_Res»"
     },
-    "ResultJson«Report_Cancel_Order_Res»": {
+    "ResultJson«Report_Channelarrivals_Res»": {
       "type": "object",
       "properties": {
         "code": {
@@ -25290,7 +28199,7 @@
         },
         "data": {
           "description": "返回数据",
-          "$ref": "#/definitions/Report_Cancel_Order_Res"
+          "$ref": "#/definitions/Report_Channelarrivals_Res"
         },
         "msg": {
           "type": "string",
@@ -25298,9 +28207,9 @@
           "description": "响应描述"
         }
       },
-      "title": "ResultJson«Report_Cancel_Order_Res»"
+      "title": "ResultJson«Report_Channelarrivals_Res»"
     },
-    "ResultJson«Report_Hotel_Roomtype_Res»": {
+    "ResultJson«Report_Channelbooking_Res»": {
       "type": "object",
       "properties": {
         "code": {
@@ -25311,7 +28220,7 @@
         },
         "data": {
           "description": "返回数据",
-          "$ref": "#/definitions/Report_Hotel_Roomtype_Res"
+          "$ref": "#/definitions/Report_Channelbooking_Res"
         },
         "msg": {
           "type": "string",
@@ -25319,9 +28228,9 @@
           "description": "响应描述"
         }
       },
-      "title": "ResultJson«Report_Hotel_Roomtype_Res»"
+      "title": "ResultJson«Report_Channelbooking_Res»"
     },
-    "ResultJson«Report_Type_Res»": {
+    "ResultJson«Report_Channelcancel_Res»": {
       "type": "object",
       "properties": {
         "code": {
@@ -25332,7 +28241,7 @@
         },
         "data": {
           "description": "返回数据",
-          "$ref": "#/definitions/Report_Type_Res"
+          "$ref": "#/definitions/Report_Channelcancel_Res"
         },
         "msg": {
           "type": "string",
@@ -25340,7 +28249,217 @@
           "description": "响应描述"
         }
       },
-      "title": "ResultJson«Report_Type_Res»"
+      "title": "ResultJson«Report_Channelcancel_Res»"
+    },
+    "ResultJson«Report_Channelgroup_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Channelgroup_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Channelgroup_Res»"
+    },
+    "ResultJson«Report_Channelhotel_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Channelhotel_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Channelhotel_Res»"
+    },
+    "ResultJson«Report_Channelprecontrol_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Channelprecontrol_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Channelprecontrol_Res»"
+    },
+    "ResultJson«Report_Channelroomtype_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Channelroomtype_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Channelroomtype_Res»"
+    },
+    "ResultJson«Report_Dailyarrivals_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Dailyarrivals_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Dailyarrivals_Res»"
+    },
+    "ResultJson«Report_GticketBooking_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_GticketBooking_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_GticketBooking_Res»"
+    },
+    "ResultJson«Report_GticketDaily_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_GticketDaily_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_GticketDaily_Res»"
+    },
+    "ResultJson«Report_Packagesale_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Packagesale_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Packagesale_Res»"
+    },
+    "ResultJson«Report_Reservationrate_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Reservationrate_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Reservationrate_Res»"
+    },
+    "ResultJson«Report_Salesstatistics_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Report_Salesstatistics_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Report_Salesstatistics_Res»"
     },
     "ResultJson«Restaurant_Entity»": {
       "type": "object",
@@ -25383,6 +28502,111 @@
         }
       },
       "title": "ResultJson«Restaurant_time_Entity»"
+    },
+    "ResultJson«Room_Status_Bad_List_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Room_Status_Bad_List_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Room_Status_Bad_List_Res»"
+    },
+    "ResultJson«Room_Status_Block_List_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Room_Status_Block_List_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Room_Status_Block_List_Res»"
+    },
+    "ResultJson«Room_Status_Booking_List_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Room_Status_Booking_List_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Room_Status_Booking_List_Res»"
+    },
+    "ResultJson«Room_Status_Detail_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Room_Status_Detail_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Room_Status_Detail_Res»"
+    },
+    "ResultJson«Room_Status_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Room_Status_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Room_Status_Res»"
     },
     "ResultJson«Roomrs_Entity»": {
       "type": "object",
@@ -25446,30 +28670,6 @@
         }
       },
       "title": "ResultJson«Roomtype_List_Res»"
-    },
-    "ResultJson«Set«string»»": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32",
-          "example": 200,
-          "description": "响应代码 200-成功 其它-失败"
-        },
-        "data": {
-          "type": "array",
-          "description": "返回数据",
-          "items": {
-            "type": "string"
-          }
-        },
-        "msg": {
-          "type": "string",
-          "example": "成功",
-          "description": "响应描述"
-        }
-      },
-      "title": "ResultJson«Set«string»»"
     },
     "ResultJson«SpaGroup_Entity»": {
       "type": "object",
@@ -25701,6 +28901,27 @@
         }
       },
       "title": "ResultJson«Statistic_Availrooms_Res»"
+    },
+    "ResultJson«Statistic_IndexData2_Res»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "响应代码 200-成功 其它-失败"
+        },
+        "data": {
+          "description": "返回数据",
+          "$ref": "#/definitions/Statistic_IndexData2_Res"
+        },
+        "msg": {
+          "type": "string",
+          "example": "成功",
+          "description": "响应描述"
+        }
+      },
+      "title": "ResultJson«Statistic_IndexData2_Res»"
     },
     "ResultJson«Statistic_IndexData_Res»": {
       "type": "object",
@@ -26269,6 +29490,114 @@
       },
       "title": "ResultJson«角色权限列表返回»"
     },
+    "Revenues_compare": {
+      "type": "object",
+      "properties": {
+        "compare_revenues": {
+          "type": "array",
+          "description": "比较收入",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "dates": {
+          "type": "array",
+          "description": "日期",
+          "items": {
+            "type": "string"
+          }
+        },
+        "increatment": {
+          "type": "array",
+          "description": "增幅",
+          "items": {
+            "type": "string"
+          }
+        },
+        "revenues": {
+          "type": "array",
+          "description": "收入",
+          "items": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "title": "Revenues_compare"
+    },
+    "Revenues_compare_req": {
+      "type": "object",
+      "required": [
+        "compare_from",
+        "compare_to",
+        "from",
+        "to",
+        "type"
+      ],
+      "properties": {
+        "compare_from": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "比较的开始日期"
+        },
+        "compare_to": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "比较的结束日期"
+        },
+        "from": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "开始日期"
+        },
+        "to": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-24",
+          "description": "结束日期"
+        },
+        "type": {
+          "type": "string",
+          "example": "total",
+          "description": "收入类型 具体值见枚举值营业收入类型"
+        }
+      },
+      "title": "Revenues_compare_req"
+    },
+    "Revenues_statistic": {
+      "type": "object",
+      "properties": {
+        "catering_revenue": {
+          "type": "number",
+          "format": "double",
+          "example": 7.55,
+          "description": "餐饮收入"
+        },
+        "room_revenue": {
+          "type": "number",
+          "format": "double",
+          "example": 20.0,
+          "description": "房价收入"
+        },
+        "ticket_revenue": {
+          "type": "number",
+          "format": "double",
+          "example": 13.0,
+          "description": "票务收入"
+        },
+        "total_revenue": {
+          "type": "number",
+          "format": "double",
+          "example": 20.55,
+          "description": "总收入"
+        }
+      },
+      "title": "Revenues_statistic"
+    },
     "Rmtype_Query_Req": {
       "type": "object",
       "properties": {
@@ -26289,6 +29618,293 @@
       },
       "title": "Rmtype_Query_Req",
       "description": "房型列表查询请求"
+    },
+    "Room_Status_Bad_List_Res": {
+      "type": "object",
+      "properties": {
+        "blockName": {
+          "type": "string",
+          "example": 1101,
+          "description": "房间"
+        },
+        "cause": {
+          "type": "number",
+          "example": "客人把床单弄脏了",
+          "description": "原因"
+        },
+        "detail": {
+          "type": "number",
+          "example": "客人把床单弄脏了",
+          "description": "详情备注"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "截止日期"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "起始日期"
+        },
+        "status": {
+          "type": "string",
+          "example": "未知",
+          "description": "状态"
+        }
+      },
+      "title": "Room_Status_Bad_List_Res",
+      "description": "房态图详情坏房列表响应"
+    },
+    "Room_Status_Block_List_Res": {
+      "type": "object",
+      "properties": {
+        "available": {
+          "type": "number",
+          "example": 123.0,
+          "description": "可卖房"
+        },
+        "blockName": {
+          "type": "string",
+          "example": "疫情锁房",
+          "description": "锁房名称"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "截止日期"
+        },
+        "pickup": {
+          "type": "number",
+          "example": 123.0,
+          "description": "已用房"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "最后确认日期"
+        },
+        "status": {
+          "type": "string",
+          "example": "激活,过期",
+          "description": "状态"
+        }
+      },
+      "title": "Room_Status_Block_List_Res",
+      "description": "房态图详情锁房列表响应"
+    },
+    "Room_Status_Booking_List_Res": {
+      "type": "object",
+      "properties": {
+        "block": {
+          "type": "string",
+          "example": 123,
+          "description": "锁房"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "离店日期"
+        },
+        "name": {
+          "type": "string",
+          "example": "疫情锁房",
+          "description": "客人姓名"
+        },
+        "roomTotal": {
+          "type": "number",
+          "example": 123.0,
+          "description": "房间数"
+        },
+        "roomno": {
+          "type": "string",
+          "example": 1101,
+          "description": "房号"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "SZ12",
+          "description": "房型"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "到店日期"
+        },
+        "status": {
+          "type": "string",
+          "example": "预抵,入住,应到未到",
+          "description": "状态"
+        }
+      },
+      "title": "Room_Status_Booking_List_Res",
+      "description": "房态图详情预定列表响应"
+    },
+    "Room_Status_Detail_List_Req": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "日期"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "SZ12",
+          "description": "房型"
+        }
+      },
+      "title": "Room_Status_Detail_List_Req",
+      "description": "房态表详情列表公共请求"
+    },
+    "Room_Status_Detail_Req": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "日期"
+        },
+        "roomtype": {
+          "type": "string",
+          "description": "房型"
+        }
+      },
+      "title": "Room_Status_Detail_Req",
+      "description": "房态表详情请求"
+    },
+    "Room_Status_Detail_Res": {
+      "type": "object",
+      "properties": {
+        "available": {
+          "type": "number",
+          "example": 123.0,
+          "description": "可卖房"
+        },
+        "bad": {
+          "type": "number",
+          "example": 123.0,
+          "description": "坏房"
+        },
+        "booking": {
+          "type": "number",
+          "example": 123.0,
+          "description": "预定占用"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2020-12-31",
+          "description": "日期"
+        },
+        "overbook": {
+          "type": "number",
+          "example": 123.0,
+          "description": "超预定"
+        },
+        "reserved": {
+          "type": "number",
+          "example": 123.0,
+          "description": "预留占用"
+        },
+        "roomTotal": {
+          "type": "number",
+          "example": 123.0,
+          "description": "物理房量"
+        },
+        "roomtype": {
+          "type": "string",
+          "example": "ZS12",
+          "description": "房型"
+        }
+      },
+      "title": "Room_Status_Detail_Res",
+      "description": "房态图详情响应"
+    },
+    "Room_Status_Req": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "结束日期"
+        },
+        "hotel": {
+          "type": "string",
+          "description": "酒店"
+        },
+        "reserved": {
+          "type": "boolean",
+          "description": "是否包含预留占用"
+        },
+        "roomtype": {
+          "type": "string",
+          "description": "房型"
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "开始日期"
+        },
+        "type": {
+          "type": "string",
+          "description": "km=可卖,zy=占用,fj=房价"
+        }
+      },
+      "title": "Room_Status_Req",
+      "description": "房态表请求"
+    },
+    "Room_Status_Res": {
+      "type": "object",
+      "properties": {
+        "tableData": {
+          "type": "array",
+          "description": "数据",
+          "items": {
+            "$ref": "#/definitions/Tabel_Data_Row"
+          }
+        },
+        "tableHead": {
+          "description": "表头",
+          "$ref": "#/definitions/Tabel_Head"
+        }
+      },
+      "title": "Room_Status_Res",
+      "description": "房态图响应"
+    },
+    "Room_price": {
+      "type": "object",
+      "properties": {
+        "average_price": {
+          "type": "number",
+          "format": "double",
+          "example": 20.55,
+          "description": "平均房价"
+        },
+        "max_price": {
+          "type": "number",
+          "format": "double",
+          "example": 20.0,
+          "description": "最高房价"
+        },
+        "min_price": {
+          "type": "number",
+          "format": "double",
+          "example": 13.0,
+          "description": "最低房价"
+        }
+      },
+      "title": "Room_price"
     },
     "Room_rs": {
       "type": "object",
@@ -26549,10 +30165,6 @@
           "type": "string",
           "description": "锁房"
         },
-        "channel": {
-          "type": "string",
-          "description": "渠道"
-        },
         "channelsource": {
           "type": "string",
           "description": "二级渠道"
@@ -26784,6 +30396,11 @@
           "description": "分页数据",
           "$ref": "#/definitions/PageData"
         },
+        "phone": {
+          "type": "string",
+          "example": 13807716666,
+          "description": " 预订手机号"
+        },
         "profileid": {
           "type": "string",
           "example": 51354551212,
@@ -26939,6 +30556,92 @@
       },
       "title": "Roomtype_List_Res",
       "description": "房型设置列表返回"
+    },
+    "Row_Data": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-09-09",
+          "description": "日期"
+        },
+        "value": {
+          "type": "number",
+          "example": 123.0,
+          "description": "数值"
+        }
+      },
+      "title": "Row_Data"
+    },
+    "Salesstatistics_Data": {
+      "type": "object",
+      "properties": {
+        "caterprice": {
+          "type": "number",
+          "example": 100.0,
+          "description": "餐饮销售额"
+        },
+        "caters": {
+          "type": "number",
+          "example": 1.0,
+          "description": "餐饮桌数"
+        },
+        "channel": {
+          "type": "string",
+          "example": "WEW",
+          "description": "渠道"
+        },
+        "market": {
+          "type": "string",
+          "example": "SMS",
+          "description": "市场"
+        },
+        "roomprice": {
+          "type": "number",
+          "example": 100.0,
+          "description": "客房销售额"
+        },
+        "rooms": {
+          "type": "number",
+          "example": 1.0,
+          "description": "客房间数"
+        },
+        "sales": {
+          "type": "string",
+          "example": "小王",
+          "description": "销售员"
+        },
+        "salesrowcount": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "表格销售员行数 如果>1就合并单元格"
+        }
+      },
+      "title": "Salesstatistics_Data"
+    },
+    "Salesstatistics_Head": {
+      "type": "object",
+      "properties": {
+        "colcode": {
+          "type": "string",
+          "example": "date",
+          "description": "列代码"
+        },
+        "colname": {
+          "type": "string",
+          "example": "日期",
+          "description": "列名称"
+        },
+        "colwidth": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "列宽度"
+        }
+      },
+      "title": "Salesstatistics_Head"
     },
     "SelectDataNode": {
       "type": "object",
@@ -27994,6 +31697,69 @@
       "title": "Statistic_Availrooms_Res",
       "description": "获取可卖房统计数据返回"
     },
+    "Statistic_IndexData2_Req": {
+      "type": "object",
+      "properties": {
+        "revenues_compare": {
+          "description": "营业收入请求参数",
+          "$ref": "#/definitions/Revenues_compare_req"
+        },
+        "types": {
+          "type": "string",
+          "example": "all",
+          "description": "统计类型,多个用逗号分隔,具体值见枚举值首页请求类型2"
+        }
+      },
+      "title": "Statistic_IndexData2_Req",
+      "description": "获取首页统计数据请求"
+    },
+    "Statistic_IndexData2_Res": {
+      "type": "object",
+      "properties": {
+        "channel_price": {
+          "description": "今日渠道订单金额",
+          "$ref": "#/definitions/Channel_price"
+        },
+        "channel_res": {
+          "description": "今日渠道订单",
+          "$ref": "#/definitions/Channel_res"
+        },
+        "new_res": {
+          "description": "今日新增订单",
+          "$ref": "#/definitions/New_res"
+        },
+        "occupancy": {
+          "description": "今日入住率",
+          "$ref": "#/definitions/Occupancy"
+        },
+        "passenger_flow": {
+          "description": "今日客流量",
+          "$ref": "#/definitions/Passenger_flow"
+        },
+        "price_top10": {
+          "description": "今日收入Top10",
+          "$ref": "#/definitions/Price_top10"
+        },
+        "res_top10": {
+          "description": "今日售房Top10",
+          "$ref": "#/definitions/Res_top10"
+        },
+        "revenues_compare": {
+          "description": "营业收入",
+          "$ref": "#/definitions/Revenues_compare"
+        },
+        "revenues_statistic": {
+          "description": "收入统计",
+          "$ref": "#/definitions/Revenues_statistic"
+        },
+        "room_price": {
+          "description": "今日房价",
+          "$ref": "#/definitions/Room_price"
+        }
+      },
+      "title": "Statistic_IndexData2_Res",
+      "description": "获取首页统计数据返回"
+    },
     "Statistic_IndexData_Req": {
       "type": "object",
       "properties": {
@@ -28517,6 +32283,78 @@
       },
       "title": "Subchannel_List_Res",
       "description": "二级渠道列表返回"
+    },
+    "Tabel_Data_Row": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "description": "列表数据",
+          "items": {
+            "$ref": "#/definitions/Row_Data"
+          }
+        },
+        "roomName": {
+          "type": "string",
+          "example": "水镇大酒店标间",
+          "description": "房型名称"
+        },
+        "roomType": {
+          "type": "string",
+          "example": "SZ12",
+          "description": "房型代码"
+        },
+        "total": {
+          "type": "number",
+          "example": 2021.0,
+          "description": "总数"
+        }
+      },
+      "title": "Tabel_Data_Row"
+    },
+    "Tabel_Head": {
+      "type": "object",
+      "properties": {
+        "available": {
+          "example": 123,
+          "description": "可用总数",
+          "$ref": "#/definitions/Tabel_Head_Row"
+        },
+        "bad": {
+          "example": 123,
+          "description": "坏房数",
+          "$ref": "#/definitions/Tabel_Head_Row"
+        },
+        "leased": {
+          "example": "12.00%",
+          "description": "出租率",
+          "$ref": "#/definitions/Tabel_Head_Row"
+        },
+        "reserved": {
+          "example": 123,
+          "description": "预留占用数",
+          "$ref": "#/definitions/Tabel_Head_Row"
+        }
+      },
+      "title": "Tabel_Head"
+    },
+    "Tabel_Head_Row": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "description": "列表数据",
+          "items": {
+            "$ref": "#/definitions/Row_Data"
+          }
+        },
+        "total": {
+          "type": "number",
+          "example": 2021.0,
+          "description": "总数"
+        }
+      },
+      "title": "Tabel_Head_Row"
     },
     "TemplateSetup_List_Data": {
       "type": "object",
@@ -29546,6 +33384,18 @@
       },
       "title": "Ticketgroup_Entity",
       "description": "票务组对象"
+    },
+    "TimeRange": {
+      "type": "object",
+      "properties": {
+        "endTime": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string"
+        }
+      },
+      "title": "TimeRange"
     },
     "Tisch_Entity": {
       "type": "object",

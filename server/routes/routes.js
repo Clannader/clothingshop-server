@@ -37,10 +37,27 @@ app.all('/*', function (req, res, next) {
   // 这句话写到了initData.js里面去了
   // req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
   //重写res.end方法
-  let _end = res.end
-  res.end = function (chunk) {
+  const _end = res.end
+  res.end = function (chunk, encoding) {
     res.returnData = chunk + ''
-    return _end.apply(this, Array.prototype.slice.apply(arguments))
+    // 后期记得修改正确的返回状态码,改成1000,四位数,不能是1或者0了
+    if (Utils.convertStringToBoolean(Utils.readConfig('errorCatch'))) {
+      let resultJSON = chunk + ''
+      try {
+        resultJSON = JSON.parse(resultJSON)
+        if (resultJSON.code && resultJSON.code === CGlobal.GlobalStatic.ApiCode.Error) {
+          const printJSON = Object.assign({}, resultJSON, {
+            url: url
+          })
+          console.error(JSON.stringify(printJSON))
+          resultJSON.msg = 'System Exception'
+          chunk = Buffer.from(JSON.stringify(resultJSON), 'utf8')
+          this.set('Content-Length', chunk.length) // 如果不设置这句话,修改chunk是没有返回的
+        }
+      }catch (e) {
+      }
+    }
+    return _end.apply(this, [chunk, encoding])
   }
   Aspect.logAspect(req, res)
   next()

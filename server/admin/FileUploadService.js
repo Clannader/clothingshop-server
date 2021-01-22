@@ -71,16 +71,16 @@ class FileUploadService {
     static fileUpload(req, res) {
         fileUpload.array('file', 2)(req, res, err => {
             if (err) {
-                return res.send({code: 0, msg: err.message})
+                return res.send({code: 999, msg: err.message})
             }
-            return res.send({code: 1, msg: '上传成功'})
+            return res.send({code: 100, msg: '上传成功'})
         })
     }
 
     static get8SEPdf(req, res) {
         const num = req.body.num
         const pdfStr = fs.readFileSync(process.env.BASE_PATH+ `/tempUpload/${num}.pdf`)
-        return res.send({code: 1, pdf: Utils.stringToBase64(pdfStr)})
+        return res.send({code: 100, pdf: Utils.stringToBase64(pdfStr)})
     }
 }
 

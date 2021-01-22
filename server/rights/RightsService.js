@@ -18,9 +18,9 @@ RightsService.getRightsList = function (req, res) {
   Rights.getAllRights(req, session, function (err, result) {
     if (err) {
       console.error(err)
-      return res.send({code: -1, msg: err.message})
+      return res.send({code: 300, msg: err.message})
     }
-    res.send({code: 1, rights: result.rows, total: result.total})
+    res.send({code: 100, rights: result.rows, total: result.total})
   })
 }
 
@@ -28,8 +28,8 @@ RightsService.findRightsById = function (req, res) {
   // let id = req.params.id
   let session = Utils.getAdminSession(req)
   Rights.findRightById(req, session, function (err, result) {
-    if (err) return res.send({code: 0, msg: err.message})
-    res.send({code: 1, rights: result})
+    if (err) return res.send({code: 999, msg: err.message})
+    res.send({code: 100, rights: result})
   })
 }
 
@@ -38,8 +38,8 @@ RightsService.deleteRights = function (req, res) {
   // let id = req.params.id
   let session = Utils.getAdminSession(req)
   Rights.deleteRights(req, session, function (err) {
-    if (err) return res.send({code: 0, msg: err.message})
-    res.send({code: 1})
+    if (err) return res.send({code: 999, msg: err.message})
+    res.send({code: 100})
   })
 }
 
@@ -48,8 +48,8 @@ RightsService.deleteRights = function (req, res) {
 // RightsService.deleteMultiple = function (req, res) {
 //   let session = Utils.getAdminSession(req)
 //   Rights.deleteMultipleRights(req.body['ids'], session, function (err, result) {
-//     if (err) return res.send({code: 0, msg: CGlobal.serverLang(err.message)})
-//     res.send({code: 1, msg: result})
+//     if (err) return res.send({code: 999, msg: CGlobal.serverLang(err.message)})
+//     res.send({code: 100, msg: result})
 //   })
 // }
 
@@ -58,9 +58,9 @@ RightsService.createRights = function (req, res) {
   let session = Utils.getAdminSession(req)
   Rights.createRights(req, session, function (err) {
     if (err) {
-      return res.send({code: 0, msg: err.message})
+      return res.send({code: 999, msg: err.message})
     }
-    res.send({code: 1, msg: CGlobal.serverLang(req.lang, '创建成功', 'rightsGroup.createSuccess')})
+    res.send({code: 100, msg: CGlobal.serverLang(req.lang, '创建成功', 'rightsGroup.createSuccess')})
   })
 }
 
@@ -68,8 +68,8 @@ RightsService.createRights = function (req, res) {
 RightsService.modifyRights = function (req, res) {
   let session = Utils.getAdminSession(req)
   Rights.modifyRights(req, session, function (err) {
-    if (err) return res.send({code: 0, msg: err.message})
-    res.send({code: 1, msg: CGlobal.serverLang(req.lang, '修改成功', 'rightsGroup.modifySuccess')})
+    if (err) return res.send({code: 999, msg: err.message})
+    res.send({code: 100, msg: CGlobal.serverLang(req.lang, '修改成功', 'rightsGroup.modifySuccess')})
   })
 }
 
@@ -77,9 +77,9 @@ RightsService.modifyRights = function (req, res) {
 RightsService.getRightsCode = function (req, res) {
   let adminSession = Utils.getAdminSession(req)
   if (!CGlobal.isPermission(adminSession.rights, CGlobal.Rights.RightsSetup.code)) {
-    return res.send({code: 1, rightsCode: []})
+    return res.send({code: 100, rightsCode: []})
   }
-  return res.send({code: 1, rightsCode: Utils.getRightsArray(req.lang, adminSession)})
+  return res.send({code: 100, rightsCode: Utils.getRightsArray(req.lang, adminSession)})
 }
 
 module.exports = RightsService

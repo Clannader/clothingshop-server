@@ -367,13 +367,13 @@ AdminSchema.statics.queryAdmins = function (req, session, cb) {
     //如果是系统用户,并且有创建system用户,那么可以查到他自己创建的用户,不能查其他system用户
     if (CGlobal.isPermission(session.rights, CGlobal.Rights.CreateSYSUser.code)) {
       where.$or.push({createUser: session.adminId})
-      where.$or.push({shopId: {$in: Utils.getShopIds(session.shopList)}})
+      where.$or.push({shopId: {$in: Utils.getShopIds(session)}})
 
       //如果用supplierCode查,会可能查出system的用户,因为他的supplierCode也是一样的,
       //但是店铺ID是system
       // where.$or.push({supplierCode: {$in: session.supplierCode.split(',')}});
     } else {
-      where.$and.push({shopId: {$in: Utils.getShopIds(session.shopList)}})
+      where.$and.push({shopId: {$in: Utils.getShopIds(session)}})
       // where.$and.push({supplierCode: {$in: session.supplierCode.split(',')}});
     }
   }

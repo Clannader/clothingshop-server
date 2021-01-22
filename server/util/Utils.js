@@ -186,12 +186,17 @@ Utils.getRightsArray = function (lang, session) {
   return rightsData
 }
 
-Utils.getShopIds = function (shopList) {
+Utils.getShopIds = function (session) {
+  const shopList = session.shopList
   if (!Array.isArray(shopList)) return []
   let arr = []
   shopList.forEach(function (value) {
     arr.push(value.shopId)
   })
+  // 新增判断是否能查询SYSTEM
+  if (CGlobal.isPermission(session.rights, CGlobal.Rights.CreateSYSAny.code)) {
+    shopList.push('SYSTEM')
+  }
   return arr
 }
 

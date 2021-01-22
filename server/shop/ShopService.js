@@ -15,7 +15,7 @@ function ShopService() {
 ShopService.isExistShop = function (req, res){
     let session = Utils.getAdminSession(req);
     Shop.isExistShopByUser(req.body.shopId, session, function (err, result) {
-        if (err) return res.send({code: 0, msg: err.message});
+        if (err) return res.send({code: 999, msg: err.message});
         result.code = 1;
         res.send(result);
     });

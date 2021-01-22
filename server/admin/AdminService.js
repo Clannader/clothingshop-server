@@ -20,13 +20,13 @@ const AdminService = {
     let password = req.body['adminPws']
     const [err, result] = await Admin.loginSystem(req, aid).then(result => [null, result])
         .catch(err => [err])
-    if (err) return res.send({code: 0, msg: err.message})
+    if (err) return res.send({code: 999, msg: err.message})
     // 其实到这里,用户不可能不存在了
     let admin = result.admin
     let shop = result.shop
     let otherInfo = result.otherInfo
     let msg = ''
-    let code = 0
+    let code = 200
     let isUpdate = false // 判断是否更新用户信息
     let updateWhere = {} // 用户更新条件
     let retryNumber = admin.retryNumber || 0
@@ -41,7 +41,7 @@ const AdminService = {
     // }
     if (!CGlobal.isEmpty(lockTime)) {
       if (moment().isBefore(moment(lockTime))) {
-        return res.send({code: 0, msg: CGlobal.serverLang(req.lang, '该用户已锁定与{0}', 'admin.lockTime'
+        return res.send({code: 999, msg: CGlobal.serverLang(req.lang, '该用户已锁定与{0}', 'admin.lockTime'
               , moment(lockTime).format('YYYY-MM-DD HH:mm:ss,SSS'))})
       } else {
         retryNumber = 0 //锁过期之后,重设次数为0
@@ -133,7 +133,7 @@ const AdminService = {
         shopName: otherInfo.shopName || ''//店铺名
       }
       let json = {
-        code: 1,
+        code: 100,
         credential: 's:' + signature.sign(
             req.sessionID, CGlobal.GlobalStatic.sessionSecret),
         expireMsg: expireMsg,
@@ -153,7 +153,7 @@ const AdminService = {
 
   abort(req, res) {
     this.deleteSession(req, function () {
-      return res.send({code: 1})
+      return res.send({code: 100})
     })
   },
 

@@ -21,7 +21,7 @@ UserLogService.getUserLogsList = function (req, res) {
     if (err) {
       return res.send({code: -1, msg: err.message})
     }
-    res.send({code: 1, logs: result.rows, total: result.total})
+    res.send({code: 100, logs: result.rows, total: result.total})
   })
 }
 

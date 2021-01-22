@@ -18,9 +18,9 @@ AdminUserService.getUsersList = function (req, res) {
   Admin.queryAdmins(req, session, function (err, result) {
     if (err) {
       console.error(err)
-      return res.send({code: 0, msg: err.message})
+      return res.send({code: 999, msg: err.message})
     }
-    res.send({code: 1, users: result.rows, total: result.total})
+    res.send({code: 100, users: result.rows, total: result.total})
   })
 }
 
@@ -30,9 +30,9 @@ AdminUserService.deleteUser = function (req, res) {
   let id = req.params.id
   Admin.deleteAdminUser(id, session, function (err) {
     if (err) {
-      return res.send({code: 0, msg: CGlobal.serverLang(err.message, err.code)})
+      return res.send({code: 999, msg: CGlobal.serverLang(err.message, err.code)})
     }
-    res.send({code: 1})
+    res.send({code: 100})
   })
 }
 
@@ -40,9 +40,9 @@ AdminUserService.createUser = function (req, res) {
   let session = Utils.getAdminSession(req)
   Admin.createAdminUser(req.body, session, function (err, result) {
     if (err) {
-      return res.send({code: 0, msg: CGlobal.serverLang(err.message)})
+      return res.send({code: 999, msg: CGlobal.serverLang(err.message)})
     }
-    res.send({code: 1, msg: CGlobal.serverLang('创建成功,初始密码为123456abc,请尽快修改密码'), adminId: result.adminId})
+    res.send({code: 100, msg: CGlobal.serverLang('创建成功,初始密码为123456abc,请尽快修改密码'), adminId: result.adminId})
   })
 }
 
@@ -50,17 +50,17 @@ AdminUserService.modifyUser = function (req, res) {
   let session = Utils.getAdminSession(req)
   Admin.modifyAdminUser(req.body, session, function (err, result) {
     if (err) {
-      return res.send({code: 0, msg: CGlobal.serverLang(err.message, err.code)})
+      return res.send({code: 999, msg: CGlobal.serverLang(err.message, err.code)})
     }
-    res.send({code: 1, msg: CGlobal.serverLang('修改成功'), adminId: result.adminId})
+    res.send({code: 100, msg: CGlobal.serverLang('修改成功'), adminId: result.adminId})
   })
 }
 
 AdminUserService.changeStatus = function (req, res) {
   let session = Utils.getAdminSession(req)
   Admin.changeStatusById(req.body.id, req.body.status, session, function (err) {
-    if (err) return res.send({code: 0, msg: CGlobal.serverLang(err.message, err.code)})
-    res.send({code: 1})
+    if (err) return res.send({code: 999, msg: CGlobal.serverLang(err.message, err.code)})
+    res.send({code: 100})
   })
 }
 
@@ -68,8 +68,8 @@ AdminUserService.getUserById = function (req, res) {
   let id = req.body['id']
   let session = Utils.getAdminSession(req)
   Admin.findBy_Id(id, session, function (err, user) {
-    if (err) return res.send({code: 0, msg: CGlobal.serverLang(err.message, err.code)})
-    let result = {user: user, code: 1}
+    if (err) return res.send({code: 999, msg: CGlobal.serverLang(err.message, err.code)})
+    let result = {user: user, code: 100}
     if (user.shopId === 'SYSTEM') {
       result.supplierCode = session.supplierCode
     } else {
@@ -82,8 +82,8 @@ AdminUserService.getUserById = function (req, res) {
 AdminUserService.setupPws = function (req, res) {
   let session = Utils.getAdminSession(req)
   Admin.setupPws(req.body, session, function (err) {
-    if (err) return res.send({code: 0, msg: CGlobal.serverLang(err.message, err.code)})
-    res.send({code: 1, msg: CGlobal.serverLang('修改成功')})
+    if (err) return res.send({code: 999, msg: CGlobal.serverLang(err.message, err.code)})
+    res.send({code: 100, msg: CGlobal.serverLang('修改成功')})
   })
 }
 

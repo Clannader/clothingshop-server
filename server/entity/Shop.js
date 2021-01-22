@@ -114,12 +114,12 @@ ShopSchema.statics.findShopListByUser = function (session, field, cb) {
  * @param session
  * @param cb
  */
-ShopSchema.statics.findShopIdListByUser = function (session, cb) {
-    this.findShopListByUser(session, {shopId: 1}, function (err, result) {
-        if (err || !result) return cb(err);
-        cb(null, Utils.getShopIds(result));
-    });
-};
+// ShopSchema.statics.findShopIdListByUser = function (session, cb) {
+//     this.findShopListByUser(session, {shopId: 1}, function (err, result) {
+//         if (err || !result) return cb(err);
+//         cb(null, Utils.getShopIds(result));
+//     });
+// };
 
 // ShopSchema.statics.findShopList = function (session, cb) {
 //     let field = {_id: 0, shopId: 1, shopName: 1, supplierCode: 1};

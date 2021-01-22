@@ -147,10 +147,10 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
     order: 'desc'
   }
 
-  if (!CGlobal.isSupervisor(session) && session.shopId === 'SYSTEM') {
+  if (!CGlobal.isSupervisor(session)) {
     where.$and.push({
       $or: [{
-        shopId: {$in: Utils.getShopIds(session.shopList)}
+        shopId: {$in: Utils.getShopIds(session)}
       }, {
         shopId: 'SYSTEM',
         userName: session.adminId
