@@ -147,9 +147,13 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
     order: 'desc'
   }
 
+  // TODO 这里估计要修改一下
   if (!CGlobal.isSupervisor(session)) {
     where.$and.push({
       $or: [{
+        // 这里返回的shopId有可能返回SYSTEM,是否考虑加个参数控制就算有权限也不返回SYSTEM
+        // 考虑另一个问题,那就是一个SYSTEM用户能看到什么用户的操作日志呢?
+        // 非SYSTEM的用户能看到什么用户的日志???
         shopId: {$in: Utils.getShopIds(session)}
       }, {
         shopId: 'SYSTEM',
