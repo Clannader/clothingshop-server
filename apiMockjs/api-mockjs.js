@@ -5,8 +5,29 @@
 
 const fs = require('fs')
 const ejs = require('ejs')
+const axios = require('axios')
 const apiPath = __dirname + '/api' // 生成代码存放的目录
 const indexPath = apiPath + '/index.js'
+
+const apiHost = 'http://47.98.165.42:9200'
+
+const service = axios.create({
+  baseURL: apiHost,
+  timeout: 30000,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json'
+  }
+})
+
+service.interceptors.response.use(
+    response => {
+      return response.data
+    },
+    error => {
+      return Promise.reject(error)
+    }
+)
 
 if (!fs.existsSync(apiPath)) {
   fs.mkdirSync(apiPath)
@@ -28,11 +49,11 @@ const createEjsApiFile = function (ejsData, templateName) {
 }
 
 // 暂时使用静态的json数据
-const swaggerJSON = require('./ds-h5-swagger.json')
+// const swaggerJSON = require('./ds-h5-swagger.json')
 
 class ApiMockjs {
   constructor() {
-    this.swaggerJSON = swaggerJSON
+    this.swaggerJSON = null
     this.mockData = {}
     this.allMockData = []
   }
@@ -42,6 +63,11 @@ class ApiMockjs {
    * @return {Promise<void>}
    */
   async start() {
+    const data = await service.get('/v2/api-docs', {}).then(res => res).catch(() => null)
+    if (!data) {
+      return
+    }
+    this.swaggerJSON = data
     const modules = this.findModules()
     const modulesFileData = await createEjsApiFile({modules}, 'index').then(data => data)
     fs.writeFileSync(indexPath, modulesFileData)
