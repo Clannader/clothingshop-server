@@ -76,12 +76,10 @@ module.exports.getPageQuery = function (name, condition, field, sort, skip = 1, 
   if (CGlobal.isPlainObject(sort)) {
     if (sort.order === 'desc') {
       st[sort.sort] = -1//降序
+    } else if (sort.order === 'asc') {
+      st[sort.sort] = 1//升序
     } else {
-      if (sort.sort) {
-        st[sort.sort] = 1//升序
-      } else {
-        st['_id'] = -1
-      }
+      st['_id'] = -1
     }
   }
   if (typeof c === 'function') {
