@@ -12,6 +12,6 @@ app.get('/server/search', serverLogsService.searchLogs)
 app.post('/server/download', serverLogsService.downloadLogs)
 app.post('/server/delete', serverLogsService.deleteLogs)
 
-app.get('/user/search', userLogsService.getUserLogsList)
+app.post('/user/search', userLogsService.getUserLogsList)
 
 module.exports = app

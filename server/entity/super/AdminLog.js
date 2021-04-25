@@ -70,7 +70,7 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
           , 'admin.noRights', CGlobal.Rights.UserLogs.code)
     })
   }
-  const searchWhere = req.query
+  const searchWhere = req.body
   const input = searchWhere['cond'] || ''
   const shopId = searchWhere.shopId
   const adminId = searchWhere.adminId
