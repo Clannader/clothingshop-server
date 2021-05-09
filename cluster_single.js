@@ -8,6 +8,7 @@ const app = express()
 // const path = require('path');
 const helmet = require('helmet')//防止XSS攻击
 const Utils = require('./server/util/Utils')
+const fs = require('fs')
 const contextPath = Utils.getContextPath()
 
 // 如果不加contextPath的话,默认是/,加了的话,就是匹配contextPath才会进入接口了
@@ -166,10 +167,42 @@ app.use(function unknownError(err, req, res, next) {//这里的next一定不能�
   next()
 })
 
+const registerRouter = function (layer) {
+  const stackObejct = {
+    orgPath: layer.orgPath,
+    regexp: layer.regexp.toString()
+  }
+  const children = []
+  if (layer.handle.stack) {
+    layer.handle.stack.forEach(value => {
+      children.push(registerRouter(value))
+    })
+  }
+  // else if (layer.route) {
+  //   layer.route.stack.forEach(value => {
+  //     children.push(registerRouter(value))
+  //   })
+  // }
+  if (children.length > 0) {
+    stackObejct['children'] = children
+  }
+  // if (!Array.isArray(stackObejct['children'])) {
+  //   delete stackObejct['children']
+  // }
+  return stackObejct
+}
+// 这里开始统计所有的路由
 app._router.stack.forEach(v => {
-  // TODO 统计所有注册的路由
-  console.log(v.name)
+  // 这里不能用filter的方法进行过滤,因为这样过滤出来的数据不对
+  if (v.name === 'router') {
+    const stack = []
+    v.handle.stack.forEach(value => {
+      stack.push(registerRouter(value))
+    })
+    fs.writeFileSync('./routerGenerator/router.json', JSON.stringify(stack))
+  }
 })
+
 
 if (Utils.readConfig('startHTTP') === 'true') {
   startHTTP()
@@ -263,7 +296,6 @@ function startHTTPS() {
   /************启动HTTPS服务********************/
       //Create HTTPS server
   const https = require('https')
-  const fs = require('fs')
   const os = require('os')
   let ip = Utils.readConfig('ip')
   let hostname = ip
