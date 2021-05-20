@@ -10,8 +10,12 @@ const Rights = conn.getEntity('Rights')
 const Admin = conn.getEntity('Admin')
 const Utils = require('../util/Utils')
 const adminInfoCache = require('../util/cache/AdminInfoCache')
+const Model = require('mongoose/lib/model')
 
 const initAdminInfo = async function (req, res, next) {
+    // 重写Model的属性
+    Model.$req = req
+
     req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
     if(Utils.readConfig('cors') === 'true'){
         res.setHeader('Access-Control-Allow-Origin', '*');

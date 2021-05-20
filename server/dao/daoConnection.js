@@ -69,10 +69,12 @@ methods.forEach(v => {
     const cb = callback
     const startTime = new Date().getTime()
     const modelName = this.modelName
-    if (this.$req && this.$req.url) {
-      console.log(this.$req.url)
+    let url = ''
+    if (this.$req && (this.$req.fullPath || this.$req.url)) {
+      url = this.$req.fullPath || this.$req.url
     }
     callback = function () {
+      console.log(url)
       console.log('表名: %s,方法: %s', modelName, v)
       console.log('语句: %s', JSON.stringify(conditions))
       console.log('返回字段: %s', JSON.stringify(projection))

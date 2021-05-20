@@ -56,6 +56,7 @@ app.all('/*', function (req, res, next) {
         , url))
   }
 
+  req.fullPath = url
   req.aop = {
     startTime: new Date().getTime()
   }
