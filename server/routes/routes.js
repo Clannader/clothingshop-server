@@ -12,31 +12,6 @@ let Utils = require('../util/Utils')
 let nodeXss = require('node-xss').clean
 let Aspect = require('../h5/CmsAopAspect')
 
-const response = express.response
-//重写response.end方法
-const _end = response.end
-response.end = function (chunk, encoding) {
-  response.returnData = chunk + ''
-  // 后期记得修改正确的返回状态码,改成1000,四位数,不能是1或者0了
-  if (Utils.convertStringToBoolean(Utils.readConfig('errorCatch'))) {
-    let resultJSON = chunk + ''
-    try {
-      resultJSON = JSON.parse(resultJSON)
-      if (resultJSON.code && resultJSON.code === CGlobal.GlobalStatic.ApiCode.Error) {
-        const printJSON = Object.assign({}, resultJSON, {
-          url: url
-        })
-        console.error(JSON.stringify(printJSON))
-        resultJSON.msg = 'System Exception'
-        chunk = Buffer.from(JSON.stringify(resultJSON), 'utf8')
-        this.set('Content-Length', chunk.length) // 如果不设置这句话,修改chunk是没有返回的
-      }
-    }catch (e) {
-    }
-  }
-  return _end.apply(this, [chunk, encoding])
-}
-
 app.all('/*', function (req, res, next) {
   //防止XSS攻击
   let url = req.url
@@ -60,6 +35,32 @@ app.all('/*', function (req, res, next) {
   req.aop = {
     startTime: new Date().getTime()
   }
+
+  // 只能在这里重写了,不然取到的返回值不对
+  // 重写response.end方法
+  const _end = res.end
+  res.end = function (chunk, encoding) {
+    this.returnData = chunk + ''
+    // 后期记得修改正确的返回状态码,改成1000,四位数,不能是1或者0了
+    if (Utils.convertStringToBoolean(Utils.readConfig('errorCatch'))) {
+      let resultJSON = chunk + ''
+      try {
+        resultJSON = JSON.parse(resultJSON)
+        if (resultJSON.code && resultJSON.code === CGlobal.GlobalStatic.ApiCode.Error) {
+          const printJSON = Object.assign({}, resultJSON, {
+            url: url
+          })
+          console.error(JSON.stringify(printJSON))
+          resultJSON.msg = 'System Exception'
+          chunk = Buffer.from(JSON.stringify(resultJSON), 'utf8')
+          this.set('Content-Length', chunk.length) // 如果不设置这句话,修改chunk是没有返回的
+        }
+      }catch (e) {
+      }
+    }
+    return _end.apply(this, [chunk, encoding])
+  }
+
   // 这句话写到了initData.js里面去了
   // req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
   Aspect.logAspect(req, res)

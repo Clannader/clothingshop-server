@@ -70,16 +70,17 @@ methods.forEach(v => {
     const startTime = new Date().getTime()
     const modelName = this.modelName
     let url = ''
+    // 在initData.js文件里面加入$req这个对象
     if (this.$req && (this.$req.fullPath || this.$req.url)) {
       url = this.$req.fullPath || this.$req.url
     }
     callback = function () {
-      console.log(url)
-      console.log('表名: %s,方法: %s', modelName, v)
-      console.log('语句: %s', JSON.stringify(conditions))
-      console.log('返回字段: %s', JSON.stringify(projection))
-      console.log('返回数据: %s', JSON.stringify(arguments[1] || {}))
-      console.log('执行时间: %s ms', new Date().getTime() - startTime)
+      // console.log(url)
+      // console.log('表名: %s,方法: %s', modelName, v)
+      // console.log('语句: %s', JSON.stringify(conditions))
+      // console.log('返回字段: %s', JSON.stringify(projection))
+      // console.log('返回数据: %s', JSON.stringify(arguments[1] || {}))
+      // console.log('执行时间: %s ms', new Date().getTime() - startTime)
       return cb.apply(this, arguments)
     }
     arguments[arguments.length - 1] = callback

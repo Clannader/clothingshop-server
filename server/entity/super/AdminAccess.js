@@ -28,7 +28,7 @@ let AdminAccess = {
         type: Date
         , required: true
     },//访问时间
-    iP: {
+    ip: {
         type: String
         , required: true
         , match: CGlobal.GlobalStatic.ipExp
@@ -38,7 +38,8 @@ let AdminAccess = {
         , required: true
     },//请求地址
     params: {
-        type: String
+        type: Object,
+        default: {}
     },//请求内容参数
     type: {
         type: String
@@ -55,10 +56,10 @@ let AdminAccess = {
         type: Number
     },//请求时间
     send: {
-        type: String
+        type: Object
     },//请求返回内容
     headers: {
-        type: String
+        type: Object
     }//请求头内容
 };
 let AdminAccessSchema = new Schema(AdminAccess);

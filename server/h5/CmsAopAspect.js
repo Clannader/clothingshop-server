@@ -40,12 +40,12 @@ class CmsAopAspect {
         adminType: adminType ? adminType.adminType : 'NULL',
         shopId: shopId,//用登录时的shopId
         date: date,
-        iP: ip,
+        ip: ip,
         url: url,
-        params: Utils.isHasSoapHeader(req) ? req.xmlData : JSON.stringify(params),
+        params: Utils.isHasSoapHeader(req) ? req.xmlData : params,
         type: isIndex ? CGlobal.GlobalStatic.Log_Type.BROWSER : CGlobal.GlobalStatic.Log_Type.INTERFACE,
         method: method.toLowerCase(),
-        headers: JSON.stringify(req.headers)
+        headers: req.headers
       }
       // AdminAccess.create(createParams, function (err) {
       //     if (err) console.error(err);
@@ -87,11 +87,18 @@ class CmsAopAspect {
         }
       })
 
-      createParams.send = res.returnData
+      let returnData = res.returnData
+      try {
+        returnData = JSON.parse(res.returnData)
+      } catch (e) {
+      }
+      createParams.send = returnData
       createParams.date = new Date()
-      AdminAccess.create(createParams, function (err) {
-        if (err) console.error(err)
-      })
+      if (Utils.convertStringToBoolean(Utils.readConfig('monitorLog'))) {
+        AdminAccess.create(createParams, function (err) {
+          if (err) console.error(err)
+        })
+      }
     })
   }
 }

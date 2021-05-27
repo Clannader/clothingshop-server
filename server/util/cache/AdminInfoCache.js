@@ -13,7 +13,7 @@ class AdminInfoCache extends BaseCache {
 
   constructor() {
     super()
-    this.expires = 60 * 1000
+    this.expires = 3 * 60 * 1000
   }
 
   async getOperaShopList(session) {

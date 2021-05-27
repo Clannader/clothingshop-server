@@ -169,6 +169,7 @@ app.use(function unknownError(err, req, res, next) {//这里的next一定不能�
 
 const registerRouter = function (layer) {
   const stackObejct = {
+    // 这里需要在express模块的layer.js里面的属性加入orgPath这个字段,否则获取的值不对
     orgPath: layer.orgPath,
     regexp: layer.regexp.toString()
   }

@@ -118,6 +118,8 @@ log4js.configure({
                         //     "context": {},
                         //     "pid": 5740
                         // }
+                        // 这里面的data节点可以通过info的传参传进来
+                        // 例如: console.info('xxxx', {type: 'xxxx'})
                         return 'oliver'
                     }
                 }
