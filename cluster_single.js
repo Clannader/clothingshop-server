@@ -73,6 +73,87 @@ const MongoStore = require('connect-mongo')(session)
 //         '@'+Utils.readConfig('db_url').split('//')[1];
 // const db_url = Utils.readConfig('db_url').replace('\/\/'
 //     , '\/\/' + Utils.readConfig('db_user') + ':' + Utils.readConfig('db_pws') + '@');
+
+// 新增重写 MongoStore 里面的set(session)的方法,改变存储session的结构
+class TemplateMongoStore extends MongoStore {
+  // 其实这里改源码是最方便的,但是为了避免升级模块包的时候,覆盖代码了,还是这里重写比较好
+  set(sid, session, callback) {
+    // Removing the lastModified prop from the session object before update
+    if (this.options.touchAfter > 0 && session && session.lastModified) {
+      delete session.lastModified
+    }
+
+    let s
+
+    if (this.Crypto) {
+      try {
+        session = this.Crypto.set(session)
+      } catch (error) {
+        return this.withCallback(Promise.reject(error), callback)
+      }
+    }
+
+    try {
+      s = {
+        _id: this.computeStorageId(sid),
+        session: this.transformFunctions.serialize(session),
+        // 其实这里把我们代码自定义的session结构丢进去存就可以了,这样就可以统计很多东西了
+        ...session.adminSession
+      }
+    } catch (err) {
+      return this.withCallback(Promise.reject(err), callback)
+    }
+
+    if (session && session.cookie && session.cookie.expires) {
+      s.expires = new Date(session.cookie.expires)
+    } else {
+      // If there's no expiration date specified, it is
+      // browser-session cookie or there is no cookie at all,
+      // as per the connect docs.
+      //
+      // So we set the expiration to two-weeks from now
+      // - as is common practice in the industry (e.g Django) -
+      // or the default specified in the options.
+      s.expires = new Date(Date.now() + this.ttl * 1000)
+    }
+
+    if (this.options.touchAfter > 0) {
+      s.lastModified = new Date()
+    }
+
+    return this.withCallback(
+      this.collectionReady()
+        .then(collection =>
+          collection.updateOne(
+            { _id: this.computeStorageId(sid) },
+            { $set: s },
+            Object.assign({ upsert: true }, this.writeOperationOptions)
+          )
+        )
+        .then(rawResponse => {
+          if (rawResponse.result) {
+            rawResponse = rawResponse.result
+          }
+          if (rawResponse && rawResponse.upserted) {
+            this.emit('create', sid)
+          } else {
+            this.emit('update', sid)
+          }
+          this.emit('set', sid)
+        }),
+      callback
+    )
+  }
+
+  // 对于promise和callback的使用,可以参考这个方法,或者这个store类,是一个比较好的例子
+  withCallback(promise, cb) {
+    if (cb) {
+      promise.then(res => cb(null, res)).catch(cb)
+    }
+    return promise
+  }
+}
+
 const conn = require('./server/dao/daoConnection')
 require('./server/dao/registerEntity')
 app.use(contextPath, session({
@@ -86,7 +167,7 @@ app.use(contextPath, session({
   // expires: 0,
   // secure: true
   // },//session存在cookie的有效时间,我觉得可以不用设置
-  store: new MongoStore({
+  store: new TemplateMongoStore({
     // url: db_url,
     mongooseConnection: conn.getConnection(),
     // collection:'sessions',//默认这个库

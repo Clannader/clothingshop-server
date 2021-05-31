@@ -140,12 +140,12 @@ const AdminService = {
         session: Utils.getTemplateSession(req.session.adminSession)
       }
       // 临时输出免登录地址
-      const key = Utils.tripleDESencrypt(JSON.stringify({
-        credential: json.credential
-      }))
+      // const key = Utils.tripleDESencrypt(JSON.stringify({
+      //   credential: json.credential
+      // }))
       // console.log(Utils.tripleDESdecrypt(key))
-      const url = 'http://localhost:9800/#/home?key=' + encodeURIComponent(key)
-      console.log(url)
+      // const url = 'http://localhost:9800/#/home?key=' + encodeURIComponent(key)
+      // console.log(url)
       res.send(json)
     })
 
