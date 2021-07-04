@@ -39,6 +39,56 @@ conn.on('reconnected', function () {
   console.log('数据库重连成功')
 })
 
+// 重写数据库调用语句监控
+const Model = require('mongoose/lib/model')
+const methods = ['save', 'remove', 'delete', 'deleteOne', 'deleteMany'
+  , 'find', 'findOne', 'countDocuments', 'count', 'distinct'
+  , 'findOneAndUpdate', 'findOneAndDelete', 'findOneAndReplace'
+  , 'findOneAndRemove', 'create', 'insertMany', 'update', 'updateMany'
+  , 'updateOne', 'aggregate', 'populate']
+methods.forEach(v => {
+  const _method = Model[v]
+  Model[v] = function () {
+    let conditions = arguments[0] || {}
+    let projection = arguments[1] || {}
+    let options = arguments[2] || {}
+    let callback = arguments[3] || {}
+    if (typeof conditions === 'function') {
+      callback = conditions
+      conditions = {}
+      projection = {}
+      options = {}
+    } else if (typeof projection === 'function'){
+      callback = projection
+      projection = {}
+      options = {}
+    } else if (typeof options === 'function') {
+      callback = options
+      options = {}
+    }
+    const cb = callback
+    const startTime = new Date().getTime()
+    const modelName = this.modelName
+    let url = ''
+    // 在initData.js文件里面加入$req这个对象
+    if (this.$req && (this.$req.fullPath || this.$req.url)) {
+      url = this.$req.fullPath || this.$req.url
+    }
+    callback = function () {
+      // console.log(url)
+      // console.log('表名: %s,方法: %s', modelName, v)
+      // console.log('语句: %s', JSON.stringify(conditions))
+      // console.log('返回字段: %s', JSON.stringify(projection))
+      // console.log('返回数据: %s', JSON.stringify(arguments[1] || {}))
+      // console.log('执行时间: %s ms', new Date().getTime() - startTime)
+      return cb.apply(this, arguments)
+    }
+    arguments[arguments.length - 1] = callback
+    return _method.apply(this, arguments)
+  }
+})
+
+
 //得到实体
 module.exports.getEntity = function (name) {
   return conn.model(name)

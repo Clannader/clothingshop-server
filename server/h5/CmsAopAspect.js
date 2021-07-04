@@ -33,6 +33,7 @@ class CmsAopAspect {
     try {
       let aid = adminSession.adminId
       let shopId = adminSession.shopId
+      // TODO 以后从缓存里面取,或者查权限的时候就拿到了
       const adminType = await AdminAccess.queryAdmin(aid, adminSession.selfShop)
       let isIndex = url.indexOf(CGlobal.GlobalStatic.baseUrl) !== -1//如果url含有index,说明是网页进来的
       createParams = {
@@ -40,12 +41,14 @@ class CmsAopAspect {
         adminType: adminType ? adminType.adminType : 'NULL',
         shopId: shopId,//用登录时的shopId
         date: date,
-        iP: ip,
+        ip: ip,
         url: url,
-        params: Utils.isHasSoapHeader(req) ? req.xmlData : JSON.stringify(params),
+        params: Utils.isHasSoapHeader(req) ? req.xmlData : params,
         type: isIndex ? CGlobal.GlobalStatic.Log_Type.BROWSER : CGlobal.GlobalStatic.Log_Type.INTERFACE,
         method: method.toLowerCase(),
-        headers: JSON.stringify(req.headers)
+        headers: Object.assign(req.headers, {
+          cookie: req.cookies
+        })
       }
       // AdminAccess.create(createParams, function (err) {
       //     if (err) console.error(err);
@@ -87,11 +90,19 @@ class CmsAopAspect {
         }
       })
 
-      createParams.send = res.returnData
+      let returnData = res.returnData
+      try {
+        returnData = JSON.parse(res.returnData)
+      } catch (e) {
+      }
+      createParams.send = returnData
       createParams.date = new Date()
-      AdminAccess.create(createParams, function (err) {
-        if (err) console.error(err)
-      })
+      if (Utils.convertStringToBoolean(Utils.readConfig('monitorLog'))) {
+        AdminAccess.create(createParams, function (err) {
+          if (err) console.error(err)
+          // TODO 成功之后,获取_id写日志
+        })
+      }
     })
   }
 }

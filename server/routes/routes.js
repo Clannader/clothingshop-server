@@ -31,15 +31,16 @@ app.all('/*', function (req, res, next) {
         , url))
   }
 
+  req.fullPath = url
   req.aop = {
     startTime: new Date().getTime()
   }
-  // 这句话写到了initData.js里面去了
-  // req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
-  //重写res.end方法
+
+  // 只能在这里重写了,不然取到的返回值不对
+  // 重写response.end方法
   const _end = res.end
   res.end = function (chunk, encoding) {
-    res.returnData = chunk + ''
+    this.returnData = chunk + ''
     // 后期记得修改正确的返回状态码,改成1000,四位数,不能是1或者0了
     if (Utils.convertStringToBoolean(Utils.readConfig('errorCatch'))) {
       let resultJSON = chunk + ''
@@ -59,6 +60,9 @@ app.all('/*', function (req, res, next) {
     }
     return _end.apply(this, [chunk, encoding])
   }
+
+  // 这句话写到了initData.js里面去了
+  // req.lang = req.headers['language'] || CGlobal.GlobalStatic.CN
   Aspect.logAspect(req, res)
   next()
 })

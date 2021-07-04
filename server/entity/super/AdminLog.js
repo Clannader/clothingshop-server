@@ -129,14 +129,14 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
   if (!CGlobal.isEmpty(startDate)) {
     where.$and.push({
       date: {
-        $gte: startDate + 'T00:00:00'
+        $gte: new Date(startDate + 'T00:00:00')
       }
     })
   }
   if (!CGlobal.isEmpty(endDate)) {
     where.$and.push({
       date: {
-        $lte: endDate + 'T23:59:59'
+        $lte: new Date(endDate + 'T23:59:59')
       }
     })
   }
