@@ -8,38 +8,32 @@ console.log('require mustIndex')
 let mustIndex = [
   //Admin表
   {
-    dbname: 'admins',
+    dbname: 'Admin', // 这里使用entity的文件名
     fields: {email: 1},
     option: {name: 'emailId', unique: true}
   },
   {
-    dbname: 'admins',
+    dbname: 'Admin',
     fields: {adminId: 1, shopId: 1},
     option: {name: 'nameId', unique: true}
   },
-  //User表
-  // {
-  //     dbname: 'users',
-  //     fields: {userId: 1},
-  //     option: {name: 'userId', unique: true}
-  // },
   {
-    dbname: 'shops',
+    dbname: 'Shop',
     fields: {shopId: 1},
     option: {name: 'shopId', unique: true}
   },
   // {
-  //     dbname: 'suppliers',
+  //     dbname: 'Supplier',
   //     fields: {supplierCode: 1},
   //     option: {name: 'supplierId', unique: true}
   // },
   {
-    dbname: 'adminaccesses',
+    dbname: 'AdminAccess',
     fields: {date: 1},
     option: {name: 'expire_log', expireAfterSeconds: 30 * 24 * 3600}//保留多少天的log
   },
   {
-    dbname: 'adminlogs',
+    dbname: 'AdminLog',
     fields: {date: 1},
     option: {name: 'expire_log', expireAfterSeconds: 30 * 24 * 3600}
   }
