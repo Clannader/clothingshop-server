@@ -129,14 +129,14 @@ AdminLogSchema.statics.queryLog = function (req, session, cb) {
   if (!CGlobal.isEmpty(startDate)) {
     where.$and.push({
       date: {
-        $gte: new Date(startDate + 'T00:00:00')
+        $gte: startDate // 前端传入零时区格式的日期进行查询yyyy-MM-ddThh:mm:ssZ
       }
     })
   }
   if (!CGlobal.isEmpty(endDate)) {
     where.$and.push({
       date: {
-        $lte: new Date(endDate + 'T23:59:59')
+        $lte: endDate
       }
     })
   }
