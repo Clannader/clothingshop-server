@@ -52,12 +52,17 @@ const AdminService = {
       retryNumber++
       if (retryNumber >= 5) {
         // 输入错误第五次锁定用户
-        lockTime = moment().add(1, 'days').toDate()
+        lockTime = moment().add(10, 'minutes').toDate()
       }
       updateWhere.retryNumber = retryNumber
       updateWhere.lockTime = lockTime
       isUpdate = true
-      msg = CGlobal.serverLang(req.lang, '用户名或密码错误, 今日还可输错{0}次', 'admin.retryPws', 5-retryNumber)
+      if (retryNumber < 5) {
+        msg = CGlobal.serverLang(req.lang, '用户名或密码错误, 今日还可输错{0}次', 'admin.retryPws', 5-retryNumber)
+      } else {
+        msg = CGlobal.serverLang(req.lang, '该用户已锁定与{0}', 'admin.lockTime'
+            , moment(lockTime).format('YYYY-MM-DD HH:mm:ss,SSS'))
+      }
     } else {
       // 密码正确之后,清空错误次数和锁定时间
       isUpdate = true
