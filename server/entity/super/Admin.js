@@ -49,7 +49,7 @@ let Admin = {
   email: {
     type: String
     , required: true
-    , unique: true//索引值唯一
+    // , unique: true//索引值唯一
     , match: CGlobal.GlobalStatic.mailExp
   },//邮箱地址
   usedPws: {
@@ -59,9 +59,9 @@ let Admin = {
   supplierCode: {
     type: String
   },//供应商代码,BUG修改字段类型,研究还有什么属性可以控制字段的,比如长度,正则
-  lasturl: {
-    type: String
-  },//上一次退出的地址
+  // lasturl: {
+  //   type: String
+  // },//上一次退出的地址
   // isLogin:{type:Boolean,default:false},//登录状态,是否处于正在登录
   loginTime: {
     type: Date
@@ -72,6 +72,12 @@ let Admin = {
   },//管理员的状态,false时不可登录
   createUser: {
     type: String//创建这个用户的人
+  },
+  createDate: {
+    type: Date // 创建时间
+  },
+  modifyDate: {
+    type: Date // 上一次修改的时间
   },
   retryNumber: {
     type: Number,// 密码错误次数
@@ -91,7 +97,7 @@ let Admin = {
 let AdminSchema = new Schema(Admin)
 
 AdminSchema.statics.findBy_Id = function (id, session, cb) {
-  let field = {password: 0, usedPws: 0, loginTime: 0, lasturl: 0}
+  let field = {password: 0, usedPws: 0, loginTime: 0}
   if (!Utils.isMongoId(id)) {
     return cb({message: '无效的id值'})
   }
@@ -106,7 +112,7 @@ AdminSchema.statics.findBy_Id = function (id, session, cb) {
 }
 
 AdminSchema.statics.findByName = function (adminId, shopId, session, cb) {
-  let field = {password: 0, usedPws: 0, loginTime: 0, lasturl: 0}
+  let field = {password: 0, usedPws: 0, loginTime: 0}
   if (!adminId) {
     return cb({message: '用户名不能为空'})
   }
@@ -216,11 +222,17 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
       },
       findShop: ['findAdmin', function (adminRes, cb) {
         let admin = adminRes.findAdmin
+        // 2021-08-28 日志:用户登录有3种方式,有2种类型的用户
+        // 对应6种情况：系统用户,使用邮箱登录,loginShop应该是SYSTEM
+        //                   使用用户名,loginShop应该是SYSTEM
+        //                   用户名@店铺ID,loginShop应该是店铺ID
+        //            普通用户,同理上面3个
         //这个判断是判断普通用户使用邮箱登录时没有shopId的
         if (admin.adminType === CGlobal.GlobalStatic.User_Type.NORMAL) {
           loginShop = admin.shopId
         }
         if (!loginShop) return cb()
+        // 如果loginShop是SYSTEM的话不需要去查询酒店信息了
         let searchShop = {
           shopId: Utils.getIgnoreCase(loginShop)
         }
@@ -235,6 +247,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
             }]
           }
         }
+        // 这里是寻找当前用户登录的店铺ID信息
         Shop.findOne(searchShop, cb)
       }],
       findSupplierCode: ['findShop', function (returnRes, cb) {
@@ -614,10 +627,12 @@ AdminSchema.statics.checkAdminUserInfo = function (data, session, cb) {
     data.shopId = shopId
     data.adminType = adminType
     data.adminStatus = adminStatus
+    date.modifyDate = new Date()
     if (!_id) {
       data.password = Utils.sha256('123456abc')
       //新增创建人节点
       data.createUser = session.adminId
+      data.createDate = new Date()
     }
     cb(err)
   })
