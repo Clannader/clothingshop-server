@@ -26,7 +26,7 @@ const AdminService = {
     let shop = result.shop
     let otherInfo = result.otherInfo
     let msg = ''
-    let code = 200
+    let code = 200 // 200为业务代码code
     let isUpdate = false // 判断是否更新用户信息
     let updateWhere = {} // 用户更新条件
     let retryNumber = admin.retryNumber || 0
@@ -101,7 +101,7 @@ const AdminService = {
         // 没有错误信息,才是登录成功,才会记录登录的时间
         updateWhere.loginTime = currentDate
       }
-      Admin.updateOne({adminId: admin.adminId, shopId: admin.shopId},
+      Admin.updateOne({_id: admin._id},
           {$set: updateWhere}, CGlobal.noop)
     }
 
@@ -134,7 +134,7 @@ const AdminService = {
         // userImg: '/img/default.jpg',
         requestIP: Utils.getRequestIP(req),
         requestHost: req.headers['host'],
-        supplierCode: admin.supplierCode || '',//集团代码
+        // supplierCode: admin.supplierCode || '',//集团代码
         shopName: otherInfo.shopName || ''//店铺名
       }
       let json = {

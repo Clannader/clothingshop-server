@@ -17,7 +17,7 @@ let staticVal = {
   Cookie_Expires: 7 * 24 * 60 * 60 * 1000,//7天
   Cache_Expires: 10 * 60 * 1000,//缓存失效时间
   //Supervisor权限
-  Supervisor_Rights: 'SUPERVISOR',
+  Supervisor_Rights: ['SUPERVISOR'],
   User_Type: {
     SYSTEM: 'SYSTEM',
     NORMAL: 'NORMAL',

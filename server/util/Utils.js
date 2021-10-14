@@ -86,11 +86,14 @@ Utils.getSuper = function () {
     adminId: 'SUPERVISOR',
     adminName: '系统超级用户',
     password: this.sha256('s'),
-    shopId: 'SYSTEM',
+    shopId: ['SYSTEM'],
     rights: CGlobal.GlobalStatic.Supervisor_Rights,
     adminType: 'SYSTEM',
     adminStatus: true,
-    email: 'oliver.wu@shijigroup.com'
+    email: 'oliver.wu@shijigroup.com',
+    createUser: 'SYSTEM',
+    createDate: new Date(),
+    isFirstLogin: false
   }
 }
 
@@ -139,7 +142,7 @@ Utils.getTemplateSession = function (session) {
     lastTime: session.lastTime,
     shopId: session.shopId,
     selfShop: session.selfShop,
-    supplierCode: session.supplierCode,
+    // supplierCode: session.supplierCode,
     shopName: session.shopName,
     isFirstLogin: session.isFirstLogin,
     mobile: session.mobile

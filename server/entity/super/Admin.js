@@ -31,34 +31,34 @@ let Admin = {
   adminType: {
     type: String
     , required: true
-    , enum: [CGlobal.GlobalStatic.User_Type.NORMAL, CGlobal.GlobalStatic.User_Type.SYSTEM
+    , enum: [CGlobal.GlobalStatic.User_Type.SYSTEM
       , CGlobal.GlobalStatic.User_Type.THIRD]
-  },//用户类型:SYSTEM,NORMAL,3RD
+  },//用户类型:SYSTEM,3RD,以后就只有系统用户和第三方用户的区分
   password: {
     type: String
   },//管理员的密码
   shopId: {
-    type: String
+    type: Array
     , required: true
   },//所属的商店名
   rights: {
-    type: String
+    type: Array
     , required: true
-    , match: CGlobal.GlobalStatic.rightsExp
+    // , match: CGlobal.GlobalStatic.rightsExp
   },//权限
   email: {
     type: String
-    , required: true
+    // , required: true
     // , unique: true//索引值唯一
-    , match: CGlobal.GlobalStatic.mailExp
+    // , match: CGlobal.GlobalStatic.mailExp
   },//邮箱地址
   usedPws: {
     type: Array
     , maxlength: 3
   },//使用过的密码,最大长度3,BUG这个字段的类型还需要考虑考虑,如果修改要改动service
-  supplierCode: {
-    type: String
-  },//供应商代码,BUG修改字段类型,研究还有什么属性可以控制字段的,比如长度,正则
+  // supplierCode: {
+  //   type: String
+  // },//供应商代码,BUG修改字段类型,研究还有什么属性可以控制字段的,比如长度,正则
   // lasturl: {
   //   type: String
   // },//上一次退出的地址
@@ -192,15 +192,15 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
     where.email = adminId
   } else if (matches) {
     where.adminId = Utils.getIgnoreCase(matches[1])
-    where.$or = [{
-      shopId: 'SYSTEM'
-    }, {
-      shopId: Utils.getIgnoreCase(matches[2])
-    }]
+    // where.$or = [{
+    //   shopId: 'SYSTEM'
+    // }, {
+    //   shopId: Utils.getIgnoreCase(matches[2])
+    // }]
     loginShop = matches[2]//@的shopId
   } else {
     where.adminId = Utils.getIgnoreCase(adminId)
-    where.shopId = 'SYSTEM'
+    // where.shopId = 'SYSTEM'
   }
 
   return new Promise((resolve, reject) => {
@@ -209,7 +209,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         that.findOne(where, function (err, adminObj) {
           if (err) return cb(err)
           if (adminObj) return cb(null, JSON.parse(JSON.stringify(adminObj)))
-          if (CGlobal.isSupervisor({adminId: adminId, orgRights: ''})) {
+          if (CGlobal.isSupervisor({adminId: adminId})) {
             that.create(Utils.getSuper(), function (err) {
               cb(err, Utils.getSuper())
             })
@@ -228,41 +228,46 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         //                   用户名@店铺ID,loginShop应该是店铺ID
         //            普通用户,同理上面3个
         //这个判断是判断普通用户使用邮箱登录时没有shopId的
-        if (admin.adminType === CGlobal.GlobalStatic.User_Type.NORMAL) {
-          loginShop = admin.shopId
-        }
+        // if (admin.adminType === CGlobal.GlobalStatic.User_Type.NORMAL) {
+        //   loginShop = admin.shopId
+        // }
         if (!loginShop) return cb()
         // 如果loginShop是SYSTEM的话不需要去查询酒店信息了
-        let searchShop = {
-          shopId: Utils.getIgnoreCase(loginShop)
-        }
-        if (admin.adminType === CGlobal.GlobalStatic.User_Type.SYSTEM
-            && admin.supplierCode) {
-          //就算数据库里面没有supplierCode这个字段,查出来的值会默认[]的
-          searchShop = {
-            $and: [{
-              supplierCode: {$in: admin.supplierCode.split(',')}
-            }, {
-              shopId: Utils.getIgnoreCase(loginShop)
-            }]
-          }
-        }
-        // 这里是寻找当前用户登录的店铺ID信息
-        Shop.findOne(searchShop, cb)
-      }],
-      findSupplierCode: ['findShop', function (returnRes, cb) {
-        let supplier = returnRes.findAdmin.supplierCode
-        if (CGlobal.isEmpty(supplier)) {
-          //只有supervisor才会进来,现在除了supervisor的supplierCode会为空外,其他用户基本都不会了
-          Shop.distinct('supplierCode', {}, function (err, result) {
-            if (err) return cb(err)
-            returnRes.findAdmin.supplierCode = result.join(',')
-            cb()
-          })
+        if (admin.shopId.includes(loginShop)) {
+          Shop.findOne({shopId: loginShop}, cb)
         } else {
           cb()
         }
+        // let searchShop = {
+        //   shopId: Utils.getIgnoreCase(loginShop)
+        // }
+        // if (admin.adminType === CGlobal.GlobalStatic.User_Type.SYSTEM
+        //     && admin.supplierCode) {
+        //   //就算数据库里面没有supplierCode这个字段,查出来的值会默认[]的
+        //   searchShop = {
+        //     $and: [{
+        //       supplierCode: {$in: admin.supplierCode.split(',')}
+        //     }, {
+        //       shopId: Utils.getIgnoreCase(loginShop)
+        //     }]
+        //   }
+        // }
+        // // 这里是寻找当前用户登录的店铺ID信息
+        // Shop.findOne(searchShop, cb)
       }]
+      // findSupplierCode: ['findShop', function (returnRes, cb) {
+      //   let supplier = returnRes.findAdmin.supplierCode
+      //   if (CGlobal.isEmpty(supplier)) {
+      //     //只有supervisor才会进来,现在除了supervisor的supplierCode会为空外,其他用户基本都不会了
+      //     Shop.distinct('supplierCode', {}, function (err, result) {
+      //       if (err) return cb(err)
+      //       returnRes.findAdmin.supplierCode = result.join(',')
+      //       cb()
+      //     })
+      //   } else {
+      //     cb()
+      //   }
+      // }]
       // findShopList: ['findShop', function (returnRes, cb) {
       //     let admin = returnRes.findAdmin;
       //     let shopObj = returnRes.findShop;

@@ -324,7 +324,7 @@ console.log('require globalServer');
             if (!this.isPlainObject(session)) return false
             if (typeof session.adminId !== 'string') return false
             return 'SUPERVISOR' === session.adminId.toUpperCase()
-                || session.orgRights.indexOf('SUPERVISOR') !== -1
+                || session.orgRights.includes('SUPERVISOR')
         },
         /**
          * 返回对象的长度 JSON

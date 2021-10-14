@@ -7,14 +7,14 @@ console.log('require mustIndex')
 //必需的索引
 let mustIndex = [
   //Admin表
-  {
-    dbname: 'Admin', // 这里使用entity的文件名
-    fields: {email: 1},
-    option: {name: 'emailId', unique: true}
-  },
+  // {
+  //   dbname: 'Admin', // 这里使用entity的文件名
+  //   fields: {email: 1},
+  //   option: {name: 'emailId', unique: true}
+  // },
   {
     dbname: 'Admin',
-    fields: {adminId: 1, shopId: 1},
+    fields: {adminId: 1},
     option: {name: 'nameId', unique: true}
   },
   {
