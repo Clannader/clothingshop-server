@@ -188,6 +188,8 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
   let matches = adminId.match('^(.+)@(.+)$')
   let loginShop = ''
   let that = this
+  // 目前支持的登录方式有1.邮箱,2.用户名,3.用户名@shopID
+  // 以后这里只能是用户名是唯一标识,否则查库会有问题
   if (adminId.match(CGlobal.GlobalStatic.mailExp)) {
     where.email = adminId
   } else if (matches) {
@@ -216,6 +218,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
           }
           //登录用户名不是SUPERVISOR
           else {
+            // 其实这里是有个bug的,如果一直返回这个提示,但是不限制登录次数会暴露这个用户名其实不存在的风险
             return cb({message: CGlobal.serverLang(req.lang, '用户名或密码错误', 'admin.invPws')})//让报错不往下走了
           }
         })
@@ -233,6 +236,10 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         // }
         if (!loginShop) return cb()
         // 如果loginShop是SYSTEM的话不需要去查询酒店信息了
+        // 2021-10-17 如果用户@了shopID,那就是验证shopID是否存在,否则就使用用户绑定的shopID即可
+        // 下面这段代码是有问题的
+        // TODO 以后要把用户的shopId进行换算成对应的shopId,因为有可能是组,并且考虑不区分大小写的问题
+        // 判断@的shopId不是用户能管理的需要提示店铺不存在
         if (admin.shopId.includes(loginShop)) {
           Shop.findOne({shopId: loginShop}, cb)
         } else {
@@ -294,8 +301,9 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         //这里最怕店铺多起来,一个用户能管理的店铺多了,报内存溢出...
         shopId: loginShop || 'SYSTEM',//当前登录的店铺ID
         // shopList: result.findShopList,//该用户能够操作的店铺ID
-        selfShop: result.findAdmin.shopId//用户自己的店铺ID
+        selfShop: result.findAdmin.shopId//用户自己的店铺ID // TODO 需要变成换算后的shopId数组
       }
+      // TODO 这个判断也是有问题的,需要思考如何判断是单店铺登录还是不@店铺的操作
       if (result.findShop) {
         other.shopName = result.findShop.shopName//店铺名
       }

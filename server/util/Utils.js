@@ -108,7 +108,7 @@ Utils.writeConfig = function (key, value) {
 
 //转义函数
 Utils.escapeString = function (str) {
-  if (!util.isString(str)) return ''
+  if (typeof str !== 'string') return ''
   return str.replace(/([.*+?^=!${}()|\[\]\/\\])/g, '\\$1')
 }
 
@@ -135,18 +135,19 @@ Utils.getAdminSession = function (req) {
 }
 
 Utils.getTemplateSession = function (session) {
-  return {
+  const result = {
     adminId: session.adminId,
     adminName: session.adminName,
     adminType: session.adminType,
     lastTime: session.lastTime,
-    shopId: session.shopId,
-    selfShop: session.selfShop,
-    // supplierCode: session.supplierCode,
-    shopName: session.shopName,
     isFirstLogin: session.isFirstLogin,
     mobile: session.mobile
   }
+  if (!Array.isArray(session.shopId)) {
+    result.shopId = session.shopId
+    result.shopName = session.shopName
+  }
+  return result
 }
 
 /**
@@ -177,6 +178,7 @@ Utils.getIgnoreCase = function (name, mode) {
 }
 
 Utils.getRightsArray = function (lang, session) {
+  // TODO 以后需要修改
   let rightsData = []
   CGlobal.forEach(CGlobal.Rights, function (i, v) {
     if (session.rights.indexOf(v.code) !== -1) {
@@ -190,6 +192,7 @@ Utils.getRightsArray = function (lang, session) {
 }
 
 Utils.getShopIds = function (session) {
+  // TODO 复查代码是否有bug
   const shopList = session.shopList
   if (!Array.isArray(shopList)) return []
   let arr = []

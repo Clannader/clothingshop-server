@@ -41,7 +41,7 @@ const AdminService = {
     // }
     if (!CGlobal.isEmpty(lockTime)) {
       if (moment().isBefore(moment(lockTime))) {
-        return res.send({code: 999, msg: CGlobal.serverLang(req.lang, '该用户已锁定与{0}', 'admin.lockTime'
+        return res.send({code: 999, msg: CGlobal.serverLang(req.lang, '该用户已锁定于{0}', 'admin.lockTime'
               , moment(lockTime).format('YYYY-MM-DD HH:mm:ss,SSS'))})
       } else {
         retryNumber = 0 //锁过期之后,重设次数为0
@@ -50,17 +50,19 @@ const AdminService = {
     }
     if (admin.password !== password) {
       retryNumber++
-      if (retryNumber >= 5) {
-        // 输入错误第五次锁定用户
+      if (retryNumber >= 10) {
+        // 输入错误第十次锁定用户
         lockTime = moment().add(10, 'minutes').toDate()
       }
       updateWhere.retryNumber = retryNumber
       updateWhere.lockTime = lockTime
       isUpdate = true
-      if (retryNumber < 5) {
-        msg = CGlobal.serverLang(req.lang, '用户名或密码错误, 今日还可输错{0}次', 'admin.retryPws', 5-retryNumber)
-      } else {
-        msg = CGlobal.serverLang(req.lang, '该用户已锁定与{0}', 'admin.lockTime'
+      if (retryNumber <= 5) {
+        msg = CGlobal.serverLang(req.lang, '用户名或密码错误', 'admin.invPassword')
+      } else if (retryNumber < 10 && retryNumber > 5) {
+        msg = CGlobal.serverLang(req.lang, '用户名或密码错误, 今日还可输错{0}次', 'admin.retryPws', 10-retryNumber)
+      } else if (retryNumber >= 10){
+        msg = CGlobal.serverLang(req.lang, '该用户已锁定于{0}', 'admin.lockTime'
             , moment(lockTime).format('YYYY-MM-DD HH:mm:ss,SSS'))
       }
     } else {
@@ -76,6 +78,7 @@ const AdminService = {
       } else if (!admin.adminType || admin.adminType === CGlobal.GlobalStatic.User_Type.THIRD) {
         msg = CGlobal.serverLang(req.lang, '第三方用户不能登录系统', 'admin.invUser')
       } else if (shop === null) {
+        // 这里判断是否@店铺是判断shop这个值是不是undefined还是null,undefined就是没有@,null就是@了店铺的
         msg = CGlobal.serverLang(req.lang, '店铺不存在', 'admin.noExistShop')
       } else if (!CGlobal.isEmpty(expireTime)) {
         if (moment(expireTime).isBefore(moment())) {
@@ -128,9 +131,9 @@ const AdminService = {
         // activeDate: currentDate.getTime(),//活跃时间
         lastTime: admin.loginTime || currentDate,//上次登录时间
         // language: CGlobal.GlobalLangType,//语言
-        shopId: otherInfo.shopId,//当前登录的店铺ID
+        shopId: otherInfo.shopId,//当前登录的店铺ID,目前新逻辑的话,这个字段是无效的,除非@shopID
         // shopList: otherInfo.shopList,//该用户能够操作的店铺ID
-        selfShop: otherInfo.selfShop,//用户自己的店铺ID
+        // selfShop: otherInfo.selfShop,//用户自己的店铺ID
         // userImg: '/img/default.jpg',
         requestIP: Utils.getRequestIP(req),
         requestHost: req.headers['host'],
@@ -184,7 +187,13 @@ const AdminService = {
       })
       return
     }
-    // CGlobal.GlobalLangType = adminSession.language;
+    if (adminSession.isFirstLogin) {
+      // 如果用户第一次登录,但是没有去修改密码,所有接口都不能使用
+      // 考虑前端的调用roles接口看看是否有问题
+      return res.send({code: 903, msg: CGlobal.serverLang(req.lang, '用户第一次登录，请修改密码', 'admin.isFirstLogin')})
+    }
+    // CGlobal.GlobalLangType = adminSession.language; 用户语言类型现在统一由前端headers传入为准
+    // 每次访问延长用户有效期时间
     req.session.adminSession.expires = currentDate.getTime()
         + CGlobal.GlobalStatic.Session_Expires
     next()

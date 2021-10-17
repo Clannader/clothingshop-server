@@ -17,6 +17,8 @@ class AdminInfoCache extends BaseCache {
   }
 
   async getOperaShopList(session) {
+    // TODO 这里应该改方法名,应该是一个session对应一个json结构的数据,然后想取什么从结构中取
+    // 这里还需要思考的是什么时候回收内存
     const key = session.sessionID
     let shopList = this.getCacheMap(key)
     if (!shopList) {

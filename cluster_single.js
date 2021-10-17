@@ -378,13 +378,13 @@ function startHTTPS() {
   /************启动HTTPS服务********************/
       //Create HTTPS server
   const https = require('https')
-  const os = require('os')
+  // const os = require('os')
   let ip = Utils.readConfig('ip')
-  let hostname = ip
+  // let hostname = ip
   if (ip === '127.0.0.1' || ip === 'localhost') {
     ip = undefined
     if (Utils.readConfig('clusterServer') !== 'true') {
-      hostname = os.hostname
+      // hostname = os.hostname
     }
   }
   const options = {
