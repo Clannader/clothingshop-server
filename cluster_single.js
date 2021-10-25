@@ -75,7 +75,6 @@ const MongoStore = require('connect-mongo')(session)
 //     , '\/\/' + Utils.readConfig('db_user') + ':' + Utils.readConfig('db_pws') + '@');
 
 // 新增重写 MongoStore 里面的set(session)的方法,改变存储session的结构
-const lodash = require('lodash')
 class TemplateMongoStore extends MongoStore {
   // 其实这里改源码是最方便的,但是为了避免升级模块包的时候,覆盖代码了,还是这里重写比较好
   set(sid, session, callback) {
@@ -95,8 +94,9 @@ class TemplateMongoStore extends MongoStore {
     }
 
     // 其实这里把我们代码自定义的session结构丢进去存就可以了,这样就可以统计很多东西了
+    // lodash.assignIn这样引入导致打包过大
     try {
-      s = lodash.assignIn({
+      s = CGlobal.extend({
         _id: this.computeStorageId(sid),
         session: this.transformFunctions.serialize(session)
       }, session.adminSession)
