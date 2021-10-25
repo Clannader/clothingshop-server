@@ -51,7 +51,7 @@ let Admin = {
     // , required: true
     // , unique: true//索引值唯一
     // , match: CGlobal.GlobalStatic.mailExp
-  },//邮箱地址
+  },//邮箱地址,修改逻辑可以为空,但是不能重复,并且符合邮箱格式
   usedPws: {
     type: Array
     , maxlength: 3
@@ -211,7 +211,8 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         that.findOne(where, function (err, adminObj) {
           if (err) return cb(err)
           if (adminObj) return cb(null, JSON.parse(JSON.stringify(adminObj)))
-          if (CGlobal.isSupervisor({adminId: adminId})) {
+          // orgRights: []是因为使用邮箱登录的时候,如果用户不存在adminId是邮箱名,导致isSupervisor方法报错
+          if (CGlobal.isSupervisor({adminId: adminId, orgRights: []})) {
             that.create(Utils.getSuper(), function (err) {
               cb(err, Utils.getSuper())
             })
@@ -235,14 +236,19 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         //   loginShop = admin.shopId
         // }
         if (!loginShop) return cb()
-        // 如果loginShop是SYSTEM的话不需要去查询酒店信息了
+        // 如果loginShop是SYSTEM的话不需要去查询店铺信息了
         // 2021-10-17 如果用户@了shopID,那就是验证shopID是否存在,否则就使用用户绑定的shopID即可
         // 下面这段代码是有问题的
         // TODO 以后要把用户的shopId进行换算成对应的shopId,因为有可能是组,并且考虑不区分大小写的问题
         // 判断@的shopId不是用户能管理的需要提示店铺不存在
-        if (admin.shopId.includes(loginShop)) {
+        // 1.如果是SUPERVISOR 直接查询shopId是否存在即可
+        // 2.如果不是SUPERVISOR 需要换算当前用户的shopList,判断登录的shopId是否属于他管理,并且不区分大小
+        // 3.如果是管理员那么shopId=['SYSTEM'],否则就是按单个shopId或者shop组绑定
+        // 4.管理员的话那就算查询店铺ID是否存在即可,不是的话就换算shopId判断是否在数组里面,在的话再查询对于信息
+        if (admin.shopId.includes('SYSTEM')) {
           Shop.findOne({shopId: loginShop}, cb)
         } else {
+          // TODO ...
           cb()
         }
         // let searchShop = {
@@ -299,11 +305,11 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
       if (err) return reject(err)
       let other = {
         //这里最怕店铺多起来,一个用户能管理的店铺多了,报内存溢出...
-        shopId: loginShop || 'SYSTEM',//当前登录的店铺ID
+        shopId: loginShop || 'SYSTEM',//当前登录的店铺ID,可以判断用户是否@shopId登录的标志
         // shopList: result.findShopList,//该用户能够操作的店铺ID
-        selfShop: result.findAdmin.shopId//用户自己的店铺ID // TODO 需要变成换算后的shopId数组
+        selfShop: result.findAdmin.shopId//用户自己的店铺ID 如果是管理员,那只有一个值['SYSTEM']
       }
-      // TODO 这个判断也是有问题的,需要思考如何判断是单店铺登录还是不@店铺的操作
+      // 只要result.findShop有值,就说明是@店铺ID登录的
       if (result.findShop) {
         other.shopName = result.findShop.shopName//店铺名
       }
@@ -327,7 +333,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
 }
 
 /**
- * 获取用户能操作的酒店列表
+ * 获取用户能操作的店铺列表
  * 这个应该使用内存缓存来搞
  */
 AdminSchema.statics.getOperaShopList = function(session) {

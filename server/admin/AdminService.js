@@ -78,7 +78,7 @@ const AdminService = {
       } else if (!admin.adminType || admin.adminType === CGlobal.GlobalStatic.User_Type.THIRD) {
         msg = CGlobal.serverLang(req.lang, '第三方用户不能登录系统', 'admin.invUser')
       } else if (shop === null) {
-        // 这里判断是否@店铺是判断shop这个值是不是undefined还是null,undefined就是没有@,null就是@了店铺的
+        // 这里判断是否@店铺,是判断shop这个值是不是undefined还是null,undefined就是没有@,null就是@了店铺的
         msg = CGlobal.serverLang(req.lang, '店铺不存在', 'admin.noExistShop')
       } else if (!CGlobal.isEmpty(expireTime)) {
         if (moment(expireTime).isBefore(moment())) {
@@ -131,14 +131,14 @@ const AdminService = {
         // activeDate: currentDate.getTime(),//活跃时间
         lastTime: admin.loginTime || currentDate,//上次登录时间
         // language: CGlobal.GlobalLangType,//语言
-        shopId: otherInfo.shopId,//当前登录的店铺ID,目前新逻辑的话,这个字段是无效的,除非@shopID
+        shopId: otherInfo.shopId,//当前登录的店铺ID,如果没有@店铺,那么永远都是SYSTEM,如果@了那就是@的那个值
         // shopList: otherInfo.shopList,//该用户能够操作的店铺ID
-        // selfShop: otherInfo.selfShop,//用户自己的店铺ID
+        selfShop: otherInfo.selfShop,//用户自己的店铺ID
         // userImg: '/img/default.jpg',
         requestIP: Utils.getRequestIP(req),
         requestHost: req.headers['host'],
         // supplierCode: admin.supplierCode || '',//集团代码
-        shopName: otherInfo.shopName || ''//店铺名
+        shopName: otherInfo.shopName //店铺名,没有@shopId那么就是没有值
       }
       let json = {
         code: 100,
