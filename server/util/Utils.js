@@ -8,7 +8,7 @@ console.log('require Utils')
 
 let Config = require('./Config')
 let CryptoJS = require('crypto-js')//引这个是总类库,只引crypto-js会是引到index,然后导入其他加密算法而已
-let util = require('util')
+// let util = require('util')
 let validator = require('validator')
 let uuid = require('node-uuid')
 let userCache = require('../util/cache/UserCache')

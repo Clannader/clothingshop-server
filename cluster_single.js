@@ -68,14 +68,15 @@ app.use(contextPath, headerParser())
 
 //请求中加session
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
+const MongoStore = require('connect-mongo')
 // const db_url = 'mongodb://'+Utils.readConfig('db_user')+':'+Utils.readConfig('db_pws')+
 //         '@'+Utils.readConfig('db_url').split('//')[1];
 // const db_url = Utils.readConfig('db_url').replace('\/\/'
 //     , '\/\/' + Utils.readConfig('db_user') + ':' + Utils.readConfig('db_pws') + '@');
 
 // 新增重写 MongoStore 里面的set(session)的方法,改变存储session的结构
-class TemplateMongoStore extends MongoStore {
+// connect-mongo 4.x以上只能改源码了,因为使用了ts
+/*class TemplateMongoStore extends MongoStore {
   // 其实这里改源码是最方便的,但是为了避免升级模块包的时候,覆盖代码了,还是这里重写比较好
   set(sid, session, callback) {
     // Removing the lastModified prop from the session object before update
@@ -152,7 +153,7 @@ class TemplateMongoStore extends MongoStore {
     }
     return promise
   }
-}
+}*/
 
 const conn = require('./server/dao/daoConnection')
 require('./server/dao/registerEntity')
@@ -167,9 +168,9 @@ app.use(contextPath, session({
   // expires: 0,
   // secure: true
   // },//session存在cookie的有效时间,我觉得可以不用设置
-  store: new TemplateMongoStore({
+  store: MongoStore.create({
     // url: db_url,
-    mongooseConnection: conn.getConnection(),
+    client: conn.getConnection().getClient(),
     // collection:'sessions',//默认这个库
     //数据库的session过期时间,不是自己定义的session过期时间
     ttl: CGlobal.GlobalStatic.dbSession_Expires
