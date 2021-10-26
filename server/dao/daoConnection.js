@@ -11,6 +11,7 @@ let that = module.exports
 let opt = {
   user: Utils.getSecurityConfig('db_user'),
   pass: Utils.getSecurityConfig('db_pws')
+  // 如果是mongoose 6.x版本以上,需要把下面4个节点注释掉
   // useNewUrlParser: true,
   // useUnifiedTopology: true,
   // useCreateIndex: true,

@@ -170,6 +170,9 @@ app.use(contextPath, session({
   // },//session存在cookie的有效时间,我觉得可以不用设置
   store: MongoStore.create({
     // url: db_url,
+    // connect-mongo 3.x写法
+    // mongooseConnection: conn.getConnection(),
+    // connect-mongo 4.x以上写法
     client: conn.getConnection().getClient(),
     // collection:'sessions',//默认这个库
     //数据库的session过期时间,不是自己定义的session过期时间
@@ -282,7 +285,7 @@ app._router.stack.forEach(v => {
     v.handle.stack.forEach(value => {
       stack.push(registerRouter(value))
     })
-    fs.writeFileSync(process.env.BASE_PATH + 'routerGenerator/router.json', JSON.stringify(stack))
+    // fs.writeFileSync(process.env.BASE_PATH + 'routerGenerator/router.json', JSON.stringify(stack))
   }
 })
 

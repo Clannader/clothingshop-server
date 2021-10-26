@@ -1,6 +1,7 @@
-const uglify = require('uglifyjs-webpack-plugin');
+// const uglify = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const env = process.env.NODE_ENV || 'prod';
 const path = require('path');
 function resolve(dir) {
@@ -12,19 +13,24 @@ module.exports = {
     target: 'node',
     output: {
         path: resolve('dist'),
+        // filename: 'app-server.[chunkhash:8].js',
         filename: 'app-server.js'
     },
     plugins: [
         new webpack.DefinePlugin({
             'process.env': require('./' + env + '.env')
         }),
-        new uglify(),
+        new CleanWebpackPlugin(),
+        // new uglify(),
         new CopyPlugin([{
             from: resolve('certs'),
             to: 'certs'
         }, {
             from: resolve('config/config.ini'),
             to: 'config/config.ini'
+        }, {
+            from: resolve('template'),
+            to: 'template'
         }]),
     ],
     module: {
@@ -34,9 +40,11 @@ module.exports = {
                 loader: 'babel-loader',
                 include: [resolve('server')],
                 options: {
+                    plugins: ['transform-runtime'],
                     presets: ['env', 'stage-2']
                 }
             }
         ]
-    }
+    },
+    mode: 'development' // development 默认不压缩, production 压缩的
 };
