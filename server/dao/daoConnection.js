@@ -10,11 +10,12 @@ let that = module.exports
 //这个数据库连接是需要电脑有网络才能通的,否则报连接异常
 let opt = {
   user: Utils.getSecurityConfig('db_user'),
-  pass: Utils.getSecurityConfig('db_pws'),
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
+  pass: Utils.getSecurityConfig('db_pws')
+  // 如果是mongoose 6.x版本以上,需要把下面4个节点注释掉
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
+  // useCreateIndex: true,
+  // useFindAndModify: false
   // server:{
   // reconnectInterval: 10 * 1000,//1分钟重连一次数据库
   // reconnectTries: 100//尝试重连100次

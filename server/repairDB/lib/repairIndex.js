@@ -8,11 +8,66 @@
 //加打印log,看加载时的顺序
 console.log('require repairIndex')
 
-let async = require('async')
-let db = require('../../dao/daoConnection')
-let mustIndex = require('../../public/data/dataPool').mustIndex
+// const async = require('async')
+const db = require('../../dao/daoConnection')
+const mustIndex = require('../../public/data/dataPool').mustIndex
 
-let errArray = []
+// 2021-08-01 新写修复索引逻辑
+// 先把默认索引的数组转变为Map集合,把相同的表的索引整合在一起
+// 考虑问题,表的别名是否要新加?? 测试时区的问题,修改电脑时区,看看写的log是否是零时区
+// 看看如何使用RSA加密算法
+const indexMap = new Map()
+const getEntityIndex = function (entity) {
+  return new Promise(resolve => {
+    entity.listIndexes((err, result) => {
+      resolve(result || [])
+    })
+  })
+}
+mustIndex.forEach(async v => {
+  const entityName = v.dbname
+  const entity = db.getEntity(entityName)
+  const collectionName = entity.collection.collectionName
+  if (!indexMap.get(entityName)) {
+    indexMap.set(entityName, {
+      entityName,
+      collectionName,
+      listIndexs: await getEntityIndex(entity)
+    })
+  }
+  // 获取到当前实体的所有索引
+  const listIndexs = indexMap.get(entityName).listIndexs
+  // 拿当前写死的索引去对比数据库的索引,如果不存在则修复
+  let isExist = false
+  // 循环数据库索引
+  CGlobal.forEach(listIndexs, (i, entityIndex) => {
+    if (entityIndex.name === '_id_') {
+      return true
+    }
+    if (CGlobal.compareObjects(v.fields, entityIndex.key)) {
+      isExist = true
+      return false
+    }
+  })
+  if (!isExist) {
+    // 不存在,修复索引
+    const collection = db.getCollection(collectionName)
+    collection.createIndex(v.fields, v.option, function (err, indexName) {
+      if (err) {
+        console.log(CGlobal.logLang('{0} 创建{1} 索引失败,失败原因:{2}'
+            , v.dbname, JSON.stringify(v.fields), err.message))
+      } else {
+        //创建索引成功
+        // console.log(indexName);//返回的是创建的索引名
+        console.log(CGlobal.logLang('{0} 创建{1} 索引 {2} 成功'
+            , v.dbname, JSON.stringify(v.fields), indexName))
+      }
+    })
+  }
+})
+
+// 旧的索引逻辑删除,已过时
+/**let errArray = []
 //创建必要表的索引
 async.eachSeries(mustIndex, function (item, cb) {
   let entity = db.getCollection(item.dbname)
@@ -58,7 +113,7 @@ async.eachSeries(mustIndex, function (item, cb) {
   } else {
     console.log(CGlobal.logLang('索引创建完毕'))
   }
-})
+})*/
 
 //比较是否存在该索引
 function compareIndex(dbIndex, customIndex) {

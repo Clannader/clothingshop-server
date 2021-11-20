@@ -8,7 +8,7 @@ console.log('require Utils')
 
 let Config = require('./Config')
 let CryptoJS = require('crypto-js')//引这个是总类库,只引crypto-js会是引到index,然后导入其他加密算法而已
-let util = require('util')
+// let util = require('util')
 let validator = require('validator')
 let uuid = require('node-uuid')
 let userCache = require('../util/cache/UserCache')
@@ -86,11 +86,14 @@ Utils.getSuper = function () {
     adminId: 'SUPERVISOR',
     adminName: '系统超级用户',
     password: this.sha256('s'),
-    shopId: 'SYSTEM',
+    shopId: ['SYSTEM'],
     rights: CGlobal.GlobalStatic.Supervisor_Rights,
     adminType: 'SYSTEM',
     adminStatus: true,
-    email: 'oliver.wu@shijigroup.com'
+    email: 'oliver.wu@shijigroup.com',
+    createUser: 'SYSTEM',
+    createDate: new Date(),
+    isFirstLogin: false
   }
 }
 
@@ -105,7 +108,7 @@ Utils.writeConfig = function (key, value) {
 
 //转义函数
 Utils.escapeString = function (str) {
-  if (!util.isString(str)) return ''
+  if (typeof str !== 'string') return ''
   return str.replace(/([.*+?^=!${}()|\[\]\/\\])/g, '\\$1')
 }
 
@@ -132,18 +135,19 @@ Utils.getAdminSession = function (req) {
 }
 
 Utils.getTemplateSession = function (session) {
-  return {
+  const result = {
     adminId: session.adminId,
     adminName: session.adminName,
     adminType: session.adminType,
     lastTime: session.lastTime,
-    shopId: session.shopId,
-    selfShop: session.selfShop,
-    supplierCode: session.supplierCode,
-    shopName: session.shopName,
     isFirstLogin: session.isFirstLogin,
     mobile: session.mobile
   }
+  if (!Array.isArray(session.shopId)) {
+    result.shopId = session.shopId
+    result.shopName = session.shopName
+  }
+  return result
 }
 
 /**
@@ -174,6 +178,7 @@ Utils.getIgnoreCase = function (name, mode) {
 }
 
 Utils.getRightsArray = function (lang, session) {
+  // TODO 以后需要修改
   let rightsData = []
   CGlobal.forEach(CGlobal.Rights, function (i, v) {
     if (session.rights.indexOf(v.code) !== -1) {
@@ -187,6 +192,7 @@ Utils.getRightsArray = function (lang, session) {
 }
 
 Utils.getShopIds = function (session) {
+  // TODO 复查代码是否有bug
   const shopList = session.shopList
   if (!Array.isArray(shopList)) return []
   let arr = []

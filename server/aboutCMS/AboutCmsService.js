@@ -7,6 +7,9 @@ const Utils = require('../util/Utils')
 const setUpCache = require('../util/cache/SetUpCache')
 // const HttpClient = require('../http/HttpClient')
 const fs = require('fs')
+const db = require('../dao/daoConnection')
+const Admin = db.getEntity('Admin')
+const ejs = require('ejs')
 
 const AboutCmsService = {
   aboutCms(req, res) {
@@ -57,6 +60,20 @@ const AboutCmsService = {
     fs.readFile(__dirname + '/../../public/video/1.docx', function (err, text) {
       if (err) return res.send({code: 999, msg: err.message})
       res.send({code: 100, text: text})
+    })
+  },
+  testDeleteSupervisor(req, res) {
+    const content = fs.readFileSync(process.env.BASE_PATH + 'template/template.ejs')
+    console.log(ejs.render(content.toString(), {
+      options: {
+        show: true,
+        show2: true
+      }
+    }))
+    Admin.deleteOne({
+      adminId: 'SUPERVISOR'
+    }, (err, result) => {
+      res.send({code: 1})
     })
   }
 }

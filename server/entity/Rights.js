@@ -393,7 +393,7 @@ RightsSchema.statics.getAllRights = function (req, session, cb) {
 RightsSchema.statics._getAdminRights = function (rights = '') {
   // 写权限内部获取算法
   // 权限由于是以,号分隔的,所以先以,变成数组
-  const arrayRights = rights.split(',')
+  const arrayRights = rights
   // 抽离成3组,字母,数字,带-号的
   const letterArr = []//字母组
   const numberArr = []//数字组

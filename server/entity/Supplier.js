@@ -1,6 +1,7 @@
 /**
  * Created by CC on 2017/11/6.
  * 供应商
+ * @deprecated 这个表废弃了 2021-10-25
  */
 'use strict';
 console.log('require Supplier');

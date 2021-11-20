@@ -68,14 +68,15 @@ app.use(contextPath, headerParser())
 
 //请求中加session
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
+const MongoStore = require('connect-mongo')
 // const db_url = 'mongodb://'+Utils.readConfig('db_user')+':'+Utils.readConfig('db_pws')+
 //         '@'+Utils.readConfig('db_url').split('//')[1];
 // const db_url = Utils.readConfig('db_url').replace('\/\/'
 //     , '\/\/' + Utils.readConfig('db_user') + ':' + Utils.readConfig('db_pws') + '@');
 
 // 新增重写 MongoStore 里面的set(session)的方法,改变存储session的结构
-class TemplateMongoStore extends MongoStore {
+// connect-mongo 4.x以上只能改源码了,因为使用了ts
+/*class TemplateMongoStore extends MongoStore {
   // 其实这里改源码是最方便的,但是为了避免升级模块包的时候,覆盖代码了,还是这里重写比较好
   set(sid, session, callback) {
     // Removing the lastModified prop from the session object before update
@@ -93,13 +94,13 @@ class TemplateMongoStore extends MongoStore {
       }
     }
 
+    // 其实这里把我们代码自定义的session结构丢进去存就可以了,这样就可以统计很多东西了
+    // lodash.assignIn这样引入导致打包过大
     try {
-      s = {
+      s = CGlobal.extend({
         _id: this.computeStorageId(sid),
-        session: this.transformFunctions.serialize(session),
-        // 其实这里把我们代码自定义的session结构丢进去存就可以了,这样就可以统计很多东西了
-        ...session.adminSession
-      }
+        session: this.transformFunctions.serialize(session)
+      }, session.adminSession)
     } catch (err) {
       return this.withCallback(Promise.reject(err), callback)
     }
@@ -152,7 +153,7 @@ class TemplateMongoStore extends MongoStore {
     }
     return promise
   }
-}
+}*/
 
 const conn = require('./server/dao/daoConnection')
 require('./server/dao/registerEntity')
@@ -167,9 +168,12 @@ app.use(contextPath, session({
   // expires: 0,
   // secure: true
   // },//session存在cookie的有效时间,我觉得可以不用设置
-  store: new TemplateMongoStore({
+  store: MongoStore.create({
     // url: db_url,
-    mongooseConnection: conn.getConnection(),
+    // connect-mongo 3.x写法
+    // mongooseConnection: conn.getConnection(),
+    // connect-mongo 4.x以上写法
+    client: conn.getConnection().getClient(),
     // collection:'sessions',//默认这个库
     //数据库的session过期时间,不是自己定义的session过期时间
     ttl: CGlobal.GlobalStatic.dbSession_Expires
@@ -281,7 +285,7 @@ app._router.stack.forEach(v => {
     v.handle.stack.forEach(value => {
       stack.push(registerRouter(value))
     })
-    fs.writeFileSync('./routerGenerator/router.json', JSON.stringify(stack))
+    // fs.writeFileSync(process.env.BASE_PATH + 'routerGenerator/router.json', JSON.stringify(stack))
   }
 })
 
@@ -378,13 +382,13 @@ function startHTTPS() {
   /************启动HTTPS服务********************/
       //Create HTTPS server
   const https = require('https')
-  const os = require('os')
+  // const os = require('os')
   let ip = Utils.readConfig('ip')
-  let hostname = ip
+  // let hostname = ip
   if (ip === '127.0.0.1' || ip === 'localhost') {
     ip = undefined
     if (Utils.readConfig('clusterServer') !== 'true') {
-      hostname = os.hostname
+      // hostname = os.hostname
     }
   }
   const options = {

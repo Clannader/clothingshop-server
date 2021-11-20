@@ -31,37 +31,37 @@ let Admin = {
   adminType: {
     type: String
     , required: true
-    , enum: [CGlobal.GlobalStatic.User_Type.NORMAL, CGlobal.GlobalStatic.User_Type.SYSTEM
+    , enum: [CGlobal.GlobalStatic.User_Type.SYSTEM
       , CGlobal.GlobalStatic.User_Type.THIRD]
-  },//用户类型:SYSTEM,NORMAL,3RD
+  },//用户类型:SYSTEM,3RD,以后就只有系统用户和第三方用户的区分
   password: {
     type: String
   },//管理员的密码
   shopId: {
-    type: String
+    type: Array
     , required: true
   },//所属的商店名
   rights: {
-    type: String
+    type: Array
     , required: true
-    , match: CGlobal.GlobalStatic.rightsExp
+    // , match: CGlobal.GlobalStatic.rightsExp
   },//权限
   email: {
     type: String
-    , required: true
-    , unique: true//索引值唯一
-    , match: CGlobal.GlobalStatic.mailExp
-  },//邮箱地址
+    // , required: true
+    // , unique: true//索引值唯一
+    // , match: CGlobal.GlobalStatic.mailExp
+  },//邮箱地址,修改逻辑可以为空,但是不能重复,并且符合邮箱格式
   usedPws: {
     type: Array
     , maxlength: 3
   },//使用过的密码,最大长度3,BUG这个字段的类型还需要考虑考虑,如果修改要改动service
-  supplierCode: {
-    type: String
-  },//供应商代码,BUG修改字段类型,研究还有什么属性可以控制字段的,比如长度,正则
-  lasturl: {
-    type: String
-  },//上一次退出的地址
+  // supplierCode: {
+  //   type: String
+  // },//供应商代码,BUG修改字段类型,研究还有什么属性可以控制字段的,比如长度,正则
+  // lasturl: {
+  //   type: String
+  // },//上一次退出的地址
   // isLogin:{type:Boolean,default:false},//登录状态,是否处于正在登录
   loginTime: {
     type: Date
@@ -72,6 +72,12 @@ let Admin = {
   },//管理员的状态,false时不可登录
   createUser: {
     type: String//创建这个用户的人
+  },
+  createDate: {
+    type: Date // 创建时间
+  },
+  modifyDate: {
+    type: Date // 上一次修改的时间
   },
   retryNumber: {
     type: Number,// 密码错误次数
@@ -91,7 +97,7 @@ let Admin = {
 let AdminSchema = new Schema(Admin)
 
 AdminSchema.statics.findBy_Id = function (id, session, cb) {
-  let field = {password: 0, usedPws: 0, loginTime: 0, lasturl: 0}
+  let field = {password: 0, usedPws: 0, loginTime: 0}
   if (!Utils.isMongoId(id)) {
     return cb({message: '无效的id值'})
   }
@@ -106,7 +112,7 @@ AdminSchema.statics.findBy_Id = function (id, session, cb) {
 }
 
 AdminSchema.statics.findByName = function (adminId, shopId, session, cb) {
-  let field = {password: 0, usedPws: 0, loginTime: 0, lasturl: 0}
+  let field = {password: 0, usedPws: 0, loginTime: 0}
   if (!adminId) {
     return cb({message: '用户名不能为空'})
   }
@@ -182,19 +188,21 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
   let matches = adminId.match('^(.+)@(.+)$')
   let loginShop = ''
   let that = this
+  // 目前支持的登录方式有1.邮箱,2.用户名,3.用户名@shopID
+  // 以后这里只能是用户名是唯一标识,否则查库会有问题
   if (adminId.match(CGlobal.GlobalStatic.mailExp)) {
     where.email = adminId
   } else if (matches) {
     where.adminId = Utils.getIgnoreCase(matches[1])
-    where.$or = [{
-      shopId: 'SYSTEM'
-    }, {
-      shopId: Utils.getIgnoreCase(matches[2])
-    }]
+    // where.$or = [{
+    //   shopId: 'SYSTEM'
+    // }, {
+    //   shopId: Utils.getIgnoreCase(matches[2])
+    // }]
     loginShop = matches[2]//@的shopId
   } else {
     where.adminId = Utils.getIgnoreCase(adminId)
-    where.shopId = 'SYSTEM'
+    // where.shopId = 'SYSTEM'
   }
 
   return new Promise((resolve, reject) => {
@@ -203,53 +211,76 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
         that.findOne(where, function (err, adminObj) {
           if (err) return cb(err)
           if (adminObj) return cb(null, JSON.parse(JSON.stringify(adminObj)))
-          if (CGlobal.isSupervisor({adminId: adminId, orgRights: ''})) {
+          // orgRights: []是因为使用邮箱登录的时候,如果用户不存在adminId是邮箱名,导致isSupervisor方法报错
+          if (CGlobal.isSupervisor({adminId: adminId, orgRights: []})) {
             that.create(Utils.getSuper(), function (err) {
               cb(err, Utils.getSuper())
             })
           }
           //登录用户名不是SUPERVISOR
           else {
+            // 其实这里是有个bug的,如果一直返回这个提示,但是不限制登录次数会暴露这个用户名其实不存在的风险
             return cb({message: CGlobal.serverLang(req.lang, '用户名或密码错误', 'admin.invPws')})//让报错不往下走了
           }
         })
       },
       findShop: ['findAdmin', function (adminRes, cb) {
         let admin = adminRes.findAdmin
+        // 2021-08-28 日志:用户登录有3种方式,有2种类型的用户
+        // 对应6种情况：系统用户,使用邮箱登录,loginShop应该是SYSTEM
+        //                   使用用户名,loginShop应该是SYSTEM
+        //                   用户名@店铺ID,loginShop应该是店铺ID
+        //            普通用户,同理上面3个
         //这个判断是判断普通用户使用邮箱登录时没有shopId的
-        if (admin.adminType === CGlobal.GlobalStatic.User_Type.NORMAL) {
-          loginShop = admin.shopId
-        }
+        // if (admin.adminType === CGlobal.GlobalStatic.User_Type.NORMAL) {
+        //   loginShop = admin.shopId
+        // }
         if (!loginShop) return cb()
-        let searchShop = {
-          shopId: Utils.getIgnoreCase(loginShop)
-        }
-        if (admin.adminType === CGlobal.GlobalStatic.User_Type.SYSTEM
-            && admin.supplierCode) {
-          //就算数据库里面没有supplierCode这个字段,查出来的值会默认[]的
-          searchShop = {
-            $and: [{
-              supplierCode: {$in: admin.supplierCode.split(',')}
-            }, {
-              shopId: Utils.getIgnoreCase(loginShop)
-            }]
-          }
-        }
-        Shop.findOne(searchShop, cb)
-      }],
-      findSupplierCode: ['findShop', function (returnRes, cb) {
-        let supplier = returnRes.findAdmin.supplierCode
-        if (CGlobal.isEmpty(supplier)) {
-          //只有supervisor才会进来,现在除了supervisor的supplierCode会为空外,其他用户基本都不会了
-          Shop.distinct('supplierCode', {}, function (err, result) {
-            if (err) return cb(err)
-            returnRes.findAdmin.supplierCode = result.join(',')
-            cb()
-          })
+        // 如果loginShop是SYSTEM的话不需要去查询店铺信息了
+        // 2021-10-17 如果用户@了shopID,那就是验证shopID是否存在,否则就使用用户绑定的shopID即可
+        // 下面这段代码是有问题的
+        // TODO 以后要把用户的shopId进行换算成对应的shopId,因为有可能是组,并且考虑不区分大小写的问题
+        // 判断@的shopId不是用户能管理的需要提示店铺不存在
+        // 1.如果是SUPERVISOR 直接查询shopId是否存在即可
+        // 2.如果不是SUPERVISOR 需要换算当前用户的shopList,判断登录的shopId是否属于他管理,并且不区分大小
+        // 3.如果是管理员那么shopId=['SYSTEM'],否则就是按单个shopId或者shop组绑定
+        // 4.管理员的话那就算查询店铺ID是否存在即可,不是的话就换算shopId判断是否在数组里面,在的话再查询对于信息
+        if (admin.shopId.includes('SYSTEM')) {
+          Shop.findOne({shopId: loginShop}, cb)
         } else {
+          // TODO ...
           cb()
         }
+        // let searchShop = {
+        //   shopId: Utils.getIgnoreCase(loginShop)
+        // }
+        // if (admin.adminType === CGlobal.GlobalStatic.User_Type.SYSTEM
+        //     && admin.supplierCode) {
+        //   //就算数据库里面没有supplierCode这个字段,查出来的值会默认[]的
+        //   searchShop = {
+        //     $and: [{
+        //       supplierCode: {$in: admin.supplierCode.split(',')}
+        //     }, {
+        //       shopId: Utils.getIgnoreCase(loginShop)
+        //     }]
+        //   }
+        // }
+        // // 这里是寻找当前用户登录的店铺ID信息
+        // Shop.findOne(searchShop, cb)
       }]
+      // findSupplierCode: ['findShop', function (returnRes, cb) {
+      //   let supplier = returnRes.findAdmin.supplierCode
+      //   if (CGlobal.isEmpty(supplier)) {
+      //     //只有supervisor才会进来,现在除了supervisor的supplierCode会为空外,其他用户基本都不会了
+      //     Shop.distinct('supplierCode', {}, function (err, result) {
+      //       if (err) return cb(err)
+      //       returnRes.findAdmin.supplierCode = result.join(',')
+      //       cb()
+      //     })
+      //   } else {
+      //     cb()
+      //   }
+      // }]
       // findShopList: ['findShop', function (returnRes, cb) {
       //     let admin = returnRes.findAdmin;
       //     let shopObj = returnRes.findShop;
@@ -274,10 +305,11 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
       if (err) return reject(err)
       let other = {
         //这里最怕店铺多起来,一个用户能管理的店铺多了,报内存溢出...
-        shopId: loginShop || 'SYSTEM',//当前登录的店铺ID
+        shopId: loginShop || 'SYSTEM',//当前登录的店铺ID,可以判断用户是否@shopId登录的标志
         // shopList: result.findShopList,//该用户能够操作的店铺ID
-        selfShop: result.findAdmin.shopId//用户自己的店铺ID
+        selfShop: result.findAdmin.shopId//用户自己的店铺ID 如果是管理员,那只有一个值['SYSTEM']
       }
+      // 只要result.findShop有值,就说明是@店铺ID登录的
       if (result.findShop) {
         other.shopName = result.findShop.shopName//店铺名
       }
@@ -301,7 +333,7 @@ AdminSchema.statics.loginSystem = function (req, adminId) {
 }
 
 /**
- * 获取用户能操作的酒店列表
+ * 获取用户能操作的店铺列表
  * 这个应该使用内存缓存来搞
  */
 AdminSchema.statics.getOperaShopList = function(session) {
@@ -614,10 +646,12 @@ AdminSchema.statics.checkAdminUserInfo = function (data, session, cb) {
     data.shopId = shopId
     data.adminType = adminType
     data.adminStatus = adminStatus
+    date.modifyDate = new Date()
     if (!_id) {
       data.password = Utils.sha256('123456abc')
       //新增创建人节点
       data.createUser = session.adminId
+      data.createDate = new Date()
     }
     cb(err)
   })

@@ -4,12 +4,12 @@
  */
 'use strict';
 require('./server/public/globalServer');
-var Utils = require('./server/util/Utils');
-var currentVersion = Utils.readConfig('version');//当前版本
-var newVersion = Utils.changeVersion(currentVersion);
-var packagePath = Utils.readConfig('packagePath');//打包路径
-var packageName = Utils.readConfig('packageName');
-var packageSuffix = Utils.readConfig('packageSuffix');//压缩后缀
+const Utils = require('./server/util/Utils');
+const currentVersion = Utils.readConfig('version');//当前版本
+const newVersion = Utils.changeVersion(currentVersion);
+let packagePath = Utils.readConfig('packagePath');//打包路径
+const packageName = Utils.readConfig('packageName');
+const packageSuffix = Utils.readConfig('packageSuffix');//压缩后缀
 if (!packagePath) {
     packagePath = __dirname + '\\dist\\';
 }
@@ -20,10 +20,10 @@ packagePath += CGlobal.replaceArgs(packageName+'-{0}.{1}', newVersion, packageSu
 packagePath = Utils.escapePath(packagePath);
 
 Utils.writeConfig('version', newVersion);//先写新版本,不然打包出来的版本不是新的
-var fs = require('fs');
-var archiver = require('archiver');
-var outStream = fs.createWriteStream(packagePath);
-var zlib = archiver('zip',{
+const fs = require('fs');
+const archiver = require('archiver');
+const outStream = fs.createWriteStream(packagePath);
+const zlib = archiver('zip',{
     zlib: { level: 9 }
 });
 

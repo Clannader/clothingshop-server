@@ -11,5 +11,3 @@ export function <%=urlSchema.functionName%>(<% if (urlSchema.isReplace) { %><%=u
     return api.<%=urlSchema.method%>(<% if (urlSchema.isReplace) { %><%=urlSchema.url%><% } else { %>'<%=urlSchema.url%>'<%}%>, <% if (urlSchema.method === 'post') {%>params<%} else {%>{params: params}<%}%>)
 }
 <%} ) %>
-
-

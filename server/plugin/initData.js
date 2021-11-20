@@ -58,7 +58,7 @@ const initAdminInfo = async function (req, res, next) {
     adminSession.isFirstLogin = CGlobal.isEmpty(adminInfo.isFirstLogin) ? true : adminInfo.isFirstLogin
     adminSession.lang = req.lang
 
-    // 新增获取用户能操作的酒店列表
+    // 新增获取用户能操作的店铺列表
     const shopListResult = await adminInfoCache.getOperaShopList(adminSession)
     adminSession.shopList = shopListResult['shopList'] || []
     // console.log(adminSession.shopList)
