@@ -46,5 +46,5 @@ module.exports = {
             }
         ]
     },
-    mode: 'development' // development 默认不压缩, production 压缩的
+    mode: 'production' // development 默认不压缩, production 压缩的
 };
