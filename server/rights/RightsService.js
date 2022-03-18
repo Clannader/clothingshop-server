@@ -17,8 +17,8 @@ RightsService.getRightsList = function (req, res) {
   let session = Utils.getAdminSession(req)
   Rights.getAllRights(req, session, function (err, result) {
     if (err) {
-      console.error(err)
-      return res.send({code: 300, msg: err.message})
+      // console.error(err)
+      return res.send({code: 999, msg: err.message})
     }
     res.send({code: 100, rights: result.rows, total: result.total})
   })

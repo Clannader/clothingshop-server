@@ -105,7 +105,7 @@ class CmsAopAspect {
       }
     })
   }
-}
 
+}
 
 module.exports = CmsAopAspect
