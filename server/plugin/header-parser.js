@@ -7,6 +7,9 @@ let cookies = require('cookie')
 
 module.exports = function () {
   return function headerParser(req, res, next) {
+    // 2022-03-19 添加注释
+    // 规定所有的session凭证都是通过headers传进来,但是nodejs的组件只认cookie的解析session的机制
+    // 所以这里就需要取了headers的session出来,然后不破坏原有的cookie的值,添加进去,让模块进行解析
     let credential = req.headers['credential']
     //这里有点坑爹啊,坑了我2天,由于我写的swagger的httpClient只实例化一次
     //这边的登录会设置cookie,导致那边的client存了一个cookie,并且不知道怎么删除

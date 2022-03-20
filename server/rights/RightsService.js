@@ -17,7 +17,6 @@ RightsService.getRightsList = function (req, res) {
   let session = Utils.getAdminSession(req)
   Rights.getAllRights(req, session, function (err, result) {
     if (err) {
-      // console.error(err)
       return res.send({code: 999, msg: err.message})
     }
     res.send({code: 100, rights: result.rows, total: result.total})
@@ -25,20 +24,22 @@ RightsService.getRightsList = function (req, res) {
 }
 
 RightsService.findRightsById = function (req, res) {
-  // let id = req.params.id
   let session = Utils.getAdminSession(req)
   Rights.findRightById(req, session, function (err, result) {
-    if (err) return res.send({code: 999, msg: err.message})
+    if (err) {
+      return res.send({code: 999, msg: err.message})
+    }
     res.send({code: 100, rights: result})
   })
 }
 
 //删除单个
 RightsService.deleteRights = function (req, res) {
-  // let id = req.params.id
   let session = Utils.getAdminSession(req)
   Rights.deleteRights(req, session, function (err) {
-    if (err) return res.send({code: 999, msg: err.message})
+    if (err) {
+      return res.send({code: 999, msg: err.message})
+    }
     res.send({code: 100})
   })
 }
@@ -68,7 +69,9 @@ RightsService.createRights = function (req, res) {
 RightsService.modifyRights = function (req, res) {
   let session = Utils.getAdminSession(req)
   Rights.modifyRights(req, session, function (err) {
-    if (err) return res.send({code: 999, msg: err.message})
+    if (err) {
+      return res.send({code: 999, msg: err.message})
+    }
     res.send({code: 100, msg: CGlobal.serverLang(req.lang, '修改成功', 'rightsGroup.modifySuccess')})
   })
 }
