@@ -22,8 +22,8 @@ CmsLoginService.checkCors = function (req, res, next) {
     return res.send({})
   }
   //重新赋值语言类型
-  let language = req.headers['language'] || CGlobal.GlobalStatic.CN
-  CGlobal.GlobalLangType = language
+  // let language = req.headers['language'] || CGlobal.GlobalStatic.CN
+  // CGlobal.GlobalLangType = language
   // let session = Utils.getAdminSession(req);
   // if (session){
   //     session.language = language
@@ -35,7 +35,7 @@ CmsLoginService.checkCors = function (req, res, next) {
     return res.send({code: 900, msg: CGlobal.serverLang(req.lang, '缺少x-requested-with头信息', 'admin.invRequest')})
   }
   let url = req.url
-  if (url === '/user/login') {
+  if (url === '/cms/h5/api/user/login') {
     return next()
   }
   adminService.allSuper.apply(adminService, arguments)

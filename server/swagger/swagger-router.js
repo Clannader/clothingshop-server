@@ -1,5 +1,7 @@
 /**
  * Create by CC on 2020/11/24
+ * TODO 后面打算使用java来写swagger的文档,然后nodejs只是部署它应该有的地址即可,这样我就不需要使用node来写swagger文档的内容了
+ * 因为真的很繁杂加复杂
  */
 'use strict'
 console.log('require swagger-router')

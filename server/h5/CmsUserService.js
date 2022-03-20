@@ -46,8 +46,9 @@ CmsUserService.getUserRoles = async function (req, res) {
   // delete session.rights
   return res.send({
     code: 100,
-    roles: rights,
-    session: Utils.getTemplateSession(session)
+    roles: Utils.tripleDESencrypt(Utils.stringToBase64(rights)),
+    session: Utils.getTemplateSession(session),
+    tripleDES: CGlobal.GlobalStatic.tripleDES
   })
 }
 
