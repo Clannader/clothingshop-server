@@ -1,0 +1,9 @@
+{
+  "apps": {
+    "name": "clothingshop",
+    "script": "./app.js",
+    "cwd": "./",
+    "exec_mode": "cluster",
+    "instances": 4
+  }
+}

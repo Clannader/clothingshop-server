@@ -74,6 +74,7 @@ selenium-debug.log
 # Editor directories and files
 .idea
 .vscode
+.clinic
 *.suo
 *.ntvs*
 *.njsproj

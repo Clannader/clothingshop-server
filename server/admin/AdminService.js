@@ -113,7 +113,7 @@ const AdminService = {
     }
     //登录成功写log
     //登录时用cookie做默认语言
-    const userAgent = req.headers['user-agent']
+    const userAgent = req.headers['user-agent'] || ''
     let store = req.sessionStore
     //重新获取一个新的sessionID
     store.regenerate(req, function () {

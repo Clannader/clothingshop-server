@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./app.js",
     "build": "webpack --config ./config/webpack.config.js",
+    "pm2:start": "pm2 start pm2.config.json",
     "start:api": "node ./apiTest/exec-app.js",
     "build:api": "webpack --config ./apiTest/config/webpack.config.js",
     "generator:api": "node ./apiGenerator/api-start.js",
