@@ -42,12 +42,13 @@ app.all('/*', function (req, res, next) {
   // 只能在这里重写了,不然取到的返回值不对
   // 重写response.end方法
   // 这里先判断开参数再去重写end方法会比较好一点,这样减少end方法重写的开销
-  if (Utils.convertStringToBoolean(Utils.readConfig('errorCatch'))) {
-    const _end = res.end
-    res.end = function (chunk, encoding) {
-      this.returnData = chunk + ''
-      // 后期记得修改正确的返回状态码,改成1000,四位数,不能是1或者0了
-      let resultJSON = chunk + ''
+  // 2022-04-09 这里不能按照之前那样写,这样会导致记录用户行为的时候没办法记录返回的信息
+  const _end = res.end
+  res.end = function (chunk, encoding) {
+    this.returnData = chunk + ''
+    // 后期记得修改正确的返回状态码,改成1000,四位数,不能是1或者0了
+    let resultJSON = chunk + ''
+    if (Utils.convertStringToBoolean(Utils.readConfig('errorCatch'))) {
       try {
         resultJSON = JSON.parse(resultJSON)
         if (resultJSON.code && resultJSON.code === CGlobal.GlobalStatic.ApiCode.Error) {
@@ -59,10 +60,9 @@ app.all('/*', function (req, res, next) {
           chunk = Buffer.from(JSON.stringify(resultJSON), 'utf8')
           this.set('Content-Length', chunk.length) // 如果不设置这句话,修改chunk是没有返回的
         }
-      }catch (e) {
-      }
-      return _end.apply(this, [chunk, encoding])
+      } catch (e) {}
     }
+    return _end.apply(this, [chunk, encoding])
   }
 
   // 这句话写到了initData.js里面去了
