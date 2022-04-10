@@ -147,6 +147,7 @@ const AdminService = {
         expireMsg: expireMsg,
         session: Utils.getTemplateSession(req.session.adminSession)
       }
+
       // 临时输出免登录地址
       // const key = Utils.tripleDESencrypt(JSON.stringify({
       //   credential: json.credential
